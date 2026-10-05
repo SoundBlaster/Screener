@@ -8,10 +8,15 @@ on:
 permissions:
   contents: read
 
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   swift-test:
     name: Swift package tests
-    runs-on: macos-15
+    runs-on: macos-26
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
       - name: Show Swift version
@@ -20,3 +25,5 @@ jobs:
         run: swift test
       - name: Build for iOS Simulator
         run: swift build --triple arm64-apple-ios16.0-simulator --sdk "$(xcrun --sdk iphonesimulator --show-sdk-path)"
+      - name: Build macOS fixture app
+        run: swift build --package-path Examples/ScreenerFixture

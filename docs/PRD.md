@@ -694,9 +694,12 @@ Measure:
 
 - UIKit capture adapter;
 - AppKit capture adapter;
+- SwiftUI `ImageRenderer` adapter for explicit view subtrees;
 - explicit capture API;
 - thumbnails and keyframes;
 - fixture app.
+
+Implementation note (2026-10-05): the three capture adapters, explicit keyframe API, and macOS fixture are implemented. Adaptive thumbnails, redaction, and the production fixture/benchmark matrix remain open.
 
 ### M2 — Adaptive recording
 
