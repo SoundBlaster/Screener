@@ -1,10 +1,13 @@
 import Foundation
+import CoreGraphics
+import ImageIO
 import ScreenerCore
 
-/// Development-time trace entry point. Capture backends are added in the next milestone.
+/// Development-time trace entry point for semantic markers and captured keyframes.
 public actor Screener {
     private var writer: TraceBundleWriter?
     private var isTransitioning = false
+    private let imageEncoder = PNGImageEncoder()
 
     public init() {}
 
@@ -40,6 +43,26 @@ public actor Screener {
         try await writer.append(kind: .marker, name: name, metadata: metadata)
     }
 
+    /// Encodes and stores a captured image away from the UI actor, then appends its frame record.
+    public func recordFrame(_ image: CapturedImage, reason: String) async throws {
+        guard !isTransitioning else { throw ScreenerError.sessionTransitionInProgress }
+        guard let writer else { throw ScreenerError.noActiveSession }
+
+        let pngData = try await imageEncoder.encodePNG(image.cgImage)
+        let blob = try await writer.writeBlob(pngData, kind: .frame, fileExtension: "png")
+        try await writer.append(
+            kind: .keyframe,
+            name: reason,
+            metadata: [
+                "pixelWidth": String(image.cgImage.width),
+                "pixelHeight": String(image.cgImage.height),
+                "scale": String(image.scale),
+                "encoding": "png",
+            ],
+            blob: blob
+        )
+    }
+
     public func stopSession() async throws {
         guard !isTransitioning else { throw ScreenerError.sessionTransitionInProgress }
         guard let writer else { throw ScreenerError.noActiveSession }
@@ -64,6 +87,20 @@ public actor Screener {
         #else
         "unknown"
         #endif
+    }
+}
+
+private actor PNGImageEncoder {
+    func encodePNG(_ image: CGImage) throws -> Data {
+        let output = NSMutableData()
+        guard let destination = CGImageDestinationCreateWithData(output, "public.png" as CFString, 1, nil) else {
+            throw ScreenerCaptureError.encodingFailed
+        }
+        CGImageDestinationAddImage(destination, image, nil)
+        guard CGImageDestinationFinalize(destination) else {
+            throw ScreenerCaptureError.encodingFailed
+        }
+        return output as Data
     }
 }
 
