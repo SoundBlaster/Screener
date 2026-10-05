@@ -92,6 +92,40 @@ struct ScreenerTests {
         #expect(decodedImage.height == 12)
     }
 
+    @Test func frameFinishesBeforeLaterMarkerAndSessionEndDuringEncoding() async throws {
+        let root = FileManager.default.temporaryDirectory.appending(path: UUID().uuidString)
+        defer { try? FileManager.default.removeItem(at: root) }
+        let encoder = ControlledPNGEncoder()
+        let screener = Screener(imageEncoder: encoder)
+        let bundle = try await screener.startSession(
+            name: "ordered-capture", appBundleID: "dev.example.app", tracesDirectory: root
+        )
+        let colorSpace = CGColorSpaceCreateDeviceRGB()
+        let context = try #require(CGContext(
+            data: nil, width: 4, height: 4, bitsPerComponent: 8, bytesPerRow: 0,
+            space: colorSpace, bitmapInfo: CGImageAlphaInfo.premultipliedLast.rawValue
+        ))
+        let image = try #require(context.makeImage())
+        let captured = try CapturedImage(cgImage: image, scale: 1)
+
+        let frameTask = Task { try await screener.recordFrame(captured, reason: "captured-first") }
+        await encoder.waitUntilEncoding()
+        let markerTask = Task { try await screener.mark("marker-after-capture") }
+        let stopTask = Task { try await screener.stopSession() }
+        await encoder.resumeEncoding()
+
+        try await frameTask.value
+        try await markerTask.value
+        try await stopTask.value
+
+        let records = try TraceBundleReader(url: bundle).timeline()
+        #expect(records.map(\.kind) == [.sessionStarted, .keyframe, .marker, .sessionEnded])
+        #expect(records[1].name == "captured-first")
+        #expect(records[2].name == "marker-after-capture")
+        #expect(records[1].timestamp <= records[2].timestamp)
+        #expect(records[1].monotonicNanoseconds <= records[2].monotonicNanoseconds)
+    }
+
     #if canImport(AppKit)
     @MainActor
     @Test func appKitCaptureRendersViewHierarchy() throws {
@@ -126,4 +160,28 @@ struct ScreenerTests {
 private struct FixedCaptureSource: ScreenerCaptureSource {
     let image: CapturedImage
     func capture() throws -> CapturedImage { image }
+}
+
+private actor ControlledPNGEncoder: PNGImageEncoding {
+    private var started = false
+    private var startWaiters: [CheckedContinuation<Void, Never>] = []
+    private var encodingContinuation: CheckedContinuation<Void, Never>?
+
+    func encodePNG(_ image: CGImage) async throws -> Data {
+        started = true
+        startWaiters.forEach { $0.resume() }
+        startWaiters.removeAll()
+        await withCheckedContinuation { encodingContinuation = $0 }
+        return Data([0x89, 0x50, 0x4E, 0x47])
+    }
+
+    func waitUntilEncoding() async {
+        guard !started else { return }
+        await withCheckedContinuation { startWaiters.append($0) }
+    }
+
+    func resumeEncoding() {
+        encodingContinuation?.resume()
+        encodingContinuation = nil
+    }
 }

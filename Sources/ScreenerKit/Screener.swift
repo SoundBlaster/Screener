@@ -7,9 +7,16 @@ import ScreenerCore
 public actor Screener {
     private var writer: TraceBundleWriter?
     private var isTransitioning = false
-    private let imageEncoder = PNGImageEncoder()
+    private var operationTail: Task<Void, Error>?
+    private let imageEncoder: any PNGImageEncoding
 
-    public init() {}
+    public init() {
+        imageEncoder = PNGImageEncoder()
+    }
+
+    init(imageEncoder: any PNGImageEncoding) {
+        self.imageEncoder = imageEncoder
+    }
 
     @discardableResult
     public func startSession(
@@ -40,7 +47,14 @@ public actor Screener {
     public func mark(_ name: String, metadata: [String: String] = [:]) async throws {
         guard !isTransitioning else { throw ScreenerError.sessionTransitionInProgress }
         guard let writer else { throw ScreenerError.noActiveSession }
-        try await writer.append(kind: .marker, name: name, metadata: metadata)
+        let timestamp = Date.now
+        let monotonicNanoseconds = DispatchTime.now().uptimeNanoseconds
+        try await enqueue {
+            try await writer.append(
+                kind: .marker, name: name, metadata: metadata,
+                timestamp: timestamp, monotonicNanoseconds: monotonicNanoseconds
+            )
+        }
     }
 
     /// Encodes and stores a captured image away from the UI actor, then appends its frame record.
@@ -48,19 +62,26 @@ public actor Screener {
         guard !isTransitioning else { throw ScreenerError.sessionTransitionInProgress }
         guard let writer else { throw ScreenerError.noActiveSession }
 
-        let pngData = try await imageEncoder.encodePNG(image.cgImage)
-        let blob = try await writer.writeBlob(pngData, kind: .frame, fileExtension: "png")
-        try await writer.append(
-            kind: .keyframe,
-            name: reason,
-            metadata: [
-                "pixelWidth": String(image.cgImage.width),
-                "pixelHeight": String(image.cgImage.height),
-                "scale": String(image.scale),
-                "encoding": "png",
-            ],
-            blob: blob
-        )
+        let timestamp = Date.now
+        let monotonicNanoseconds = DispatchTime.now().uptimeNanoseconds
+        let imageEncoder = self.imageEncoder
+        try await enqueue {
+            let pngData = try await imageEncoder.encodePNG(image.cgImage)
+            let blob = try await writer.writeBlob(pngData, kind: .frame, fileExtension: "png")
+            try await writer.append(
+                kind: .keyframe,
+                name: reason,
+                metadata: [
+                    "pixelWidth": String(image.cgImage.width),
+                    "pixelHeight": String(image.cgImage.height),
+                    "scale": String(image.scale),
+                    "encoding": "png",
+                ],
+                blob: blob,
+                timestamp: timestamp,
+                monotonicNanoseconds: monotonicNanoseconds
+            )
+        }
     }
 
     public func stopSession() async throws {
@@ -69,14 +90,28 @@ public actor Screener {
         self.writer = nil
         isTransitioning = true
         do {
-            try await writer.append(kind: .sessionEnded, name: "session-ended")
-            await writer.close()
+            try await enqueue {
+                try await writer.append(kind: .sessionEnded, name: "session-ended")
+                await writer.close()
+            }
             isTransitioning = false
         } catch {
             await writer.close()
             isTransitioning = false
             throw error
         }
+    }
+
+    /// Reserves timeline order before suspension, so slow encoders cannot reorder later events.
+    private func enqueue(_ operation: @escaping @Sendable () async throws -> Void) async throws {
+        let previous = operationTail
+        let next = Task {
+            // A failed event must not prevent later events (especially sessionEnded) from running.
+            if let previous { _ = try? await previous.value }
+            try await operation()
+        }
+        operationTail = next
+        try await next.value
     }
 
     private static var currentPlatform: String {
@@ -90,8 +125,12 @@ public actor Screener {
     }
 }
 
-private actor PNGImageEncoder {
-    func encodePNG(_ image: CGImage) throws -> Data {
+protocol PNGImageEncoding: Sendable {
+    func encodePNG(_ image: CGImage) async throws -> Data
+}
+
+private actor PNGImageEncoder: PNGImageEncoding {
+    func encodePNG(_ image: CGImage) async throws -> Data {
         let output = NSMutableData()
         guard let destination = CGImageDestinationCreateWithData(output, "public.png" as CFString, 1, nil) else {
             throw ScreenerCaptureError.encodingFailed

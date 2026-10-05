@@ -24,6 +24,11 @@ private final class FixtureModel: ObservableObject {
     private let phases = ["Idle", "Loading profile", "Profile loaded"]
     private lazy var captureSession = ScreenerCaptureSession(screener: screener)
 
+    func setWindow(_ newWindow: NSWindow?) {
+        guard window !== newWindow else { return }
+        window = newWindow
+    }
+
     var phaseName: String { phases[phaseIndex] }
 
     func start() async {
@@ -142,7 +147,7 @@ private struct FixtureView: View {
         }
         .padding(24)
         .frame(minWidth: 600, minHeight: 420)
-        .background(WindowProbe { model.window = $0 }.frame(width: 1, height: 1).opacity(0))
+        .background(WindowProbe { model.setWindow($0) }.frame(width: 1, height: 1).opacity(0))
     }
 
     private var description: String {
@@ -166,16 +171,31 @@ private struct WindowProbe: NSViewRepresentable {
 
     func updateNSView(_ nsView: WindowProbeView, context: Context) {
         nsView.onWindowChange = onWindowChange
-        onWindowChange(nsView.window)
+        nsView.scheduleWindowReport()
     }
 }
 
 @MainActor
 private final class WindowProbeView: NSView {
     var onWindowChange: ((NSWindow?) -> Void)?
+    private weak var lastReportedWindow: NSWindow?
+    private var hasReportedWindow = false
 
     override func viewDidMoveToWindow() {
         super.viewDidMoveToWindow()
+        scheduleWindowReport()
+    }
+
+    func scheduleWindowReport() {
+        DispatchQueue.main.async { [weak self] in
+            self?.reportWindowChange()
+        }
+    }
+
+    private func reportWindowChange() {
+        guard !hasReportedWindow || lastReportedWindow !== window else { return }
+        hasReportedWindow = true
+        lastReportedWindow = window
         onWindowChange?(window)
     }
 }
