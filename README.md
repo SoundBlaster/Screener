@@ -2,7 +2,7 @@
 
 Screener is a local-first visual flight recorder for debugging transient UI states in iOS and macOS apps. It is designed to let a developer or coding agent inspect a recorded timeline after the interesting state has passed.
 
-The repository contains the versioned `.vtrace` bundle core, an app-side session/marker API, and UIKit, AppKit, and SwiftUI capture adapters. The macOS fixture app exercises state changes, markers, and real window keyframes. The read-only MCP server remains a planned milestone.
+The repository contains the versioned `.vtrace` bundle core, an app-side session/marker API, UIKit, AppKit, and SwiftUI capture adapters, and a separate read-only MCP server. The macOS fixture app exercises state changes, markers, and real window keyframes.
 
 ```swift
 import ScreenerKit
@@ -38,11 +38,43 @@ Use **Start recording**, advance the fixture state, capture a frame, and stop th
 swift test
 ```
 
+## Local MCP server
+
+Build the standalone macOS stdio server:
+
+```sh
+swift build --product screener-mcp
+.build/debug/screener-mcp --traces-dir "$HOME/Library/Caches/ScreenerFixture/Traces"
+```
+
+Without `--traces-dir`, it checks `~/Library/Caches/Screener/Traces` and `~/Library/Caches/ScreenerFixture/Traces`. Pass the option more than once to add roots. It discovers `.vtrace` directories below each root and exposes three read-only MCP tools:
+
+- `screener.sessions` lists session metadata without local file paths.
+- `screener.timeline` returns up to 2,000 chronological records for a session.
+- `screener.frame` returns one PNG/JPEG thumbnail or keyframe by session and record UUID.
+
+Tools accept catalog UUIDs rather than arbitrary filesystem paths. Frame references are checked after symlink resolution, image types are limited to PNG/JPEG, and each image is capped at 32 MiB. The executable writes no diagnostics to stdout because stdio carries MCP messages.
+
+Configure an MCP host to launch `.build/debug/screener-mcp` over stdio. If traces are outside the defaults, pass `--traces-dir` and the directory as separate arguments. Simulator-container auto-discovery, contact sheets, semantic inspection, and image diffs remain future work.
+
+For example, an MCP host configuration can use an absolute executable path:
+
+```json
+{
+  "mcpServers": {
+    "screener": {
+      "command": "/absolute/path/to/Screener/.build/debug/screener-mcp",
+      "args": ["--traces-dir", "/absolute/path/to/traces"]
+    }
+  }
+}
+```
+
 ## Architecture
 
 - `ScreenerCore` owns the trace format, writer, and reader.
 - `ScreenerKit` owns main-actor capture adapters and does not depend on MCP or OpenTelemetry.
-- A future `screener-mcp` process will read `.vtrace` bundles and expose read-only inspection tools.
+- `ScreenerMCP` and the separate `screener-mcp` executable read local `.vtrace` bundles and expose session, timeline, and single-frame tools.
 - Optional OpenTelemetry instrumentation may report bounded recorder-health signals, but trace records remain the source of visual history. Telemetry delivery does not imply a trace was captured or persisted.
 
 See [`docs/PRD.md`](docs/PRD.md) and [`docs/adr`](docs/adr) for scope and decisions.

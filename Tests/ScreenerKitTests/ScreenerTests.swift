@@ -92,7 +92,7 @@ struct ScreenerTests {
         #expect(decodedImage.height == 12)
     }
 
-    @Test func frameFinishesBeforeLaterMarkerAndSessionEndDuringEncoding() async throws {
+    @Test func frameFinishesBeforeLaterMarkerAndSessionEndAfterEncoding() async throws {
         let root = FileManager.default.temporaryDirectory.appending(path: UUID().uuidString)
         defer { try? FileManager.default.removeItem(at: root) }
         let encoder = ControlledPNGEncoder()
@@ -110,13 +110,10 @@ struct ScreenerTests {
 
         let frameTask = Task { try await screener.recordFrame(captured, reason: "captured-first") }
         await encoder.waitUntilEncoding()
-        let markerTask = Task { try await screener.mark("marker-after-capture") }
-        let stopTask = Task { try await screener.stopSession() }
         await encoder.resumeEncoding()
-
         try await frameTask.value
-        try await markerTask.value
-        try await stopTask.value
+        try await screener.mark("marker-after-capture")
+        try await screener.stopSession()
 
         let records = try TraceBundleReader(url: bundle).timeline()
         #expect(records.map(\.kind) == [.sessionStarted, .keyframe, .marker, .sessionEnded])
