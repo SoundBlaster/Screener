@@ -18,18 +18,46 @@ public struct TraceBundleReader: Sendable {
     /// Reads complete JSONL records. A trailing unterminated line is ignored because
     /// the writer may have been interrupted while appending it.
     public func timeline() throws -> [TraceRecord] {
+        try timelineResult().records
+    }
+
+    public func timelineResult() throws -> TraceTimeline {
+        _ = try manifest()
         let timelineURL = url.appending(path: "timeline.jsonl")
         guard FileManager.default.fileExists(atPath: timelineURL.path) else {
             throw TraceBundleError.invalidBundle(url)
         }
         let bytes = try Data(contentsOf: timelineURL)
-        var lines = bytes.split(separator: 0x0A, omittingEmptySubsequences: true)
-        if bytes.last != 0x0A { lines = Array(lines.dropLast()) }
+        let lines = bytes.split(separator: 0x0A, omittingEmptySubsequences: false).dropLast()
 
-        return try lines.enumerated().map { index, line in
-            do { return try Self.decoder.decode(TraceRecord.self, from: Data(line)) }
-            catch { throw TraceBundleError.malformedRecord(line: index + 1) }
+        var records: [TraceRecord] = []
+        var skippedOptionalKinds: [String] = []
+        for (index, line) in lines.enumerated() {
+            do {
+                let data = Data(line)
+                let header = try Self.decoder.decode(TimelineHeader.self, from: data)
+                if !Self.knownKinds.contains(header.kind) {
+                    guard header.optional == true else {
+                        throw TraceBundleError.malformedRecord(line: index + 1)
+                    }
+                    skippedOptionalKinds.append(header.kind)
+                    continue
+                }
+                records.append(try Self.decoder.decode(TraceRecord.self, from: data))
+            } catch let error as TraceBundleError {
+                throw error
+            } catch {
+                throw TraceBundleError.malformedRecord(line: index + 1)
+            }
         }
+        return TraceTimeline(records: records, skippedOptionalKinds: skippedOptionalKinds)
+    }
+
+    private static let knownKinds: Set<String> = ["sessionStarted", "marker", "sessionEnded", "thumbnail", "keyframe"]
+
+    private struct TimelineHeader: Decodable {
+        let kind: String
+        let optional: Bool?
     }
 
     private static var decoder: JSONDecoder {
@@ -45,5 +73,15 @@ public struct TraceBundleReader: Sendable {
             return date
         }
         return decoder
+    }
+}
+
+public struct TraceTimeline: Sendable, Equatable {
+    public let records: [TraceRecord]
+    public let skippedOptionalKinds: [String]
+
+    public init(records: [TraceRecord], skippedOptionalKinds: [String] = []) {
+        self.records = records
+        self.skippedOptionalKinds = skippedOptionalKinds
     }
 }

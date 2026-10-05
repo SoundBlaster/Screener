@@ -49,6 +49,7 @@ public actor TraceBundleWriter {
         monotonicNanoseconds: UInt64 = DispatchTime.now().uptimeNanoseconds
     ) throws -> TraceRecord {
         guard !isClosed else { throw TraceBundleError.writerClosed }
+        if let blob { try validatePublishedBlob(blob) }
         let record = TraceRecord(
             sequence: nextSequence,
             timestamp: timestamp,
@@ -87,6 +88,24 @@ public actor TraceBundleWriter {
 
     public func close() {
         isClosed = true
+    }
+
+    private func validatePublishedBlob(_ path: String) throws {
+        let components = path.split(separator: "/", omittingEmptySubsequences: false)
+        guard !path.isEmpty,
+              !path.hasPrefix("/"),
+              !path.contains("\\"),
+              components.allSatisfy({ !$0.isEmpty && $0 != "." && $0 != ".." }) else {
+            throw TraceBundleError.invalidBlobReference(path)
+        }
+
+        let bundlePath = url.standardizedFileURL.resolvingSymlinksInPath().path
+        let blobURL = url.appending(path: path).standardizedFileURL.resolvingSymlinksInPath()
+        guard blobURL.path.hasPrefix(bundlePath + "/"),
+              let values = try? blobURL.resourceValues(forKeys: [.isRegularFileKey]),
+              values.isRegularFile == true else {
+            throw TraceBundleError.invalidBlobReference(path)
+        }
     }
 
     private static var encoder: JSONEncoder {

@@ -637,7 +637,7 @@ Rules:
 - backward-compatible additive changes stay within a major version;
 - breaking changes require a new major version;
 - MCP reader should support at least the current and previous major version once v2 exists;
-- record kinds are extensible; unknown optional kinds can be skipped with diagnostics.
+- record kinds are extensible; unknown optional kinds (marked with `"optional": true` on the JSONL record) can be skipped with diagnostics.
 
 ## 24. Testing strategy
 

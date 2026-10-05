@@ -94,7 +94,7 @@ SQLite would be viable, but it adds cross-process lifecycle, schema migration an
 - Every record has a monotonic timestamp.
 - Wall-clock time is supplementary; ordering uses monotonic time.
 - A timeline record never points to a blob that has not been atomically published.
-- Unknown optional record kinds are skippable.
+- Unknown optional record kinds marked with `"optional": true` are skippable; unknown required kinds are rejected.
 - Semantic markers are never dropped solely because the image pipeline is under backpressure.
 - A trailing malformed/incomplete line in an active trace is ignored until completed or abandoned.
 

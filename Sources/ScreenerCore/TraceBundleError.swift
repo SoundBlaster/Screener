@@ -6,4 +6,5 @@ public enum TraceBundleError: Error, Equatable {
     case malformedRecord(line: Int)
     case writerClosed
     case invalidBlobExtension
+    case invalidBlobReference(String)
 }
