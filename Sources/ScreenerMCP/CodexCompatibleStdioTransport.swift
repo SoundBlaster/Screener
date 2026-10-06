@@ -33,7 +33,7 @@ public actor CodexCompatibleStdioTransport: Transport {
                 do {
                     let messages = await underlying.receive()
                     for try await message in messages {
-                        continuation.yield(try MCPInitializeCompatibility.normalized(message))
+                        continuation.yield(MCPInitializeCompatibility.normalized(message))
                     }
                     continuation.finish()
                 } catch {

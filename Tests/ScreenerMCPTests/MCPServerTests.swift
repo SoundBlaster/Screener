@@ -11,7 +11,7 @@ struct MCPServerTests {
             #"{"jsonrpc":"2.0","id":0,"method":"initialize","params":{"protocolVersion":"2025-06-18","capabilities":{"elicitation":{"form":{},"url":{}},"experimental":{"codex/auth-change":{},"custom":"enabled"}},"clientInfo":{"name":"codex-mcp-client","title":"Codex","version":"0.156.1"}}}"#.utf8
         )
 
-        let normalized = try MCPInitializeCompatibility.normalized(message)
+        let normalized = MCPInitializeCompatibility.normalized(message)
         let object = try #require(JSONSerialization.jsonObject(with: normalized) as? [String: Any])
         let paramsObject = try #require(object["params"] as? [String: Any])
         let capabilities = try #require(paramsObject["capabilities"] as? [String: Any])
@@ -28,8 +28,16 @@ struct MCPServerTests {
     @Test func leavesCompatibleInitializeAndOtherMessagesUnchanged() throws {
         let initialize = Data(#"{"jsonrpc":"2.0","id":0,"method":"initialize","params":{"capabilities":{"experimental":{"custom":"enabled"}}}}"#.utf8)
         let otherMethod = Data(#"{"jsonrpc":"2.0","id":1,"method":"tools/list","params":{}}"#.utf8)
-        #expect(try MCPInitializeCompatibility.normalized(initialize) == initialize)
-        #expect(try MCPInitializeCompatibility.normalized(otherMethod) == otherMethod)
+        #expect(MCPInitializeCompatibility.normalized(initialize) == initialize)
+        #expect(MCPInitializeCompatibility.normalized(otherMethod) == otherMethod)
+    }
+
+    @Test func passesMalformedFramesThroughWithoutEndingReceiveStream() {
+        let malformed = Data(#"{"jsonrpc":"2.0","method":"initialize""#.utf8)
+        let validAfterMalformed = Data(#"{"jsonrpc":"2.0","method":"tools/list"}"#.utf8)
+
+        #expect(MCPInitializeCompatibility.normalized(malformed) == malformed)
+        #expect(MCPInitializeCompatibility.normalized(validAfterMalformed) == validAfterMalformed)
     }
 
     @Test func advertisesReadOnlyToolsAndServesSessionsTimelineAndFrame() async throws {
