@@ -50,7 +50,8 @@ swift build --product screener-mcp
 Without `--traces-dir`, it checks `~/Library/Caches/Screener/Traces` and `~/Library/Caches/ScreenerFixture/Traces`. Pass the option more than once to add roots. It discovers `.vtrace` directories below each root and exposes three read-only MCP tools:
 
 - `screener.sessions` lists session metadata without local file paths.
-- `screener.timeline` returns up to 2,000 chronological records for a session.
+- `screener.timeline` returns chronological records in pages of up to 2,000; use `nextOffset` to continue.
+- `screener.contact_sheet` returns a chronological grid of up to 24 downsampled frames plus a numbered cell-to-record map. Use `offset` to page through longer sessions.
 - `screener.frame` returns one PNG/JPEG thumbnail or keyframe by session and record UUID.
 
 Tools accept catalog UUIDs rather than arbitrary filesystem paths. Frame references are checked after symlink resolution, image types are limited to PNG/JPEG, and each image is capped at 32 MiB. The executable writes no diagnostics to stdout because stdio carries MCP messages.

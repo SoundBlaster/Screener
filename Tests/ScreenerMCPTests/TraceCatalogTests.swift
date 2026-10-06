@@ -1,5 +1,6 @@
 import Foundation
 import Testing
+import ImageIO
 import ScreenerCore
 @testable import ScreenerMCP
 
@@ -52,6 +53,41 @@ struct TraceCatalogTests {
         #expect(lastPage.records.map(\.id) == [expectedIDs[4]])
         #expect(firstPage.totalRecords == 5)
         #expect(lastPage.nextOffset == nil)
+    }
+
+    @Test func contactSheetContainsChronologicalFrameMapAndCanBePaged() async throws {
+        let root = try temporaryDirectory()
+        defer { try? FileManager.default.removeItem(at: root) }
+        let manifest = TraceManifest(name: "visual", appBundleID: "dev.test", platform: "iOS")
+        let writer = try TraceBundleWriter(
+            url: root.appending(path: "visual.vtrace", directoryHint: .isDirectory),
+            manifest: manifest
+        )
+        var expected: [UUID] = []
+        for (index, kind) in [TraceRecord.Kind.keyframe, .thumbnail, .keyframe].enumerated() {
+            let blobKind: TraceBundleWriter.BlobKind = kind == .thumbnail ? .thumbnail : .frame
+            let blob = try await writer.writeBlob(
+                makeTestPNG(red: CGFloat(index) * 0.2), kind: blobKind, fileExtension: "png"
+            )
+            let record = try await writer.append(kind: kind, name: "screen-\(index)", blob: blob)
+            expected.append(record.id)
+        }
+
+        let catalog = TraceCatalog(roots: [root])
+        let firstPage = try catalog.contactSheet(
+            sessionID: manifest.sessionID, maxCells: 2, columns: 2
+        )
+        #expect(firstPage.page.cells.map(\.id) == Array(expected[0..<2]))
+        #expect(firstPage.page.cells.map(\.index) == [1, 2])
+        #expect(firstPage.page.totalFrames == 3)
+        #expect(firstPage.page.nextOffset == 2)
+        let firstImageSource = try #require(CGImageSourceCreateWithData(firstPage.imageData as CFData, nil))
+        let firstImage = try #require(CGImageSourceCreateImageAtIndex(firstImageSource, 0, nil))
+        #expect(firstImage.width == 568)
+
+        let secondPage = try catalog.contactSheet(sessionID: manifest.sessionID, offset: 2)
+        #expect(secondPage.page.cells.map(\.id) == [expected[2]])
+        #expect(secondPage.page.nextOffset == nil)
     }
 
     @Test func doesNotFollowFrameSymlinkOutsideBundle() async throws {
