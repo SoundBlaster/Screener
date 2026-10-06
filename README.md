@@ -47,7 +47,7 @@ swift build --product screener-mcp
 .build/debug/screener-mcp --traces-dir "$HOME/Library/Caches/ScreenerFixture/Traces"
 ```
 
-Without `--traces-dir`, it checks `~/Library/Caches/Screener/Traces` and `~/Library/Caches/ScreenerFixture/Traces`. Pass the option more than once to add roots. It discovers `.vtrace` directories below each root and exposes three read-only MCP tools:
+Without `--traces-dir`, it checks `~/Library/Caches/Screener/Traces` and `~/Library/Caches/ScreenerFixture/Traces`. Pass the option more than once to add roots. It discovers `.vtrace` directories below each root and exposes four read-only MCP tools:
 
 - `screener.sessions` lists session metadata without local file paths.
 - `screener.timeline` returns chronological records in pages of up to 2,000; use `nextOffset` to continue.
@@ -56,7 +56,7 @@ Without `--traces-dir`, it checks `~/Library/Caches/Screener/Traces` and `~/Libr
 
 Tools accept catalog UUIDs rather than arbitrary filesystem paths. Frame references are checked after symlink resolution, image types are limited to PNG/JPEG, and each image is capped at 32 MiB. The executable writes no diagnostics to stdout because stdio carries MCP messages.
 
-Configure an MCP host to launch `.build/debug/screener-mcp` over stdio. If traces are outside the defaults, pass `--traces-dir` and the directory as separate arguments. Simulator-container auto-discovery, contact sheets, semantic inspection, and image diffs remain future work.
+Configure an MCP host to launch `.build/debug/screener-mcp` over stdio. If traces are outside the defaults, pass `--traces-dir` and the directory as separate arguments. Simulator-container auto-discovery, semantic inspection, and image diffs remain future work.
 
 For example, an MCP host configuration can use an absolute executable path:
 
