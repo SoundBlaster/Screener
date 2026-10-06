@@ -3,10 +3,22 @@ import AppKit
 
 @MainActor
 public struct AppKitCaptureSource: ScreenerCaptureSource {
-    private let view: NSView
+    /// What fills pixels the view hierarchy leaves transparent.
+    public enum Background: Sendable, Equatable {
+        /// The window's background color, resolved in the view's appearance, so the frame
+        /// matches the screen. A window's content view usually draws no background of its
+        /// own: the window frame paints it, and `cacheDisplay` does not capture the frame.
+        case window
+        /// Keep transparent pixels transparent.
+        case transparent
+    }
 
-    public init(view: NSView) {
+    private let view: NSView
+    private let background: Background
+
+    public init(view: NSView, background: Background = .window) {
         self.view = view
+        self.background = background
     }
 
     public func capture() throws -> CapturedImage {
@@ -19,9 +31,40 @@ public struct AppKitCaptureSource: ScreenerCaptureSource {
         }
 
         view.cacheDisplay(in: bounds, to: bitmap)
-        guard let cgImage = bitmap.cgImage else { throw ScreenerCaptureError.imageUnavailable }
+        guard let content = bitmap.cgImage else { throw ScreenerCaptureError.imageUnavailable }
         let scale = Double(bitmap.pixelsWide) / Double(bounds.width)
-        return try CapturedImage(cgImage: cgImage, scale: scale)
+        guard background == .window else { return try CapturedImage(cgImage: content, scale: scale) }
+        guard let color = windowBackgroundColor(),
+              let flattened = Self.composite(content, over: color) else {
+            throw ScreenerCaptureError.imageUnavailable
+        }
+        return try CapturedImage(cgImage: flattened, scale: scale)
+    }
+
+    /// Dynamic system colors resolve against the current drawing appearance, so resolve
+    /// the window's color in the appearance the view actually draws with.
+    private func windowBackgroundColor() -> CGColor? {
+        let color = view.window?.backgroundColor ?? .windowBackgroundColor
+        var resolved: CGColor?
+        view.effectiveAppearance.performAsCurrentDrawingAppearance {
+            // Pattern colors have no sRGB form; fall back to the system window color.
+            resolved = (color.usingColorSpace(.sRGB) ?? NSColor.windowBackgroundColor.usingColorSpace(.sRGB))?.cgColor
+        }
+        return resolved
+    }
+
+    nonisolated static func composite(_ image: CGImage, over color: CGColor) -> CGImage? {
+        let space = image.colorSpace.flatMap { $0.model == .rgb ? $0 : nil }
+            ?? CGColorSpace(name: CGColorSpace.sRGB)!
+        guard let context = CGContext(
+            data: nil, width: image.width, height: image.height, bitsPerComponent: 8, bytesPerRow: 0,
+            space: space, bitmapInfo: CGImageAlphaInfo.premultipliedLast.rawValue
+        ) else { return nil }
+        let rect = CGRect(x: 0, y: 0, width: image.width, height: image.height)
+        context.setFillColor(color)
+        context.fill(rect)
+        context.draw(image, in: rect)
+        return context.makeImage()
     }
 }
 #endif
