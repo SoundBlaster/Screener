@@ -1,4 +1,6 @@
 import Foundation
+import CoreGraphics
+import ImageIO
 import ScreenerCore
 
 public struct TraceSession: Codable, Sendable, Equatable, Identifiable {
@@ -17,12 +19,35 @@ public struct TraceTimelinePage: Codable, Sendable, Equatable {
     public let totalRecords: Int
 }
 
+public struct TraceContactSheetCell: Codable, Sendable, Equatable, Identifiable {
+    public let id: UUID
+    public let index: Int
+    public let sequence: UInt64
+    public let timestamp: Date
+    public let name: String
+    public let kind: TraceRecord.Kind
+}
+
+public struct TraceContactSheetPage: Codable, Sendable, Equatable {
+    public let cells: [TraceContactSheetCell]
+    public let offset: Int
+    public let nextOffset: Int?
+    public let totalFrames: Int
+    public let columns: Int
+}
+
+public struct TraceContactSheetResult: Sendable {
+    public let page: TraceContactSheetPage
+    public let imageData: Data
+}
+
 public enum TraceCatalogError: Error, Equatable, LocalizedError {
     case sessionNotFound(UUID)
     case recordNotFound(UUID)
     case invalidFrameReference
     case frameTooLarge
     case unsupportedFrameType
+    case invalidFrameImage
 
     public var errorDescription: String? {
         switch self {
@@ -31,6 +56,7 @@ public enum TraceCatalogError: Error, Equatable, LocalizedError {
         case .invalidFrameReference: "The frame blob reference is invalid or points outside its trace bundle."
         case .frameTooLarge: "The frame exceeds the configured MCP image size limit."
         case .unsupportedFrameType: "Only PNG and JPEG frames can be returned by MCP."
+        case .invalidFrameImage: "The recorded frame could not be decoded as an image."
         }
     }
 }
@@ -95,6 +121,55 @@ public struct TraceCatalog: Sendable {
             throw TraceCatalogError.recordNotFound(recordID)
         }
 
+        return try frame(record: record, relativePath: relativePath, bundle: bundle)
+    }
+
+    public func contactSheet(
+        sessionID: UUID,
+        offset: Int = 0,
+        maxCells: Int = 24,
+        columns: Int = 4
+    ) throws -> TraceContactSheetResult {
+        let bundle = try bundle(for: sessionID)
+        let allFrames = try TraceBundleReader(url: bundle).timeline().filter {
+            ($0.kind == .keyframe || $0.kind == .thumbnail) && $0.blob != nil
+        }
+        let start = min(max(0, offset), allFrames.count)
+        let count = max(1, min(maxCells, 24))
+        let end = min(start + count, allFrames.count)
+        let selected = allFrames[start..<end]
+        let columnCount = max(1, min(columns, min(6, max(1, selected.count))))
+        var thumbnails: [(TraceContactSheetCell, Data)] = []
+        for (position, record) in selected.enumerated() {
+            guard let relativePath = record.blob else { continue }
+            let frameData = try frame(record: record, relativePath: relativePath, bundle: bundle)
+            let thumbnail = try Self.downsample(frameData.data, maximumPixelSize: 256)
+            thumbnails.append((
+                TraceContactSheetCell(
+                    id: record.id,
+                    index: start + position + 1,
+                    sequence: record.sequence,
+                    timestamp: record.timestamp,
+                    name: record.name,
+                    kind: record.kind
+                ),
+                thumbnail
+            ))
+        }
+
+        let cells = thumbnails.map(\.0)
+        let page = TraceContactSheetPage(
+            cells: cells,
+            offset: start,
+            nextOffset: end < allFrames.count ? end : nil,
+            totalFrames: allFrames.count,
+            columns: columnCount
+        )
+        let image = try ContactSheetRenderer.render(thumbnails, columns: columnCount)
+        return TraceContactSheetResult(page: page, imageData: image)
+    }
+
+    private func frame(record: TraceRecord, relativePath: String, bundle: URL) throws -> (record: TraceRecord, data: Data, mimeType: String) {
         let components = relativePath.split(separator: "/", omittingEmptySubsequences: false)
         guard !relativePath.isEmpty,
               !relativePath.hasPrefix("/"),
@@ -121,6 +196,28 @@ public struct TraceCatalog: Sendable {
         default: throw TraceCatalogError.unsupportedFrameType
         }
         return (record, try Data(contentsOf: fileURL), mimeType)
+    }
+
+    private static func downsample(_ data: Data, maximumPixelSize: Int) throws -> Data {
+        guard let source = CGImageSourceCreateWithData(data as CFData, nil),
+              let image = CGImageSourceCreateThumbnailAtIndex(
+                source,
+                0,
+                [
+                    kCGImageSourceCreateThumbnailFromImageAlways: true,
+                    kCGImageSourceCreateThumbnailWithTransform: true,
+                    kCGImageSourceThumbnailMaxPixelSize: maximumPixelSize,
+                ] as CFDictionary
+              ) else {
+            throw TraceCatalogError.invalidFrameImage
+        }
+        let output = NSMutableData()
+        guard let destination = CGImageDestinationCreateWithData(output, "public.png" as CFString, 1, nil) else {
+            throw TraceCatalogError.invalidFrameImage
+        }
+        CGImageDestinationAddImage(destination, image, nil)
+        guard CGImageDestinationFinalize(destination) else { throw TraceCatalogError.invalidFrameImage }
+        return output as Data
     }
 
     private func bundle(for sessionID: UUID) throws -> URL {

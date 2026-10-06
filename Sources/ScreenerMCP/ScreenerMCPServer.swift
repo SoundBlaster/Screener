@@ -49,6 +49,22 @@ public enum ScreenerMCPServer {
                     ]),
                     annotations: .init(readOnlyHint: true, destructiveHint: false, idempotentHint: true, openWorldHint: false)
                 ),
+                Tool(
+                    name: "screener.contact_sheet",
+                    title: "Build a contact sheet",
+                    description: "Return a chronological grid of up to 24 downsampled frames. Cell numbers map to the structured cells array; pages use frame offsets.",
+                    inputSchema: .object([
+                        "type": .string("object"),
+                        "properties": .object([
+                            "sessionID": .object(["type": .string("string"), "format": .string("uuid")]),
+                            "offset": .object(["type": .string("integer"), "minimum": .int(0)]),
+                            "maxCells": .object(["type": .string("integer"), "minimum": .int(1), "maximum": .int(24)]),
+                            "columns": .object(["type": .string("integer"), "minimum": .int(1), "maximum": .int(6)]),
+                        ]),
+                        "required": .array([.string("sessionID")]),
+                    ]),
+                    annotations: .init(readOnlyHint: true, destructiveHint: false, idempotentHint: true, openWorldHint: false)
+                ),
             ])
         }
 
@@ -88,6 +104,24 @@ public enum ScreenerMCPServer {
                     return try CallTool.Result(
                         content: [text(json(metadata)), .image(data: frame.data.base64EncodedString(), mimeType: frame.mimeType, annotations: nil, _meta: nil)],
                         structuredContent: MCP.Value(metadata)
+                    )
+                case "screener.contact_sheet":
+                    guard let rawSessionID = args["sessionID"]?.stringValue,
+                          let sessionID = UUID(uuidString: rawSessionID) else {
+                        return errorResult("sessionID must be a UUID")
+                    }
+                    let result = try catalog.contactSheet(
+                        sessionID: sessionID,
+                        offset: args["offset"]?.intValue ?? 0,
+                        maxCells: args["maxCells"]?.intValue ?? 24,
+                        columns: args["columns"]?.intValue ?? 4
+                    )
+                    return try CallTool.Result(
+                        content: [
+                            text(json(result.page)),
+                            .image(data: result.imageData.base64EncodedString(), mimeType: "image/png", annotations: nil, _meta: nil),
+                        ],
+                        structuredContent: MCP.Value(result.page)
                     )
                 default:
                     return errorResult("Unknown tool: \(params.name)")

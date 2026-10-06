@@ -12,7 +12,7 @@ struct MCPServerTests {
         let bundle = root.appending(path: "run.vtrace", directoryHint: .isDirectory)
         let manifest = TraceManifest(name: "Demo run", appBundleID: "dev.demo", platform: "iOS")
         let writer = try TraceBundleWriter(url: bundle, manifest: manifest)
-        let blob = try await writer.writeBlob(Data([0x01, 0x02]), kind: .frame, fileExtension: "png")
+        let blob = try await writer.writeBlob(try makeTestPNG(), kind: .frame, fileExtension: "png")
         let record = try await writer.append(kind: .keyframe, name: "Home", blob: blob)
         _ = try await writer.append(kind: .marker, name: "Middle")
         _ = try await writer.append(kind: .marker, name: "Latest")
@@ -24,7 +24,9 @@ struct MCPServerTests {
         _ = try await client.connect(transport: transports.client)
 
         let tools = try await client.listTools().tools
-        #expect(tools.map(\.name).sorted() == ["screener.frame", "screener.sessions", "screener.timeline"])
+        #expect(tools.map(\.name).sorted() == [
+            "screener.contact_sheet", "screener.frame", "screener.sessions", "screener.timeline",
+        ])
         #expect(tools.allSatisfy { $0.annotations.readOnlyHint == true })
 
         let sessionsRequest = try await client.send(CallTool.request(.init(name: "screener.sessions")))
@@ -56,6 +58,17 @@ struct MCPServerTests {
             ]
         )
         #expect(laterTimeline.content.contains { if case .text(let text, _, _) = $0 { text.contains("Latest") } else { false } })
+
+        let contactSheet = try await client.send(
+            CallTool.request(.init(
+                name: "screener.contact_sheet",
+                arguments: ["sessionID": .string(manifest.sessionID.uuidString), "maxCells": .int(12)]
+            ))
+        )
+        let contactSheetResult = try await contactSheet.value
+        #expect(contactSheetResult.isError != true)
+        #expect(contactSheetResult.structuredContent?.objectValue?["cells"]?.arrayValue?.count == 1)
+        #expect(contactSheetResult.content.contains { if case .image(_, "image/png", _, _) = $0 { true } else { false } })
 
         let image = try await client.callTool(
             name: "screener.frame",
