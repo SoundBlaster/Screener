@@ -6,6 +6,32 @@ import ScreenerMCP
 
 @Suite("Screener MCP protocol")
 struct MCPServerTests {
+    @Test func normalizesCodexObjectValuedExperimentalCapabilityForSDK() throws {
+        let message = Data(
+            #"{"jsonrpc":"2.0","id":0,"method":"initialize","params":{"protocolVersion":"2025-06-18","capabilities":{"elicitation":{"form":{},"url":{}},"experimental":{"codex/auth-change":{},"custom":"enabled"}},"clientInfo":{"name":"codex-mcp-client","title":"Codex","version":"0.156.1"}}}"#.utf8
+        )
+
+        let normalized = try MCPInitializeCompatibility.normalized(message)
+        let object = try #require(JSONSerialization.jsonObject(with: normalized) as? [String: Any])
+        let paramsObject = try #require(object["params"] as? [String: Any])
+        let capabilities = try #require(paramsObject["capabilities"] as? [String: Any])
+        let experimental = try #require(capabilities["experimental"] as? [String: String])
+        #expect(experimental == ["custom": "enabled"])
+
+        let params = try JSONDecoder().decode(Initialize.Parameters.self, from: JSONSerialization.data(withJSONObject: paramsObject))
+        #expect(params.protocolVersion == "2025-06-18")
+        #expect(params.clientInfo.title == "Codex")
+        #expect(params.capabilities.experimental == ["custom": "enabled"])
+        #expect(params.capabilities.elicitation?.form != nil)
+    }
+
+    @Test func leavesCompatibleInitializeAndOtherMessagesUnchanged() throws {
+        let initialize = Data(#"{"jsonrpc":"2.0","id":0,"method":"initialize","params":{"capabilities":{"experimental":{"custom":"enabled"}}}}"#.utf8)
+        let otherMethod = Data(#"{"jsonrpc":"2.0","id":1,"method":"tools/list","params":{}}"#.utf8)
+        #expect(try MCPInitializeCompatibility.normalized(initialize) == initialize)
+        #expect(try MCPInitializeCompatibility.normalized(otherMethod) == otherMethod)
+    }
+
     @Test func advertisesReadOnlyToolsAndServesSessionsTimelineAndFrame() async throws {
         let root = try temporaryDirectory()
         defer { try? FileManager.default.removeItem(at: root) }
