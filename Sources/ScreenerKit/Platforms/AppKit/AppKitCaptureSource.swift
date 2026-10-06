@@ -5,6 +5,10 @@ import AppKit
 public struct AppKitCaptureSource: ScreenerCaptureSource {
     /// What fills pixels the view hierarchy leaves transparent.
     public enum Background: Sendable, Equatable {
+        /// `.window` when the view is its window's content view, `.transparent` otherwise.
+        /// A subview's transparent pixels show its ancestors on screen, not the window
+        /// color, so only the content view can be completed with the window background.
+        case automatic
         /// The window's background color, resolved in the view's appearance, so the frame
         /// matches the screen. A window's content view usually draws no background of its
         /// own: the window frame paints it, and `cacheDisplay` does not capture the frame.
@@ -16,7 +20,7 @@ public struct AppKitCaptureSource: ScreenerCaptureSource {
     private let view: NSView
     private let background: Background
 
-    public init(view: NSView, background: Background = .window) {
+    public init(view: NSView, background: Background = .automatic) {
         self.view = view
         self.background = background
     }
@@ -33,12 +37,20 @@ public struct AppKitCaptureSource: ScreenerCaptureSource {
         view.cacheDisplay(in: bounds, to: bitmap)
         guard let content = bitmap.cgImage else { throw ScreenerCaptureError.imageUnavailable }
         let scale = Double(bitmap.pixelsWide) / Double(bounds.width)
-        guard background == .window else { return try CapturedImage(cgImage: content, scale: scale) }
+        guard fillsWithWindowBackground else { return try CapturedImage(cgImage: content, scale: scale) }
         guard let color = windowBackgroundColor(),
               let flattened = Self.composite(content, over: color) else {
             throw ScreenerCaptureError.imageUnavailable
         }
         return try CapturedImage(cgImage: flattened, scale: scale)
+    }
+
+    private var fillsWithWindowBackground: Bool {
+        switch background {
+        case .automatic: view.window.map { $0.contentView === view } ?? false
+        case .window: true
+        case .transparent: false
+        }
     }
 
     /// Dynamic system colors resolve against the current drawing appearance, so resolve

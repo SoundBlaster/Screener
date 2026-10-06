@@ -160,6 +160,29 @@ struct ScreenerTests {
         #expect(clearPixel.alpha == 0)
     }
 
+    @MainActor
+    @Test func appKitCaptureKeepsSubviewTransparencyByDefault() throws {
+        let window = NSWindow(contentRect: NSRect(x: 0, y: 0, width: 100, height: 60),
+                              styleMask: .borderless, backing: .buffered, defer: true)
+        window.backgroundColor = NSColor(srgbRed: 0, green: 0, blue: 1, alpha: 1)
+        let content = NSView(frame: NSRect(x: 0, y: 0, width: 100, height: 60))
+        let child = NSView(frame: NSRect(x: 0, y: 0, width: 100, height: 60))
+        let left = NSView(frame: NSRect(x: 0, y: 0, width: 50, height: 60))
+        left.wantsLayer = true
+        left.layer?.backgroundColor = NSColor(srgbRed: 1, green: 0, blue: 0, alpha: 1).cgColor
+        child.addSubview(left)
+        content.addSubview(child)
+        window.contentView = content
+
+        // On screen a subview's clear pixels show its ancestors, not the window color.
+        let automatic = try AppKitCaptureSource(view: child).capture().cgImage
+        #expect(try #require(rgba(of: automatic, atFractionX: 0.75)).alpha == 0)
+        #expect(try #require(rgba(of: automatic, atFractionX: 0.25)).red > 200)
+
+        let forced = try AppKitCaptureSource(view: child, background: .window).capture().cgImage
+        #expect(try #require(rgba(of: forced, atFractionX: 0.75)).blue > 200)
+    }
+
     @Test func compositeKeepsOpaquePixelsAndFillsClearOnes() throws {
         let space = try #require(CGColorSpace(name: CGColorSpace.sRGB))
         let context = try #require(CGContext(
