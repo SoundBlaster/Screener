@@ -10,6 +10,13 @@ public struct TraceSession: Codable, Sendable, Equatable, Identifiable {
     public let screenerVersion: String
 }
 
+public struct TraceTimelinePage: Codable, Sendable, Equatable {
+    public let records: [TraceRecord]
+    public let offset: Int
+    public let nextOffset: Int?
+    public let totalRecords: Int
+}
+
 public enum TraceCatalogError: Error, Equatable, LocalizedError {
     case sessionNotFound(UUID)
     case recordNotFound(UUID)
@@ -64,8 +71,20 @@ public struct TraceCatalog: Sendable {
     }
 
     public func timeline(sessionID: UUID, limit: Int = 500) throws -> [TraceRecord] {
+        try timelinePage(sessionID: sessionID, limit: limit).records
+    }
+
+    public func timelinePage(sessionID: UUID, offset: Int = 0, limit: Int = 500) throws -> TraceTimelinePage {
         let bundle = try bundle(for: sessionID)
-        return Array(try TraceBundleReader(url: bundle).timeline().prefix(max(1, min(limit, 2_000))))
+        let allRecords = try TraceBundleReader(url: bundle).timeline()
+        let start = min(max(0, offset), allRecords.count)
+        let end = min(start + max(1, min(limit, 2_000)), allRecords.count)
+        return TraceTimelinePage(
+            records: Array(allRecords[start..<end]),
+            offset: start,
+            nextOffset: end < allRecords.count ? end : nil,
+            totalRecords: allRecords.count
+        )
     }
 
     public func frame(sessionID: UUID, recordID: UUID) throws -> (record: TraceRecord, data: Data, mimeType: String) {

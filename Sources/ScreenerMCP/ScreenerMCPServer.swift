@@ -23,11 +23,12 @@ public enum ScreenerMCPServer {
                 Tool(
                     name: "screener.timeline",
                     title: "Read session timeline",
-                    description: "Read chronological events and frame metadata for one session. Limit is clamped to 1...2000.",
+                    description: "Read chronological events and frame metadata for one session. Use nextOffset to page through long sessions. Limit is clamped to 1...2000.",
                     inputSchema: .object([
                         "type": .string("object"),
                         "properties": .object([
                             "sessionID": .object(["type": .string("string"), "format": .string("uuid")]),
+                            "offset": .object(["type": .string("integer"), "minimum": .int(0)]),
                             "limit": .object(["type": .string("integer"), "minimum": .int(1), "maximum": .int(2000)]),
                         ]),
                         "required": .array([.string("sessionID")]),
@@ -57,14 +58,16 @@ public enum ScreenerMCPServer {
                 switch params.name {
                 case "screener.sessions":
                     let sessions = catalog.sessions()
-                    return try CallTool.Result(content: [text(json(sessions))], structuredContent: MCP.Value(sessions))
+                    let output = SessionsOutput(sessions: sessions)
+                    return try CallTool.Result(content: [text(json(output))], structuredContent: MCP.Value(output))
                 case "screener.timeline":
                     guard let rawID = args["sessionID"]?.stringValue, let sessionID = UUID(uuidString: rawID) else {
                         return errorResult("sessionID must be a UUID")
                     }
+                    let offset = args["offset"]?.intValue ?? 0
                     let limit = args["limit"]?.intValue ?? 500
-                    let records = try catalog.timeline(sessionID: sessionID, limit: limit)
-                    return try CallTool.Result(content: [text(json(records))], structuredContent: MCP.Value(records))
+                    let page = try catalog.timelinePage(sessionID: sessionID, offset: offset, limit: limit)
+                    return try CallTool.Result(content: [text(json(page))], structuredContent: MCP.Value(page))
                 case "screener.frame":
                     guard let rawSessionID = args["sessionID"]?.stringValue,
                           let sessionID = UUID(uuidString: rawSessionID),
@@ -119,5 +122,9 @@ public enum ScreenerMCPServer {
         let name: String
         let kind: String
         let mimeType: String
+    }
+
+    private struct SessionsOutput: Codable, Sendable {
+        let sessions: [TraceSession]
     }
 }

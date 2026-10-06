@@ -23,6 +23,37 @@ struct TraceCatalogTests {
         #expect(result.data == Data([0x89, 0x50, 0x4E, 0x47]))
     }
 
+    @Test func timelinePagesKeepLaterRecordsReachableInChronologicalOrder() async throws {
+        let root = try temporaryDirectory()
+        defer { try? FileManager.default.removeItem(at: root) }
+        let manifest = TraceManifest(name: "paged", appBundleID: "dev.test", platform: "iOS")
+        let writer = try TraceBundleWriter(
+            url: root.appending(path: "paged.vtrace", directoryHint: .isDirectory),
+            manifest: manifest
+        )
+        var expectedIDs: [UUID] = []
+        for index in 0..<5 {
+            let record = try await writer.append(kind: .marker, name: "event-\(index)")
+            expectedIDs.append(record.id)
+        }
+
+        let firstPage = try TraceCatalog(roots: [root]).timelinePage(
+            sessionID: manifest.sessionID, limit: 2
+        )
+        let secondPage = try TraceCatalog(roots: [root]).timelinePage(
+            sessionID: manifest.sessionID, offset: try #require(firstPage.nextOffset), limit: 2
+        )
+        let lastPage = try TraceCatalog(roots: [root]).timelinePage(
+            sessionID: manifest.sessionID, offset: try #require(secondPage.nextOffset), limit: 2
+        )
+
+        #expect(firstPage.records.map(\.id) == Array(expectedIDs[0..<2]))
+        #expect(secondPage.records.map(\.id) == Array(expectedIDs[2..<4]))
+        #expect(lastPage.records.map(\.id) == [expectedIDs[4]])
+        #expect(firstPage.totalRecords == 5)
+        #expect(lastPage.nextOffset == nil)
+    }
+
     @Test func doesNotFollowFrameSymlinkOutsideBundle() async throws {
         let root = try temporaryDirectory()
         defer { try? FileManager.default.removeItem(at: root) }
