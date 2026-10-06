@@ -699,7 +699,7 @@ Measure:
 - thumbnails and keyframes;
 - fixture app.
 
-Implementation note (2026-10-05): the three capture adapters, explicit keyframe API, and macOS fixture are implemented. Adaptive thumbnails, redaction, and the production fixture/benchmark matrix remain open.
+Implementation note (2026-10-06): the three capture adapters, explicit keyframe API, and macOS fixture are implemented. A local release benchmark now measures long-trace timeline paging and contact-sheet generation; adaptive thumbnails, redaction, and the production fixture/benchmark matrix remain open.
 
 ### M2 — Adaptive recording
 

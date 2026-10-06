@@ -38,6 +38,14 @@ Use **Start recording**, advance the fixture state, capture a frame, and stop th
 swift test
 ```
 
+Run repeatable local performance measurements for tail timeline paging and contact-sheet generation:
+
+```sh
+swift run -c release screener-benchmarks --records 10000 --frames 400 --iterations 7
+```
+
+The benchmark builds a temporary synthetic trace outside the timed section and reports p50/p95 latency. It intentionally reports measurements without enforcing wall-clock thresholds, so shared CI machines do not fail from timing noise.
+
 ## Local MCP server
 
 Build the standalone macOS stdio server:
