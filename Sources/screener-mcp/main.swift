@@ -7,7 +7,7 @@ enum ScreenerMCPCommand {
     static func main() async throws {
         let roots = try traceRoots(from: Array(CommandLine.arguments.dropFirst()))
         let server = await ScreenerMCPServer.make(catalog: TraceCatalog(roots: roots))
-        try await server.start(transport: StdioTransport())
+        try await server.start(transport: CodexCompatibleStdioTransport())
         await server.waitUntilCompleted()
     }
 
