@@ -136,6 +136,70 @@ struct ScreenerTests {
         #expect(Double(captured.cgImage.width) / 100 == captured.scale)
         #expect(Double(captured.cgImage.height) / 60 == captured.scale)
     }
+
+    @MainActor
+    @Test func appKitCaptureFillsTransparentPixelsWithWindowBackground() throws {
+        let window = NSWindow(contentRect: NSRect(x: 0, y: 0, width: 100, height: 60),
+                              styleMask: .borderless, backing: .buffered, defer: true)
+        window.backgroundColor = NSColor(srgbRed: 0, green: 0, blue: 1, alpha: 1)
+        let content = NSView(frame: NSRect(x: 0, y: 0, width: 100, height: 60))
+        let left = NSView(frame: NSRect(x: 0, y: 0, width: 50, height: 60))
+        left.wantsLayer = true
+        left.layer?.backgroundColor = NSColor(srgbRed: 1, green: 0, blue: 0, alpha: 1).cgColor
+        content.addSubview(left)
+        window.contentView = content
+
+        let flattened = try AppKitCaptureSource(view: content).capture().cgImage
+        let leftPixel = try #require(rgba(of: flattened, atFractionX: 0.25))
+        let rightPixel = try #require(rgba(of: flattened, atFractionX: 0.75))
+        #expect(leftPixel.red > 200 && leftPixel.blue < 60 && leftPixel.alpha == 255)
+        #expect(rightPixel.blue > 200 && rightPixel.red < 60 && rightPixel.alpha == 255)
+
+        let transparent = try AppKitCaptureSource(view: content, background: .transparent).capture().cgImage
+        let clearPixel = try #require(rgba(of: transparent, atFractionX: 0.75))
+        #expect(clearPixel.alpha == 0)
+    }
+
+    @MainActor
+    @Test func appKitCaptureKeepsSubviewTransparencyByDefault() throws {
+        let window = NSWindow(contentRect: NSRect(x: 0, y: 0, width: 100, height: 60),
+                              styleMask: .borderless, backing: .buffered, defer: true)
+        window.backgroundColor = NSColor(srgbRed: 0, green: 0, blue: 1, alpha: 1)
+        let content = NSView(frame: NSRect(x: 0, y: 0, width: 100, height: 60))
+        let child = NSView(frame: NSRect(x: 0, y: 0, width: 100, height: 60))
+        let left = NSView(frame: NSRect(x: 0, y: 0, width: 50, height: 60))
+        left.wantsLayer = true
+        left.layer?.backgroundColor = NSColor(srgbRed: 1, green: 0, blue: 0, alpha: 1).cgColor
+        child.addSubview(left)
+        content.addSubview(child)
+        window.contentView = content
+
+        // On screen a subview's clear pixels show its ancestors, not the window color.
+        let automatic = try AppKitCaptureSource(view: child).capture().cgImage
+        #expect(try #require(rgba(of: automatic, atFractionX: 0.75)).alpha == 0)
+        #expect(try #require(rgba(of: automatic, atFractionX: 0.25)).red > 200)
+
+        let forced = try AppKitCaptureSource(view: child, background: .window).capture().cgImage
+        #expect(try #require(rgba(of: forced, atFractionX: 0.75)).blue > 200)
+    }
+
+    @Test func compositeKeepsOpaquePixelsAndFillsClearOnes() throws {
+        let space = try #require(CGColorSpace(name: CGColorSpace.sRGB))
+        let context = try #require(CGContext(
+            data: nil, width: 4, height: 2, bitsPerComponent: 8, bytesPerRow: 0,
+            space: space, bitmapInfo: CGImageAlphaInfo.premultipliedLast.rawValue
+        ))
+        context.setFillColor(CGColor(srgbRed: 1, green: 0, blue: 0, alpha: 1))
+        context.fill(CGRect(x: 0, y: 0, width: 2, height: 2))
+        let image = try #require(context.makeImage())
+
+        let flattened = try #require(AppKitCaptureSource.composite(
+            image, over: CGColor(srgbRed: 0, green: 1, blue: 0, alpha: 1)))
+        let left = try #require(rgba(of: flattened, atFractionX: 0.25))
+        let right = try #require(rgba(of: flattened, atFractionX: 0.75))
+        #expect(left.red == 255 && left.green == 0 && left.alpha == 255)
+        #expect(right.green == 255 && right.red == 0 && right.alpha == 255)
+    }
     #endif
 
     #if canImport(SwiftUI)
@@ -151,6 +215,23 @@ struct ScreenerTests {
         #expect(captured.cgImage.height == 64)
     }
     #endif
+}
+
+/// Reads one sRGB pixel from the vertical middle of `image`, `fraction` of the way across.
+private func rgba(of image: CGImage, atFractionX fraction: Double)
+    -> (red: UInt8, green: UInt8, blue: UInt8, alpha: UInt8)? {
+    guard let space = CGColorSpace(name: CGColorSpace.sRGB),
+          let context = CGContext(
+              data: nil, width: image.width, height: image.height, bitsPerComponent: 8,
+              bytesPerRow: image.width * 4, space: space,
+              bitmapInfo: CGImageAlphaInfo.premultipliedLast.rawValue
+          ) else { return nil }
+    context.draw(image, in: CGRect(x: 0, y: 0, width: image.width, height: image.height))
+    guard let data = context.data else { return nil }
+    let x = min(image.width - 1, Int(Double(image.width) * fraction))
+    let offset = (image.height / 2) * image.width * 4 + x * 4
+    let bytes = data.assumingMemoryBound(to: UInt8.self)
+    return (bytes[offset], bytes[offset + 1], bytes[offset + 2], bytes[offset + 3])
 }
 
 @MainActor

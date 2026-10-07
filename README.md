@@ -22,6 +22,8 @@ try await capture.capture(
 try await screener.stopSession()
 ```
 
+When the captured view is its window's content view, `AppKitCaptureSource` fills pixels the view hierarchy leaves transparent with the window's background color, resolved in the view's appearance. A content view usually draws no background, because the window frame paints it, so without this keyframes are mostly transparent and look black in viewers that drop alpha. Subviews keep their transparency by default, because on screen their clear pixels show their ancestors. Pass `background: .window` or `.transparent` to choose explicitly.
+
 UIKit apps can pass a `UIView` to `UIKitCaptureSource`. SwiftUI callers can pass a view to `SwiftUICaptureSource`; that adapter renders the explicit subtree, while a hosted root view can be captured through its UIKit/AppKit host window. UI rendering happens on the main actor; PNG encoding and bundle writes happen after the rendered `CGImage` crosses to the recorder actor. The resulting `.vtrace` directory contains a JSON manifest, append-only JSONL timeline, and PNG keyframes. Reads tolerate an incomplete trailing line from an interrupted append while rejecting malformed complete records.
 
 Run the interactive macOS fixture with:
