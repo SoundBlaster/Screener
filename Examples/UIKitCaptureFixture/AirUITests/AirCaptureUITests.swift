@@ -16,7 +16,8 @@ final class AirCaptureUITests: XCTestCase {
         continueAfterFailure = false
         let phase = environment["SCREENER_AIR_PHASE"] ?? "reconnaissance"
         XCTAssertTrue(["reconnaissance", "capture", "cancel"].contains(phase))
-        fixture.launchArguments = ["--screencapturekit-probe"]
+        fixture.launchArguments = [environment["SCREENER_AIR_SDK_TRACE"] == "1"
+            ? "--screencapturekit-trace" : "--screencapturekit-probe"]
         fixture.launch()
         XCTAssertTrue(fixture.wait(for: .runningForeground, timeout: 20))
         // A bounded settling interval lets the system-owned picker become visible.

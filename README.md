@@ -42,6 +42,52 @@ compares public hierarchy/snapshot paths. The follow-up [physical Air experiment
 measures substantially closer glass/menu pixels through an opt-in ScreenCaptureKit
 session on iOS 27, with manually granted recording permission.
 
+For an experimental SDK session, use a **physical iOS 27 device** with an SDK
+that includes ScreenCaptureKit. Retain the capture object until it stops:
+
+```swift
+#if os(iOS) && canImport(ScreenCaptureKit) && !targetEnvironment(simulator) && !targetEnvironment(macCatalyst)
+if #available(iOS 27, *) {
+    let screener = Screener()
+    let traceURL = try await screener.startSession(
+        name: "materials", appBundleID: "com.example.app", tracesDirectory: tracesDirectory
+    )
+    let capture = ScreenCaptureKitSession(screener: screener)
+    do {
+        try await capture.start() // Waits for the user's system permission choice.
+        // Exercise the app while retaining capture; semantic markers use screener.mark().
+    } catch {
+        // Rejection, task cancellation, and startup errors clean up the capture session.
+    }
+    await capture.stop() // Drain accepted samples before closing the trace.
+    let captureFailure = capture.failure // Also check errors after an automatic stop.
+    try await screener.stopSession()
+}
+#endif
+```
+
+The [SDK Air session report](docs/validation/screen-capture-session-2026-10-09/README.md)
+preserves the recorded menu, timeline, and MCP contact sheet.
+
+The caller owns the trace lifecycle. `start()` requires an active trace and each
+capture object is single-use. Only one Screener picker owner may run in the app;
+an already-active system picker is rejected. The session captures the current app
+without audio, microphone, or camera, samples roughly once per second plus a final drain, retains only
+the newest pending sample, and stops after 180 seconds including permission time.
+`stop()` is idempotent and waits for startup, stream stop, writes, and a final drain.
+Check `state`/`failure` for automatic termination and close the trace afterward.
+Always stop explicitly before releasing the capture object; there is no async
+cleanup guarantee on deallocation or process termination.
+
+Frames are converted to orientation-corrected RGBA8 sRGB PNGs at the stream's
+default resolution. Metadata includes source PTS (`capture.presentationSeconds`),
+pixel format, orientation, and available content geometry. Timeline timestamps
+describe recorder entry, **not** the original sample time; source PTS is a separate
+clock domain. YCbCr conversion is not pixel-identical to a system RGB screenshot.
+This bounded keyframe backend does not establish transition-rate or performance
+coverage. The type is absent on Simulator, Mac Catalyst, macOS, and SDKs without
+the iOS framework; existing hierarchy capture remains available there.
+
 Run the interactive macOS fixture with:
 
 ```sh
@@ -49,6 +95,39 @@ swift run --package-path Examples/ScreenerFixture
 ```
 
 Use **Start recording**, advance the fixture state, capture a frame, and stop the session. Bundles are written under the fixture app's Caches directory.
+
+## Codex skill and plugin
+
+The project-local [$screener-visual-trace skill](.agents/skills/screener-visual-trace/SKILL.md)
+selects capture evidence and verifies a Debug recording. It covers UIKit as the
+default, UIKit trace plus `simctl` screenshots for Simulator materials, and a
+manually approved ScreenCaptureKit session on physical iOS 27. It checks the
+consumer's actual SDK pin before using the experimental API.
+
+The [Codex plugin manifest](.codex-plugin/plugin.json) exposes that same skill
+folder for reuse across apps. This is a skills-only Codex package: it does not
+automatically register or launch the MCP server. Connect the built local server
+using the instructions below when needed. Plugin versioning is independent of
+SDK release versioning; installing this skill does not update an app's dependency.
+The layout follows the supported [Codex plugin format](https://developers.openai.com/plugins/build/plugins).
+
+Codex discovers the project skill under `.agents/skills`; if it does not appear,
+start a new chat or restart the app. Example:
+
+```text
+Use $screener-visual-trace to verify PhotoCompressor's Debug menu in Simulator
+with a UIKit trace and a matching system screenshot.
+```
+
+To use only the skill in another project's workspace, copy its entire directory
+(including references) into that project's `.agents/skills/`. Review an existing
+same-named skill before replacing it. The [repo marketplace](.agents/plugins/marketplace.json) exposes `screener` from
+this repository root under the **Screener** source. Refresh/restart the host and
+install it from that source when using the plugin; creating these files alone
+does not install it. For CLI distribution after merge, register the source with
+`codex plugin marketplace add SoundBlaster/Screener`, then install
+`codex plugin add screener@screener-local`. Avoid installing both a standalone
+copy and the plugin into the same consumer.
 
 ## Build and test
 

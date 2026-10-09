@@ -1,0 +1,20 @@
+{
+  "name": "screener-local",
+  "interface": {
+    "displayName": "Screener"
+  },
+  "plugins": [
+    {
+      "name": "screener",
+      "source": {
+        "source": "local",
+        "path": "./"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Developer tools"
+    }
+  ]
+}

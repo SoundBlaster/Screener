@@ -58,7 +58,10 @@ public actor Screener {
     }
 
     /// Encodes and stores a captured image away from the UI actor, then appends its frame record.
-    public func recordFrame(_ image: CapturedImage, reason: String) async throws {
+    /// Additional metadata cannot override the actual PNG dimensions, scale, or encoding.
+    public func recordFrame(
+        _ image: CapturedImage, reason: String, metadata: [String: String] = [:]
+    ) async throws {
         guard !isTransitioning else { throw ScreenerError.sessionTransitionInProgress }
         guard let writer else { throw ScreenerError.noActiveSession }
 
@@ -71,12 +74,12 @@ public actor Screener {
             try await writer.append(
                 kind: .keyframe,
                 name: reason,
-                metadata: [
+                metadata: metadata.merging([
                     "pixelWidth": String(image.cgImage.width),
                     "pixelHeight": String(image.cgImage.height),
                     "scale": String(image.scale),
                     "encoding": "png",
-                ],
+                ]) { _, actual in actual },
                 blob: blob,
                 timestamp: timestamp,
                 monotonicNanoseconds: monotonicNanoseconds
