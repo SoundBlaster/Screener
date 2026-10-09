@@ -96,6 +96,39 @@ swift run --package-path Examples/ScreenerFixture
 
 Use **Start recording**, advance the fixture state, capture a frame, and stop the session. Bundles are written under the fixture app's Caches directory.
 
+## Codex skill and plugin
+
+The project-local [$screener-visual-trace skill](.agents/skills/screener-visual-trace/SKILL.md)
+selects capture evidence and verifies a Debug recording. It covers UIKit as the
+default, UIKit trace plus `simctl` screenshots for Simulator materials, and a
+manually approved ScreenCaptureKit session on physical iOS 27. It checks the
+consumer's actual SDK pin before using the experimental API.
+
+The [Codex plugin manifest](.codex-plugin/plugin.json) exposes that same skill
+folder for reuse across apps. This is a skills-only Codex package: it does not
+automatically register or launch the MCP server. Connect the built local server
+using the instructions below when needed. Plugin versioning is independent of
+SDK release versioning; installing this skill does not update an app's dependency.
+The layout follows the supported [Codex plugin format](https://developers.openai.com/plugins/build/plugins).
+
+Codex discovers the project skill under `.agents/skills`; if it does not appear,
+start a new chat or restart the app. Example:
+
+```text
+Use $screener-visual-trace to verify PhotoCompressor's Debug menu in Simulator
+with a UIKit trace and a matching system screenshot.
+```
+
+To use only the skill in another project's workspace, copy its entire directory
+(including references) into that project's `.agents/skills/`. Review an existing
+same-named skill before replacing it. The [repo marketplace](.agents/plugins/marketplace.json) exposes `screener` from
+this repository root under the **Screener** source. Refresh/restart the host and
+install it from that source when using the plugin; creating these files alone
+does not install it. For CLI distribution after merge, register the source with
+`codex plugin marketplace add SoundBlaster/Screener`, then install
+`codex plugin add screener@screener-local`. Avoid installing both a standalone
+copy and the plugin into the same consumer.
+
 ## Build and test
 
 ```sh

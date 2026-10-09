@@ -1,0 +1,4 @@
+interface:
+  display_name: "Screener Visual Trace"
+  short_description: "Capture and verify UIKit and system-material traces"
+  default_prompt: "Use $screener-visual-trace to select a capture backend and verify a Debug visual trace on the chosen device."
