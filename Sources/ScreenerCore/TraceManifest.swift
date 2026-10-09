@@ -17,7 +17,7 @@ public struct TraceManifest: Codable, Sendable, Equatable {
         appBundleID: String,
         platform: String,
         startedAt: Date = .now,
-        screenerVersion: String = "0.1.0"
+        screenerVersion: String = "0.1.0-alpha.2"
     ) {
         self.formatVersion = Self.currentFormatVersion
         self.sessionID = sessionID
