@@ -1,0 +1,51 @@
+name: UIKitCaptureFixture
+options:
+  bundleIdPrefix: dev.screener
+  deploymentTarget:
+    iOS: "16.0"
+packages:
+  Screener:
+    path: ../..
+targets:
+  UIKitCaptureFixture:
+    type: application
+    platform: iOS
+    sources: [Sources]
+    dependencies:
+      - package: Screener
+        product: ScreenerKit
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: dev.screener.UIKitFixture
+        GENERATE_INFOPLIST_FILE: YES
+        INFOPLIST_KEY_UILaunchScreen_Generation: YES
+        SWIFT_VERSION: "6.0"
+    info:
+      path: Generated/Info.plist
+      properties:
+        UIApplicationSceneManifest:
+          UIApplicationSupportsMultipleScenes: false
+          UISceneConfigurations:
+            UIWindowSceneSessionRoleApplication:
+              - UISceneConfigurationName: Default
+                UISceneDelegateClassName: $(PRODUCT_MODULE_NAME).SceneDelegate
+  UIKitCaptureFixtureTests:
+    type: bundle.unit-test
+    platform: iOS
+    sources:
+      - path: ../../Tests/ScreenerKitTests/UIKitCaptureTests.swift
+    dependencies:
+      - target: UIKitCaptureFixture
+      - package: Screener
+        product: ScreenerKit
+    settings:
+      base:
+        GENERATE_INFOPLIST_FILE: YES
+        SWIFT_VERSION: "6.0"
+schemes:
+  UIKitCaptureFixture:
+    build:
+      targets:
+        UIKitCaptureFixture: all
+    test:
+      targets: [UIKitCaptureFixtureTests]

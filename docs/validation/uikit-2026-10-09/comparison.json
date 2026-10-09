@@ -1,0 +1,42 @@
+{
+  "blur": {
+    "region_points": [
+      24,
+      180,
+      364,
+      300
+    ],
+    "mean_absolute_sRGB_error_0_255": 0.25578522149600585,
+    "percent_pixels_any_channel_difference_gt_10": 0.0
+  },
+  "glass": {
+    "region_points": [
+      24,
+      340,
+      364,
+      460
+    ],
+    "mean_absolute_sRGB_error_0_255": 24.332397421931734,
+    "percent_pixels_any_channel_difference_gt_10": 95.95506535947712
+  },
+  "menu": {
+    "region_points": [
+      120,
+      442,
+      370,
+      588
+    ],
+    "mean_absolute_sRGB_error_0_255": 21.983599188229324,
+    "percent_pixels_any_channel_difference_gt_10": 88.67245053272451
+  },
+  "control_stripes": {
+    "region_points": [
+      0,
+      110,
+      402,
+      170
+    ],
+    "mean_absolute_sRGB_error_0_255": 0.0,
+    "percent_pixels_any_channel_difference_gt_10": 0.0
+  }
+}

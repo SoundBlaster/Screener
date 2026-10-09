@@ -1,6 +1,9 @@
 #if canImport(UIKit)
 import UIKit
 
+/// Renders a UIKit hierarchy at its current display scale.
+/// Pass the containing UIWindow when capturing visual effects. Hierarchy rendering
+/// is not a system-compositor screenshot and may differ for blur or glass materials.
 @MainActor
 public struct UIKitCaptureSource: ScreenerCaptureSource {
     private let view: UIView
@@ -18,7 +21,12 @@ public struct UIKitCaptureSource: ScreenerCaptureSource {
         }
 
         let format = UIGraphicsImageRendererFormat()
-        format.scale = view.window?.screen.scale ?? 1
+        // UIWindow.window can be nil. Read the local traits instead of falling
+        // back to 1x for the very window whose hierarchy we are capturing.
+        let displayScale = view.traitCollection.displayScale
+        if displayScale.isFinite, displayScale > 0 {
+            format.scale = displayScale
+        }
         format.opaque = view.isOpaque
         let renderer = UIGraphicsImageRenderer(bounds: bounds, format: format)
         var renderedHierarchy = false

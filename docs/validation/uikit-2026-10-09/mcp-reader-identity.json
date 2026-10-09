@@ -1,0 +1,5 @@
+{
+  "server": "/Users/egor/Development/GitHub/Screener/.build/out/Products/Debug/screener-mcp",
+  "sha256": "048c4dad586231856e9eb3bd4841bc4c5b9112f9cc1359e6a497ba7717f97f42",
+  "client": "stdio JSON-RPC protocol client; not a registered Codex MCP tool"
+}
