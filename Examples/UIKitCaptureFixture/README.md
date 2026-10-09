@@ -54,8 +54,12 @@ xcrun simctl launch YOUR_SIMULATOR_UDID dev.screener.UIKitFixture \
   --capture-research --replaykit-probe --research-passes=4
 ```
 
-`Documents/CaptureResearch` holds the latest adapter, hierarchy (false/standard/extended),
-layer, snapshot-hierarchy, and scene-windows PNGs. `latest.json` records completeness;
+`Documents/CaptureResearch/latest-run.txt` identifies a unique run directory, which
+holds the latest adapter, hierarchy (false/standard/extended),
+layer, snapshot-hierarchy, and scene-windows PNGs. Old runs are kept separately;
+copy only the selected run. Final ReplayKit counters are persisted after the stop
+completion and any in-flight sink callback; `stopCompleted=false` flags a failed stop.
+`latest.json` records completeness;
 an incomplete snapshot PNG is diagnostic output, never a trace keyframe. Capture
 base/menu batches and independent `simctl` screenshots as `base/system.png` and
 `menu/system.png`. Copy each batch while that state remains static, then run:

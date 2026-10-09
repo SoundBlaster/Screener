@@ -58,8 +58,17 @@ stopped successfully, with **0 callbacks, 0 video callbacks, 0 pixel buffers, an
 converted frames** over 14.30 seconds between start/stop status writes.
 [Counters](replaykit/replaykit-summary.json),
 [start status](replaykit/replaykit-status.txt), and [stop status](replaykit/replaykit-stop.txt)
-are preserved. This establishes failure to deliver samples in this environment;
-it does not establish ReplayKit behavior on physical devices.
+are preserved. Those legacy counters were finalized before the stop call, so they
+establish zero observed callbacks up to finalization, but do not rule out late
+callbacks during shutdown. The reviewed fixture now waits for stop completion,
+drains the sink lock, and finalizes counters afterward. The original measurements
+are retained unchanged; they do not establish ReplayKit behavior on physical devices.
+
+The release-preparation validation reran a one-batch probe on the same Simulator:
+the explicit stop completion succeeded and final counters remained zero. A following
+run without ReplayKit used a different UUID directory and inherited no ReplayKit
+status/image/error artifacts. [Review-fix validation](review-fix-validation.json)
+records both run IDs, final counters, and the tested source identity.
 
 The material batches predate the added callback counters and deadline; rendering
 logic is unchanged. The final instrumented fixture was rebuilt and run separately.

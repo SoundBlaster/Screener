@@ -7,12 +7,14 @@ import ScreenerKit
 @MainActor
 enum CaptureResearch {
     static func run(window: UIWindow) async {
-        let root = URL.documentsDirectory.appending(path: "CaptureResearch", directoryHint: .isDirectory)
+        let runs = URL.documentsDirectory.appending(path: "CaptureResearch", directoryHint: .isDirectory)
+        let root = runs.appending(path: UUID().uuidString, directoryHint: .isDirectory)
         let replayKit = RPScreenRecorder.shared()
         let sink = ReplayKitResearchSink(root: root)
         var startedReplayKit = false
         do {
             try FileManager.default.createDirectory(at: root, withIntermediateDirectories: true)
+            try root.lastPathComponent.write(to: runs.appending(path: "latest-run.txt"), atomically: true, encoding: .utf8)
             if ProcessInfo.processInfo.arguments.contains("--replaykit-probe") {
                 if replayKit.isAvailable {
                     do {
@@ -63,13 +65,18 @@ enum CaptureResearch {
                     window.layer.render(in: context.cgContext)
                 }
                 if let cgImage = layerImage.cgImage { try save(cgImage, to: root.appending(path: "layer.png")) }
+                let snapshotURL = root.appending(path: "snapshot-hierarchy.png")
+                if FileManager.default.fileExists(atPath: snapshotURL.path) {
+                    try FileManager.default.removeItem(at: snapshotURL)
+                }
+                metadata["snapshot-hierarchy"] = ["available": false, "complete": false]
                 if let snapshot = window.snapshotView(afterScreenUpdates: true) {
                     var complete = false
                     let output = UIGraphicsImageRenderer(bounds: window.bounds, format: format).image { _ in
                         complete = snapshot.drawHierarchy(in: snapshot.bounds, afterScreenUpdates: false)
                     }
-                    metadata["snapshot-hierarchy"] = ["complete": complete]
-                    if let cgImage = output.cgImage { try save(cgImage, to: root.appending(path: "snapshot-hierarchy.png")) }
+                    metadata["snapshot-hierarchy"] = ["available": true, "complete": complete]
+                    if let cgImage = output.cgImage { try save(cgImage, to: snapshotURL) }
                 }
                 let windows = window.windowScene?.windows.filter { !$0.isHidden && $0.alpha > 0 } ?? [window]
                 var complete = true
@@ -90,17 +97,26 @@ enum CaptureResearch {
         } catch {
             try? String(describing: error).write(to: root.appending(path: "error.txt"), atomically: true, encoding: .utf8)
         }
-        sink.finish()
         // Stop even when rendering, disk writes, or cancellation fail.
+        var stopCompleted = !startedReplayKit
         if startedReplayKit {
             do {
                 try? "stopping".write(to: root.appending(path: "replaykit-stop.txt"), atomically: true, encoding: .utf8)
-                try await replayKit.stopCapture()
+                try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, any Error>) in
+                    replayKit.stopCapture { error in
+                        if let error { continuation.resume(throwing: error) }
+                        else { continuation.resume() }
+                    }
+                }
+                stopCompleted = true
                 try? "stopped".write(to: root.appending(path: "replaykit-stop.txt"), atomically: true, encoding: .utf8)
             } catch {
                 try? String(describing: error).write(to: root.appending(path: "replaykit-stop-error.txt"), atomically: true, encoding: .utf8)
             }
         }
+        // ReplayKit's stop completion precedes this lock-protected final snapshot.
+        // Acquiring the sink lock drains any callback already processing a sample.
+        sink.finish(stopCompleted: stopCompleted)
     }
 
     private static func save(_ image: CGImage, to url: URL) throws {
@@ -118,6 +134,7 @@ private final class ReplayKitResearchSink: @unchecked Sendable {
     private var callbackCount = 0
     private var videoCallbackCount = 0
     private var convertedFrameCount = 0
+    private var finalized = false
     private let context = CIContext()
 
     init(root: URL) { self.root = root }
@@ -125,6 +142,7 @@ private final class ReplayKitResearchSink: @unchecked Sendable {
     func consume(_ buffer: CMSampleBuffer, type: RPSampleBufferType, error: Error?) {
         lock.lock()
         defer { lock.unlock() }
+        guard !finalized else { return }
         callbackCount += 1
         if type == .video { videoCallbackCount += 1 }
         if let error {
@@ -149,11 +167,13 @@ private final class ReplayKitResearchSink: @unchecked Sendable {
         }
     }
 
-    func finish() {
+    func finish(stopCompleted: Bool) {
         lock.lock()
         defer { lock.unlock() }
-        let info = ["callbacks": callbackCount, "videoCallbacks": videoCallbackCount,
-                    "framesWithPixelBuffer": frameCount, "convertedFrames": convertedFrameCount]
+        finalized = true
+        let info: [String: Any] = ["callbacks": callbackCount, "videoCallbacks": videoCallbackCount,
+                    "framesWithPixelBuffer": frameCount, "convertedFrames": convertedFrameCount,
+                    "stopCompleted": stopCompleted]
         if let data = try? JSONSerialization.data(withJSONObject: info, options: [.prettyPrinted, .sortedKeys]) {
             try? data.write(to: root.appending(path: "replaykit-summary.json"), options: .atomic)
         }
