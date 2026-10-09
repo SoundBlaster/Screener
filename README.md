@@ -37,6 +37,10 @@ before using material pixels as a regression oracle.
 
 The [UIKit capture fixture](Examples/UIKitCaptureFixture/README.md) provides a
 repeatable native-scale and materials check on iOS Simulator.
+The [glass capture investigation](docs/validation/glass-research-2026-10-09/README.md)
+compares public hierarchy/snapshot paths. The follow-up [physical Air experiment](docs/validation/air-2026-10-09/README.md)
+measures substantially closer glass/menu pixels through an opt-in ScreenCaptureKit
+session on iOS 27, with manually granted recording permission.
 
 Run the interactive macOS fixture with:
 

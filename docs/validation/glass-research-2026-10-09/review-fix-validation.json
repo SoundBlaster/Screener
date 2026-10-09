@@ -1,0 +1,14 @@
+{
+  "simulator": "9665FC01-1F2B-4018-B5F1-0E5E857A6235",
+  "replaykit_run": "6184899D-EA8B-4EFA-BAF5-E817C2956BC2",
+  "replaykit_summary": {
+    "callbacks": 0,
+    "convertedFrames": 0,
+    "framesWithPixelBuffer": 0,
+    "stopCompleted": true,
+    "videoCallbacks": 0
+  },
+  "second_run_without_replaykit": "74A9BDA5-FAF2-4E91-8C1F-BFE0EC6C2B26",
+  "old_outputs_isolated": true,
+  "source_sha256": "a885978f7a3c8350d50d91af13ccd23083835392b2cbb73788f3a7e14e255ab7"
+}

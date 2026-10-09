@@ -1,0 +1,6 @@
+2026-10-09T18:06:57Z picker-presented available=true scale=3.0 bounds=(0.0, 0.0, 420.0, 912.0)
+2026-10-09T18:07:20Z started isCapturing=true filterRect=(0.0, 0.0, 420.0, 912.0)
+2026-10-09T18:07:34Z stopping reason=fixture-button
+2026-10-09T18:07:34Z hierarchy: CancellationError()
+2026-10-09T18:07:34Z stopped isCapturing=false
+2026-10-09T18:07:34Z finished pickerActive=false

@@ -1,0 +1,15 @@
+{
+  "device": "iPhone Air",
+  "model": "iPhone18,4",
+  "udid": "00008150-000208290280401C",
+  "isSimulator": false,
+  "os": "27.0",
+  "osBuild": "24A435",
+  "xcode": "27.1 (27A9269)",
+  "sdk": "iPhoneOS27.1",
+  "bundleID": "dev.screener.UIKitFixture",
+  "scheme": "UIKitCaptureAirResearch",
+  "positivePermission": "manually granted by user",
+  "captureSource": "SCStream current-application picker; screen output only; capturesAudio=false",
+  "finalTestRevision": "build-for-testing succeeded; not executed"
+}
