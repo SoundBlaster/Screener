@@ -31,6 +31,10 @@ final class ScreenTraceFixture {
     func present() {
         task = Task {
             do {
+                let errorURL = root.appending(path: "error.txt")
+                if FileManager.default.fileExists(atPath: errorURL.path) {
+                    try FileManager.default.removeItem(at: errorURL)
+                }
                 let url = try await recorder.startSession(name: "screen-capture-sdk",
                     appBundleID: "dev.screener.UIKitFixture", tracesDirectory: root)
                 try url.lastPathComponent.write(to: root.appending(path: "latest-run.txt"), atomically: true, encoding: .utf8)

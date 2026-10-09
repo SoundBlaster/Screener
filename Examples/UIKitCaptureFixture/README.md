@@ -120,6 +120,7 @@ instead of the standalone research PNG sink. Manually approve recording once,
 exercise base/menu states, then press **Stop capture**. The fixture waits for the
 SDK drain before closing its trace. `Documents/ScreenCaptureTraces/latest-run.txt`
 identifies the complete `.vtrace`; `error.txt` flags an SDK/persistence error.
+The fixture clears that error sentinel before starting a new run.
 The SDK samples one keyframe per second with a single pending frame and a
 180-second total bound. Its source PTS and capture metadata accompany each PNG.
 
