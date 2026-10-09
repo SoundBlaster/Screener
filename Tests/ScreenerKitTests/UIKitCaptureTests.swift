@@ -50,4 +50,33 @@ struct UIKitCaptureTests {
         }
     }
 }
+#if canImport(ScreenCaptureKit) && !targetEnvironment(simulator) && !targetEnvironment(macCatalyst)
+@MainActor
+@Suite("ScreenCaptureKit session lifecycle without permission")
+struct ScreenCaptureKitLifecycleTests {
+    @Test func stoppingBeforeStartIsTerminalAndIdempotent() async {
+        guard #available(iOS 27, *) else { return }
+        let session = ScreenCaptureKitSession(screener: Screener())
+        await session.stop()
+        await session.stop()
+        #expect(session.state == .finished)
+        #expect(session.failure == nil)
+        await #expect(throws: ScreenCaptureKitSession.SessionError.alreadyStarted) {
+            try await session.start()
+        }
+    }
+
+    @Test func absentTraceFailsBeforePermissionRequest() async {
+        guard #available(iOS 27, *) else { return }
+        let session = ScreenCaptureKitSession(screener: Screener())
+        await #expect(throws: ScreenerError.noActiveSession) {
+            try await session.start()
+        }
+        #expect(session.state == .finished)
+        #expect(session.failure as? ScreenerError == .noActiveSession)
+        await session.stop()
+    }
+}
+#endif
+
 #endif

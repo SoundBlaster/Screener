@@ -77,9 +77,20 @@ struct ScreenerTests {
         let captured = try CapturedImage(cgImage: cgImage, scale: 2)
         let captureSession = ScreenerCaptureSession(screener: screener)
         try await captureSession.capture(from: FixedCaptureSource(image: captured), reason: "fixture-state")
+        try await screener.recordFrame(captured, reason: "stream-frame", metadata: [
+            "capture.backend": "ScreenCaptureKit", "capture.presentationSeconds": "12.5",
+            "pixelWidth": "999", "scale": "999", "encoding": "invalid"
+        ])
         try await screener.stopSession()
 
-        let frame = try #require(TraceBundleReader(url: bundle).timeline().first { $0.kind == .keyframe })
+        let frames = try TraceBundleReader(url: bundle).timeline().filter { $0.kind == .keyframe }
+        let streamFrame = try #require(frames.last)
+        #expect(streamFrame.metadata["capture.backend"] == "ScreenCaptureKit")
+        #expect(streamFrame.metadata["capture.presentationSeconds"] == "12.5")
+        #expect(streamFrame.metadata["pixelWidth"] == "20")
+        #expect(streamFrame.metadata["scale"] == "2.0")
+        #expect(streamFrame.metadata["encoding"] == "png")
+        let frame = try #require(frames.first)
         #expect(frame.name == "fixture-state")
         #expect(frame.metadata["pixelWidth"] == "20")
         #expect(frame.metadata["pixelHeight"] == "12")

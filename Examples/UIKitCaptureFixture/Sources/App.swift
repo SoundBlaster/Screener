@@ -63,6 +63,13 @@ final class MaterialsController: UIViewController {
         super.viewDidAppear(animated)
         guard captureTask == nil, let window = view.window else { return }
         #if canImport(ScreenCaptureKit) && !targetEnvironment(simulator)
+        if #available(iOS 27, *), ProcessInfo.processInfo.arguments.contains("--screencapturekit-trace") {
+            guard screenCaptureResearch == nil else { return }
+            let fixture = ScreenTraceFixture(window: window)
+            screenCaptureResearch = fixture
+            fixture.present()
+            return
+        }
         if #available(iOS 27, *), ProcessInfo.processInfo.arguments.contains("--screencapturekit-probe") {
             guard screenCaptureResearch == nil else { return }
             let research = ScreenCaptureResearch(window: window)

@@ -111,3 +111,21 @@ Reproduce preserved color-managed metrics with Pillow:
 ```sh
 python3 Examples/UIKitCaptureFixture/Research/compare-air.py docs/validation/air-2026-10-09
 ```
+
+
+## SDK trace session on Air
+
+Launch with `--screencapturekit-trace` to use `ScreenerKit.ScreenCaptureKitSession`
+instead of the standalone research PNG sink. Manually approve recording once,
+exercise base/menu states, then press **Stop capture**. The fixture waits for the
+SDK drain before closing its trace. `Documents/ScreenCaptureTraces/latest-run.txt`
+identifies the complete `.vtrace`; `error.txt` flags an SDK/persistence error.
+The SDK samples one keyframe per second with a single pending frame and a
+180-second total bound. Its source PTS and capture metadata accompany each PNG.
+
+For the gated Air UI test, additionally set
+`TEST_RUNNER_SCREENER_AIR_SDK_TRACE=1` with the existing research opt-in and
+`TEST_RUNNER_SCREENER_AIR_PHASE=capture`. This waits for manual permission and
+checks running → menu → stopped; it never grants permission automatically.
+The normal app-hosted test scheme also checks SDK lifecycle preconditions on
+physical iOS 27 without presenting a picker.
