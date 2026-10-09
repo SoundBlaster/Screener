@@ -26,6 +26,18 @@ When the captured view is its window's content view, `AppKitCaptureSource` fills
 
 UIKit apps can pass a `UIView` to `UIKitCaptureSource`. SwiftUI callers can pass a view to `SwiftUICaptureSource`; that adapter renders the explicit subtree, while a hosted root view can be captured through its UIKit/AppKit host window. UI rendering happens on the main actor; PNG encoding and bundle writes happen after the rendered `CGImage` crosses to the recorder actor. The resulting `.vtrace` directory contains a JSON manifest, append-only JSONL timeline, and PNG keyframes. Reads tolerate an incomplete trailing line from an interrupted append while rejecting malformed complete records.
 
+UIKit capture reads `view.traitCollection.displayScale` on every capture, including
+when the source is a `UIWindow`. Unspecified traits retain UIKit's renderer default.
+This is the display's rendering scale in pixels per point, not a request to resample
+to `UIScreen.nativeScale`. Capture the containing window for visual effects that
+depend on content behind them. `drawHierarchy` does not guarantee system-compositor
+fidelity for blur, glass, system overlays, or GPU-backed content; a successful capture
+only establishes that UIKit rendered the hierarchy. Compare against a system screenshot
+before using material pixels as a regression oracle.
+
+The [UIKit capture fixture](Examples/UIKitCaptureFixture/README.md) provides a
+repeatable native-scale and materials check on iOS Simulator.
+
 Run the interactive macOS fixture with:
 
 ```sh

@@ -1,0 +1,1 @@
+width=1206 height=2622 scale=3.0 window.window=nil traits=3.0 sample=35

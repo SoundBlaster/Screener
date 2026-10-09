@@ -1,0 +1,48 @@
+{
+  "devicesAndConfigurations" : [
+    {
+      "device" : {
+        "architecture" : "arm64",
+        "deviceId" : "9665FC01-1F2B-4018-B5F1-0E5E857A6235",
+        "deviceName" : "ScreenKit CI iPhone 17 iOS 27.0",
+        "modelName" : "iPhone 17",
+        "osBuildNumber" : "24A434",
+        "osVersion" : "27.0",
+        "platform" : "iOS Simulator"
+      },
+      "expectedFailures" : 0,
+      "failedTests" : 0,
+      "passedTests" : 5,
+      "skippedTests" : 0,
+      "testPlanConfiguration" : {
+        "configurationId" : "1",
+        "configurationName" : "Test Scheme Action"
+      }
+    }
+  ],
+  "environmentDescription" : "UIKitCaptureFixture · Built with macOS 27.0",
+  "expectedFailures" : 0,
+  "failedTests" : 0,
+  "finishTime" : 1791555418.167,
+  "passedTests" : 3,
+  "result" : "Passed",
+  "runtimeWarnings" : [
+
+  ],
+  "skippedTests" : 0,
+  "startTime" : 1791555410.659,
+  "statistics" : [
+    {
+      "subtitle" : "3 test runs",
+      "title" : "1 test ran with dynamic parameters"
+    }
+  ],
+  "testFailures" : [
+
+  ],
+  "title" : "Test - UIKitCaptureFixture",
+  "topInsights" : [
+
+  ],
+  "totalTestCount" : 3
+}

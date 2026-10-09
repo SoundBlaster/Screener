@@ -1,0 +1,27 @@
+{
+  "session_id": "22C39A14-5AF3-4599-961F-3D2963CC00A2",
+  "record_count": 53,
+  "frame_count": 52,
+  "closed": false,
+  "frame_metadata_variants": [
+    {
+      "encoding": "png",
+      "pixelHeight": "2622",
+      "pixelWidth": "1206",
+      "scale": "3.0"
+    }
+  ],
+  "mcp_readback": {
+    "sessions": 1,
+    "contact_sheet_pages": 3,
+    "frame_returned": true
+  },
+  "files_sha256": {
+    "Sources/ScreenerKit/Platforms/UIKit/UIKitCaptureSource.swift": "db48188df2455f7f4d30db5b77b3c4cc52172abe41d5fb355f7396d2f98e916e",
+    "Examples/UIKitCaptureFixture/Sources/App.swift": "a5edd99ae675149f3002dc2a8126792d6221979d598d5e620f9f0e042b46fb72",
+    "docs/validation/uikit-2026-10-09/materials-adapter.png": "c3526eef84c34108af68ec61026c6f0a57398f770a5ac2b843efc962e52309a2",
+    "docs/validation/uikit-2026-10-09/menu-system.png": "ba32ee02da3c6fbc4e16f497213876b5d9ca0e384500a5cd64a6e7ee14b11835",
+    "docs/validation/uikit-2026-10-09/materials-system.png": "09e32944ac42e2206769d861b20632a99521e807ec2477a6fc5ff90f013660d8",
+    "docs/validation/uikit-2026-10-09/menu-adapter.png": "915956b42a8944e5c4d7b2c24b01503023be05e7bb54de41f4b99142071aa9cc"
+  }
+}
