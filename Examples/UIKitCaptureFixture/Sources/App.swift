@@ -18,6 +18,7 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
 final class MaterialsController: UIViewController {
     private var captureTask: Task<Void, Never>?
+    private var screenCaptureResearch: AnyObject?
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -61,6 +62,15 @@ final class MaterialsController: UIViewController {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         guard captureTask == nil, let window = view.window else { return }
+        #if canImport(ScreenCaptureKit) && !targetEnvironment(simulator)
+        if #available(iOS 27, *), ProcessInfo.processInfo.arguments.contains("--screencapturekit-probe") {
+            guard screenCaptureResearch == nil else { return }
+            let research = ScreenCaptureResearch(window: window)
+            screenCaptureResearch = research
+            research.present()
+            return
+        }
+        #endif
         if ProcessInfo.processInfo.arguments.contains("--capture-research") {
             captureTask = Task { @MainActor in
                 await CaptureResearch.run(window: window)

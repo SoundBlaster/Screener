@@ -29,6 +29,16 @@ targets:
             UIWindowSceneSessionRoleApplication:
               - UISceneConfigurationName: Default
                 UISceneDelegateClassName: $(PRODUCT_MODULE_NAME).SceneDelegate
+  UIKitCaptureAirUITests:
+    type: bundle.ui-testing
+    platform: iOS
+    sources: [AirUITests]
+    dependencies:
+      - target: UIKitCaptureFixture
+    settings:
+      base:
+        GENERATE_INFOPLIST_FILE: YES
+        SWIFT_VERSION: "6.0"
   UIKitCaptureFixtureTests:
     type: bundle.unit-test
     platform: iOS
@@ -49,3 +59,10 @@ schemes:
         UIKitCaptureFixture: all
     test:
       targets: [UIKitCaptureFixtureTests]
+  UIKitCaptureAirResearch:
+    build:
+      targets:
+        UIKitCaptureFixture: all
+        UIKitCaptureAirUITests: [test]
+    test:
+      targets: [UIKitCaptureAirUITests]

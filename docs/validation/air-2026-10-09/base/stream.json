@@ -1,0 +1,16 @@
+{
+  "callbacks" : 31,
+  "completeFrames" : 31,
+  "encodingDuration" : "0.180061208 seconds",
+  "height" : 2736,
+  "pixelFormat" : 875704422,
+  "presentationSeconds" : 41775.949393916002,
+  "publications" : 4,
+  "publicationTime" : "2026-10-09T18:07:24Z",
+  "SCStreamUpdateFrameContentRect" : "{\n    Height = 912;\n    Width = 420;\n    X = 0;\n    Y = 0;\n}",
+  "SCStreamUpdateFrameContentScale" : "1",
+  "SCStreamUpdateFrameDisplayResolution" : "3",
+  "SCStreamUpdateFrameScreenRect" : "{\n    Height = 912;\n    Width = 420;\n    X = 0;\n    Y = 0;\n}",
+  "status" : 0,
+  "width" : 1260
+}

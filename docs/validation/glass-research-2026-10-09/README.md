@@ -10,10 +10,12 @@ hierarchy. Capturing the scene's visible windows gives the same result in this o
 fixture. This is evidence for these paths on this simulator, not a proof that every
 possible UIKit technique fails on every OS/device.
 
-The next candidate is **ScreenCaptureKit's asynchronous `SCStream` on a physical
-iOS 27 device**. Its API probe typechecks, but pixel fidelity is not yet established.
-At device discovery, all physical iPhones, including Air
-`00008150-000208290280401C`, were unavailable. No physical install or run took place.
+At the time of this simulator investigation, ScreenCaptureKit's asynchronous
+`SCStream` was a device-only candidate with compile-only evidence; all physical
+iPhones were unavailable. Later the same day, the user connected Air and the
+[physical-device follow-up](../air-2026-10-09/README.md) established substantially
+closer glass/menu pixels, native 3× buffers, clean stop, and cancellation. Positive
+recording permission was manually granted. The simulator evidence below is unchanged.
 
 ## Simulator experiment
 

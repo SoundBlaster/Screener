@@ -76,3 +76,34 @@ xcrun --sdk iphoneos swiftc -typecheck -swift-version 6 \
   -target arm64-apple-ios27.0 \
   Examples/UIKitCaptureFixture/Research/ScreenCaptureKitAPIProbe.swift
 ```
+
+## Physical iOS 27 ScreenCaptureKit probe
+
+On a physical device with the ScreenCaptureKit module, launch with
+`--screencapturekit-probe`. Manually approve the system screen-recording request.
+The mode captures the current app only and adds Stop capture/status controls below
+the material regions. It is excluded from Simulator builds and leaves the default
+UIKit recording mode unchanged.
+
+`Documents/ScreenCaptureResearch/latest-run.txt` identifies a unique run directory.
+It contains latest/ring stream and adapter PNGs, source sample timestamps,
+publication times, actual pixel format/geometry, lifecycle events, and final counters.
+The stream ring has 32 slots; the adapter ring has 16. The whole experiment stops
+after 180 seconds, including permission time, or through Stop capture. Reuse a
+single approved session for base/menu comparisons rather than repeatedly relaunching.
+
+The separate `UIKitCaptureAirResearch` scheme contains gated XCUITest research.
+Set `TEST_RUNNER_SCREENER_AIR_RESEARCH=1` and
+`TEST_RUNNER_SCREENER_AIR_PHASE=reconnaissance`, `capture`, or `cancel` when invoking
+`xcodebuild`. Capture waits up to 60 seconds for manual approval; it never presses
+a positive consent button. Cancel requires `TEST_RUNNER_SCREENER_AIR_CANCEL_LABEL`
+from the observed system hierarchy. Always target the exact physical device UDID
+and supply your normal local signing team; the standard fixture scheme does not
+run these UI experiments.
+
+See the [Air results and validation limits](../../docs/validation/air-2026-10-09/README.md).
+Reproduce preserved color-managed metrics with Pillow:
+
+```sh
+python3 Examples/UIKitCaptureFixture/Research/compare-air.py docs/validation/air-2026-10-09
+```
