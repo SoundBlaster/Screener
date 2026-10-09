@@ -37,7 +37,13 @@ backgrounding, interruption, or performance coverage on other devices.
   existing mode flags rather than inventing a second integration.
 - Inspect the actual Screener SDK source when available. `ScreenCaptureKitSession`
   is experimental; `v0.1.0-alpha.1` predates that SDK API. If the consuming pin
-  lacks the symbol, report that gap and use UIKit unless an update is authorized.
+  lacks the symbol, check for an existing consumer-local research adapter before
+  reporting the mode unavailable. Identify that adapter separately from the SDK
+  API; preserve working integration. If neither exists, use UIKit unless an
+  integration/update is authorized.
+- Record the resolved SDK revision, app binary/build identity and MCP reader
+  identity separately. A manifest or reader version string alone does not identify
+  the SDK linked into the app; see [evidence identity](references/capture-workflows.md#evidence-identity-and-replay-pitfalls).
 - If source lookup is needed, use a user-provided checkout or `SCREENER_REPO`,
   then a matching workspace/local package checkout. Do not treat this skill's
   installed plugin-cache location as the consuming app or a writable source checkout.
@@ -60,10 +66,11 @@ claim approval was automated. If the user is unavailable, stop at the permission
 boundary and report that capture has not started.
 
 Stop/drain capture before closing the trace. On cancel, timeout, or error, inspect
-`state`/`failure` and still close the caller-owned trace. The SDK samples roughly
-once per second plus a final drain; it is not video or guaranteed transition-rate
-capture. Use appropriate faster evidence if the requested transition can occur
-between keyframes.
+`state`/`failure` and still close the caller-owned trace. The current SDK
+`ScreenCaptureKitSession` samples roughly once per second plus a final drain;
+UIKit loops and consumer-local adapters can have different budgets/cadence.
+Read the integration's actual limits. None is a video or transition-rate promise;
+use appropriate faster evidence if the transition can occur between keyframes.
 
 If Screener MCP is connected, inspect `screener.sessions` → `screener.timeline`
 → `screener.contact_sheet` / `screener.frame` by returned IDs. Otherwise inspect

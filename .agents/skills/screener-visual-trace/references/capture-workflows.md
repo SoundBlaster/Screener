@@ -25,7 +25,7 @@ try await recorder.stopSession()
 #endif
 ```
 
-For production integration, put stop/cleanup on error paths too; the snippet shows
+For a complete Debug integration, put stop/cleanup on error paths too; the snippet shows
 API shape, not a complete app controller. Decode stored PNGs and compare their
 width/height with the captured view's point size × current trait scale. Check both
 axes, window bounds, orientation, and trait changes before diagnosing a scale bug.
@@ -128,8 +128,60 @@ inspect any capture failure separately: completion records alone do not prove
 that every write or stream stop succeeded. On an interrupted trace, distinguish
 an incomplete trailing JSONL record from malformed complete data.
 
+`screen-capture.stopped` belongs to `ScreenCaptureKitSession`. UIKit and older
+consumer-local adapters can use different markers; inspect their lifecycle
+contract rather than rejecting a valid trace for lacking this SDK-specific event.
+
 MCP order: list sessions, select the actual recorded ID, inspect timeline, then
 request a contact sheet or a frame by returned record ID. Use pagination when
 needed. A contact sheet proves decoded history, not frame-rate coverage; inspect
 full-resolution material/menu PNGs for fidelity. Keep screenshots and source PTS
 alongside trace times to identify the same settled state without equating clocks.
+
+## Evidence identity and replay pitfalls
+
+These checks came from a real large-button/context-menu pilot; apply them when
+the same ambiguity arises rather than copying that app's flags, paths or budgets.
+
+- **Separate three identities.** Preserve the consuming `Package.resolved` pin
+  (or equivalent), the installed app binary/build identity, and the MCP executable
+  path/hash plus initialize response. In the alpha.1 pilot the SDK resolved to
+  `10ba0dd` while both the trace manifest and an older reader reported `0.1.0`.
+  This was not evidence that the old SDK had been installed. Recheck a new pin
+  against actual adapter changes; a release tag alone does not improve glass.
+- **Separate capture availability from UI automation.** A connected physical
+  Air was rejected by an interaction service that exposed only simulators, while
+  CoreDevice successfully installed/launched/copied its trace. Use manual actions
+  when needed and label them. If a prepared UI session expires with “Session not
+  found”, reacquire it once, recapture hierarchy and verify the target/app PID;
+  repeated unchanged failures are a tool blocker, not proof of an app crash.
+  A tool's `NotRun` response is not a successful UI-test result; retained runtime
+  screenshots/hierarchy can still provide narrower observation evidence.
+- **Coordinate bounded capture with the person.** Discover the current trace
+  and trigger mechanism after launch. For a file-triggered app pilot, wait for
+  consent/running state before requesting a burst; capture the base, then ask the
+  person to leave the menu open before requesting the next burst. Keep the same
+  approved stream. Arming may expire while waiting for a reply; inspect lifecycle
+  instead of writing controls to an already-closed trace. Do not impose that
+  app's file polling or burst budget on the SDK session API.
+- **Inspect actual samples.** Decode PNGs, count frames/failures, and check final
+  lifecycle and referenced blobs. A closed zero-frame trace is not a capture
+  success. Some local adapters repeatedly publish the latest complete image;
+  frame count then does not establish distinct source samples or temporal coverage.
+  Full-resolution base/menu frames expose material differences hidden by a small
+  contact sheet. Inspect the opening too if the reported defect is transient;
+  a clean settled menu cannot rule out an earlier outline or jump.
+- **Limit fidelity claims to the comparison.** The pilot produced native 3×
+  UIKit traces with visibly incorrect menu backdrops; scale success did not fix
+  glass. Physical stream captures showed coherent glass, but without a matched
+  independent device screenshot they established appearance observations, not a
+  numerical match. Keep light/dark, Reduce Transparency, older-OS fallbacks and
+  device/layout profiles separately checked or explicitly unverified.
+- **Keep replay portable.** Reuse the consumer's project and prescribed build
+  cache; keep copied traces, selected PNGs and run metadata outside disposable
+  build products. A complete handoff identifies backend/SDK/app/reader, target/OS,
+  launch/control steps, manual actions, frame dimensions/scale, failure counts,
+  termination, representative record IDs and raw artifact location. Avoid
+  reconfiguring a global MCP host just to inspect one trace: an existing reader
+  can be invoked through its actual stdio protocol, labeled as such rather than
+  presented as a registered connector.
