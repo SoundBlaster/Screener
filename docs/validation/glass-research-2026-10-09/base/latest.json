@@ -1,0 +1,23 @@
+{
+  "displayScale" : 3,
+  "hierarchy-extended" : {
+    "bitsPerComponent" : 16,
+    "complete" : true
+  },
+  "hierarchy-false" : {
+    "bitsPerComponent" : 16,
+    "complete" : true
+  },
+  "hierarchy-standard" : {
+    "bitsPerComponent" : 8,
+    "complete" : true
+  },
+  "pass" : 13,
+  "scene-windows" : {
+    "complete" : true,
+    "count" : 1
+  },
+  "snapshot-hierarchy" : {
+    "complete" : false
+  }
+}

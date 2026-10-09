@@ -61,6 +61,12 @@ final class MaterialsController: UIViewController {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         guard captureTask == nil, let window = view.window else { return }
+        if ProcessInfo.processInfo.arguments.contains("--capture-research") {
+            captureTask = Task { @MainActor in
+                await CaptureResearch.run(window: window)
+            }
+            return
+        }
         captureTask = Task { @MainActor in
             let root = URL.documentsDirectory.appending(path: "Captures", directoryHint: .isDirectory)
             do {
