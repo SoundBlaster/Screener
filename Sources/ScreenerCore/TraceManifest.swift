@@ -1,5 +1,6 @@
 import Foundation
 
+/// Session identity and producer metadata for versioned trace storage.
 public struct TraceManifest: Codable, Sendable, Equatable {
     public static let currentFormatVersion = 1
 
