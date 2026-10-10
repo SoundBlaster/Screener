@@ -1,0 +1,22 @@
+{
+  "name": "screener",
+  "version": "0.1.0",
+  "description": "Select iOS capture backends and verify Debug visual traces with Screener.",
+  "author": {
+    "name": "SoundBlaster"
+  },
+  "repository": "https://github.com/SoundBlaster/Screener",
+  "license": "MIT",
+  "skills": "./.agents/skills/",
+  "interface": {
+    "displayName": "Screener",
+    "shortDescription": "Record and inspect iOS Debug visual traces.",
+    "longDescription": "Choose UIKit trace with Simulator screenshots or an opt-in physical ScreenCaptureKit session, then inspect recorded frames and lifecycle evidence.",
+    "developerName": "SoundBlaster",
+    "category": "Developer tools",
+    "capabilities": [],
+    "defaultPrompt": [
+      "Use the Screener plugin to capture and verify a Debug UI trace on the selected device."
+    ]
+  }
+}

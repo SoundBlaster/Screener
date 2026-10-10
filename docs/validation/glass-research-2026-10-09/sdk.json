@@ -1,0 +1,26 @@
+{
+  "xcode": "27.1 (27A9269)",
+  "sdk_version": "27.1",
+  "device_framework_present": true,
+  "simulator_framework_present": false,
+  "typecheck": {
+    "target": "arm64-apple-ios27.0",
+    "swift_version": "6",
+    "exit_code": 0
+  },
+  "availability": {
+    "SCStream": "iOS27+",
+    "SCContentSharingPicker.presentForCurrentApplication": "iOS27+",
+    "SCScreenshotManager": "unavailable iOS",
+    "SCStreamConfiguration.width": "iOS27+",
+    "SCStreamConfiguration.height": "iOS27+",
+    "SCStreamConfiguration.minimumFrameInterval": "unavailable iOS",
+    "SCStreamConfiguration.queueDepth": "unavailable iOS",
+    "SCStreamConfiguration.pixelFormat": "unavailable iOS"
+  },
+  "header_sha256": {
+    "SCStream.h": "11633abf2df86bd6c92345a9c4804a0746e18d4db39994ae29243671f332825b",
+    "SCScreenshotManager.h": "f62995d35201d09753c852cdb83ce9880b9fae4ec34e1baef1d91fa1b47181e7",
+    "SCContentSharingPicker.h": "7989de4658bb115fe11c54c74c97e9b5948a6c1e3d477ef9662852d5f2710f7f"
+  }
+}

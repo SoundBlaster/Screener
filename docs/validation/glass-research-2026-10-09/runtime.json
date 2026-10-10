@@ -1,0 +1,14 @@
+{
+  "simulator_uuid": "9665FC01-1F2B-4018-B5F1-0E5E857A6235",
+  "simulator": true,
+  "material_pid": 90816,
+  "instrumented_pid": 93188,
+  "instrumented_passes": 4,
+  "start_status_written_utc": "2026-10-09T15:48:58.022010+00:00",
+  "stop_status_written_utc": "2026-10-09T15:49:12.318341+00:00",
+  "seconds_between_status_files": 14.29633092880249,
+  "device_session_closed": true,
+  "simulator_shutdown": true,
+  "physical_air_state": "unavailable",
+  "physical_run": false
+}

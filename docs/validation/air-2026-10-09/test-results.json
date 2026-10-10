@@ -1,0 +1,159 @@
+{
+  "air-recon": {
+    "devicesAndConfigurations": [
+      {
+        "device": {
+          "architecture": "arm64",
+          "deviceId": "00008150-000208290280401C",
+          "deviceName": "iPhone Air",
+          "modelName": "iPhone Air",
+          "osBuildNumber": "24A435",
+          "osVersion": "27.0",
+          "platform": "iOS"
+        },
+        "expectedFailures": 0,
+        "failedTests": 0,
+        "passedTests": 1,
+        "skippedTests": 0,
+        "testPlanConfiguration": {
+          "configurationId": "1",
+          "configurationName": "Test Scheme Action"
+        }
+      }
+    ],
+    "environmentDescription": "UIKitCaptureAirResearch \u00b7 Built with macOS 27.0",
+    "expectedFailures": 0,
+    "failedTests": 0,
+    "finishTime": 1791569060.105,
+    "passedTests": 1,
+    "result": "Passed",
+    "runtimeWarnings": [],
+    "skippedTests": 0,
+    "startTime": 1791569038.553,
+    "statistics": [],
+    "testFailures": [],
+    "title": "Test - UIKitCaptureAirResearch",
+    "topInsights": [],
+    "totalTestCount": 1
+  },
+  "air-capture": {
+    "devicesAndConfigurations": [
+      {
+        "device": {
+          "architecture": "arm64",
+          "deviceId": "00008150-000208290280401C",
+          "deviceName": "iPhone Air",
+          "modelName": "iPhone Air",
+          "osBuildNumber": "24A435",
+          "osVersion": "27.0",
+          "platform": "iOS"
+        },
+        "expectedFailures": 0,
+        "failedTests": 1,
+        "passedTests": 0,
+        "skippedTests": 0,
+        "testPlanConfiguration": {
+          "configurationId": "1",
+          "configurationName": "Test Scheme Action"
+        }
+      }
+    ],
+    "environmentDescription": "UIKitCaptureAirResearch \u00b7 Built with macOS 27.0",
+    "expectedFailures": 0,
+    "failedTests": 1,
+    "finishTime": 1791569162.542,
+    "passedTests": 0,
+    "result": "Failed",
+    "runtimeWarnings": [],
+    "skippedTests": 0,
+    "startTime": 1791569151.155,
+    "statistics": [],
+    "testFailures": [
+      {
+        "failureText": "XCTUnwrap failed: expected non-nil value of type \"String\" - Set SCREENER_AIR_CONSENT_LABEL from reconnaissance hierarchy",
+        "targetName": "UIKitCaptureAirUITests",
+        "testIdentifier": 1,
+        "testIdentifierString": "AirCaptureUITests/testScreenCaptureResearch()",
+        "testIdentifierURL": "test://com.apple.xcode/UIKitCaptureFixture/UIKitCaptureAirUITests/AirCaptureUITests/testScreenCaptureResearch",
+        "testName": "testScreenCaptureResearch()"
+      }
+    ],
+    "title": "Test - UIKitCaptureAirResearch",
+    "topInsights": [],
+    "totalTestCount": 1
+  },
+  "air-capture2": {
+    "devicesAndConfigurations": [
+      {
+        "device": {
+          "architecture": "arm64",
+          "deviceId": "00008150-000208290280401C",
+          "deviceName": "iPhone Air",
+          "modelName": "iPhone Air",
+          "osBuildNumber": "24A435",
+          "osVersion": "27.0",
+          "platform": "iOS"
+        },
+        "expectedFailures": 0,
+        "failedTests": 0,
+        "passedTests": 1,
+        "skippedTests": 0,
+        "testPlanConfiguration": {
+          "configurationId": "1",
+          "configurationName": "Test Scheme Action"
+        }
+      }
+    ],
+    "environmentDescription": "UIKitCaptureAirResearch \u00b7 Built with macOS 27.0",
+    "expectedFailures": 0,
+    "failedTests": 0,
+    "finishTime": 1791569256.537,
+    "passedTests": 1,
+    "result": "Passed",
+    "runtimeWarnings": [],
+    "skippedTests": 0,
+    "startTime": 1791569214.367,
+    "statistics": [],
+    "testFailures": [],
+    "title": "Test - UIKitCaptureAirResearch",
+    "topInsights": [],
+    "totalTestCount": 1
+  },
+  "air-cancel": {
+    "devicesAndConfigurations": [
+      {
+        "device": {
+          "architecture": "arm64",
+          "deviceId": "00008150-000208290280401C",
+          "deviceName": "iPhone Air",
+          "modelName": "iPhone Air",
+          "osBuildNumber": "24A435",
+          "osVersion": "27.0",
+          "platform": "iOS"
+        },
+        "expectedFailures": 0,
+        "failedTests": 0,
+        "passedTests": 1,
+        "skippedTests": 0,
+        "testPlanConfiguration": {
+          "configurationId": "1",
+          "configurationName": "Test Scheme Action"
+        }
+      }
+    ],
+    "environmentDescription": "UIKitCaptureAirResearch \u00b7 Built with macOS 27.0",
+    "expectedFailures": 0,
+    "failedTests": 0,
+    "finishTime": 1791569301.232,
+    "passedTests": 1,
+    "result": "Passed",
+    "runtimeWarnings": [],
+    "skippedTests": 0,
+    "startTime": 1791569289.503,
+    "statistics": [],
+    "testFailures": [],
+    "title": "Test - UIKitCaptureAirResearch",
+    "topInsights": [],
+    "totalTestCount": 1
+  }
+}

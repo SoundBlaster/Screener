@@ -1,0 +1,45 @@
+{
+  "run_id": "3EC638B6-3D1F-42BF-8E9C-28AF4D24E600",
+  "source_digests": {
+    "Examples/UIKitCaptureFixture/Sources/App.swift": "0af569915828831cd33c86a054b77a67915b2757e8fd53b54552e4cfd5b0b900",
+    "Examples/UIKitCaptureFixture/Sources/ScreenCaptureResearch.swift": "1dc7daac03469bfff84f536eb5df864f0712668ec02432203d7c34090ed44ece",
+    "Examples/UIKitCaptureFixture/AirUITests/AirCaptureUITests.swift": "ef8b40f1d7225b5069cb7e383cc25609808c16ec84618f5157690bb662723537",
+    "Examples/UIKitCaptureFixture/project.yml": "1834de53cb84f97b89b719e2311cc64f0b1532410df22dd702894e9664009502"
+  },
+  "pairing": {
+    "base": {
+      "stream_source": "stream-04",
+      "adapter_source": "adapter-01",
+      "system_attachment": {
+        "configurationName": "Test Scheme Action",
+        "deviceId": "00008150-000208290280401C",
+        "deviceName": "iPhone Air",
+        "exportedFileName": "C194EBCB-40B1-43EA-8577-FCE333C782F9.png",
+        "isAssociatedWithFailure": false,
+        "suggestedHumanReadableName": "03-base-materials_0_F74354B4-A3E7-4617-9AE1-21F4D7AE5C63.png",
+        "timestamp": 1791569244.266
+      }
+    },
+    "menu": {
+      "stream_source": "stream-09",
+      "adapter_source": "adapter-04",
+      "system_attachment": {
+        "configurationName": "Test Scheme Action",
+        "deviceId": "00008150-000208290280401C",
+        "deviceName": "iPhone Air",
+        "exportedFileName": "7355E297-FF92-4961-B67B-40693ADE35B2.png",
+        "isAssociatedWithFailure": false,
+        "suggestedHumanReadableName": "04-save-menu_0_E4C00F0E-A776-444B-A19C-F28EC4EAC7C6.png",
+        "timestamp": 1791569251.181
+      }
+    }
+  },
+  "image_sha256": {
+    "base/system.png": "7ffe7e8303f8cc29855c4be856b2d945e881b50ca19f46378cde4b11ea6c3906",
+    "base/stream.png": "f448bb2c37be53b21424473195e2bfeb7cddd9ec11f75e9c960193ae7a788798",
+    "base/adapter.png": "3fe83e96ca60fc1a72b2c46ad6ffc0dc617a28808f795880f1447409de1734eb",
+    "menu/system.png": "8740a752ff25588fa821be8674acd66c537a84494dc47aa4d7c92f49dffd060a",
+    "menu/stream.png": "c78cc130fca804a3bd4d409c27679916c835dd17c6e765e14a1c708334ca11e9",
+    "menu/adapter.png": "4d282391715930e350d5be3d2e69eb65664c87a710e989b238a2e562b81201d6"
+  }
+}

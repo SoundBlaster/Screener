@@ -1,0 +1,145 @@
+{
+  "color_space": "sRGB",
+  "regions_points": {
+    "control": [
+      0,
+      110,
+      402,
+      170
+    ],
+    "blur": [
+      24,
+      180,
+      364,
+      300
+    ],
+    "glass": [
+      24,
+      340,
+      364,
+      460
+    ],
+    "menu": [
+      120,
+      442,
+      370,
+      588
+    ]
+  },
+  "states": {
+    "base": {
+      "metadata": {
+        "displayScale": 3,
+        "hierarchy-extended": {
+          "bitsPerComponent": 16,
+          "complete": true
+        },
+        "hierarchy-false": {
+          "bitsPerComponent": 16,
+          "complete": true
+        },
+        "hierarchy-standard": {
+          "bitsPerComponent": 8,
+          "complete": true
+        },
+        "pass": 13,
+        "scene-windows": {
+          "complete": true,
+          "count": 1
+        },
+        "snapshot-hierarchy": {
+          "complete": false
+        }
+      },
+      "mean_absolute_RGB_error_0_255": {
+        "adapter": {
+          "control": 0.0,
+          "blur": 0.25578522149600585,
+          "glass": 24.332397421931734
+        },
+        "hierarchy-extended": {
+          "control": 0.0,
+          "blur": 0.25578522149600585,
+          "glass": 24.332397421931734
+        },
+        "hierarchy-false": {
+          "control": 0.0,
+          "blur": 0.25578522149600585,
+          "glass": 24.332397421931734
+        },
+        "hierarchy-standard": {
+          "control": 0.0,
+          "blur": 0.0,
+          "glass": 24.295851488743647
+        },
+        "layer": {
+          "control": 0.0,
+          "blur": 60.54828159041394,
+          "glass": 63.651233660130714
+        },
+        "scene-windows": {
+          "control": 0.0,
+          "blur": 0.25578522149600585,
+          "glass": 24.332397421931734
+        }
+      }
+    },
+    "menu": {
+      "metadata": {
+        "displayScale": 3,
+        "hierarchy-extended": {
+          "bitsPerComponent": 16,
+          "complete": true
+        },
+        "hierarchy-false": {
+          "bitsPerComponent": 16,
+          "complete": true
+        },
+        "hierarchy-standard": {
+          "bitsPerComponent": 8,
+          "complete": true
+        },
+        "pass": 22,
+        "scene-windows": {
+          "complete": true,
+          "count": 1
+        },
+        "snapshot-hierarchy": {
+          "complete": false
+        }
+      },
+      "mean_absolute_RGB_error_0_255": {
+        "adapter": {
+          "control": 0.0,
+          "blur": 0.25578522149600585,
+          "menu": 21.983599188229324
+        },
+        "hierarchy-extended": {
+          "control": 0.0,
+          "blur": 0.25578522149600585,
+          "menu": 21.983599188229324
+        },
+        "hierarchy-false": {
+          "control": 0.0,
+          "blur": 0.25578522149600585,
+          "menu": 21.983599188229324
+        },
+        "hierarchy-standard": {
+          "control": 0.0,
+          "blur": 0.0,
+          "menu": 21.888181633688486
+        },
+        "layer": {
+          "control": 0.0,
+          "blur": 60.54828159041394,
+          "menu": 58.28306443429731
+        },
+        "scene-windows": {
+          "control": 0.0,
+          "blur": 0.25578522149600585,
+          "menu": 21.983599188229324
+        }
+      }
+    }
+  }
+}

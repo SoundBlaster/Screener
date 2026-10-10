@@ -5,7 +5,7 @@ public enum ScreenerMCPServer {
     public static func make(catalog: TraceCatalog = TraceCatalog()) async -> Server {
         let server = Server(
             name: "screener-mcp",
-            version: "0.1.0",
+            version: "0.1.0-alpha.2",
             title: "Screener",
             instructions: "Read-only access to local Screener visual-debugging traces. Start with screener.sessions, then request a timeline and one frame.",
             capabilities: .init(tools: .init())

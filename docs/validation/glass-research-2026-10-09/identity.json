@@ -1,0 +1,49 @@
+{
+  "material_batches": "Captured before callback-counter/deadline instrumentation; rendering logic unchanged.",
+  "builds": {
+    ".build/research/build.log": {
+      "sha256": "9a3811fa1c6428367a7a05884c18c2681cd243f07082dbe9a40795fbbcc1070e",
+      "success": true
+    },
+    ".build/research/build-instrumented.log": {
+      "sha256": "b1914d3f2ff27f7edb8ae38282f857daa68cea699532edfe8b721e49117ccacd",
+      "success": true
+    },
+    ".build/research/build-final.log": {
+      "sha256": "f75e6ddd6ffa6f7b92181b19f03cdf22fe7243584b537bd84f63592d64c6fccd",
+      "success": true
+    }
+  },
+  "instrumented_binary_sha256": "9f0ed41bccff4fa6b098417389bc86aba7ea987369cd0d06e90c46ddaf4fd6eb",
+  "image_sha256": {
+    "docs/validation/glass-research-2026-10-09/base/adapter.png": "c3526eef84c34108af68ec61026c6f0a57398f770a5ac2b843efc962e52309a2",
+    "docs/validation/glass-research-2026-10-09/base/hierarchy-extended.png": "c3526eef84c34108af68ec61026c6f0a57398f770a5ac2b843efc962e52309a2",
+    "docs/validation/glass-research-2026-10-09/base/hierarchy-false.png": "c3526eef84c34108af68ec61026c6f0a57398f770a5ac2b843efc962e52309a2",
+    "docs/validation/glass-research-2026-10-09/base/hierarchy-standard.png": "f2845578f776d10d36c14effc3997903e3f482745d0f7b49de7610d2d58d744f",
+    "docs/validation/glass-research-2026-10-09/base/layer.png": "0c3c83b56ff4ad038e7acc4e115d7b2c83f5feea5d852a6e13f550e2af3ea1cf",
+    "docs/validation/glass-research-2026-10-09/base/scene-windows.png": "1abfa8bb80dc1c70f53431af6774c7dbc5102faa39ff27714ef73a05fb4a4b95",
+    "docs/validation/glass-research-2026-10-09/base/snapshot-hierarchy.png": "eeba4a79495fe820d0cc17cb2dc7cb674bedb72b725fd0ac6660ee7321d5b94c",
+    "docs/validation/glass-research-2026-10-09/base/system.png": "4ac146d6f23d4e630b6bd1479aee9089a70f0fa51862c5245e3f0b8e5d7c9bb6",
+    "docs/validation/glass-research-2026-10-09/menu/adapter.png": "915956b42a8944e5c4d7b2c24b01503023be05e7bb54de41f4b99142071aa9cc",
+    "docs/validation/glass-research-2026-10-09/menu/hierarchy-extended.png": "915956b42a8944e5c4d7b2c24b01503023be05e7bb54de41f4b99142071aa9cc",
+    "docs/validation/glass-research-2026-10-09/menu/hierarchy-false.png": "915956b42a8944e5c4d7b2c24b01503023be05e7bb54de41f4b99142071aa9cc",
+    "docs/validation/glass-research-2026-10-09/menu/hierarchy-standard.png": "e09e3413f2dfb9f2719e711a3cd3196e6c4d96f22f64b5f4f628be807d2a0e4a",
+    "docs/validation/glass-research-2026-10-09/menu/layer.png": "1f485278e7eb873613d19a3a07112e5fa6f5142fe61c5e36f5d7cbe01b209842",
+    "docs/validation/glass-research-2026-10-09/menu/scene-windows.png": "28ce0b1d7745962f3d71f40385315f6ff9d6c52a22949ecb68daaecb417b85d2",
+    "docs/validation/glass-research-2026-10-09/menu/snapshot-hierarchy.png": "eeba4a79495fe820d0cc17cb2dc7cb674bedb72b725fd0ac6660ee7321d5b94c",
+    "docs/validation/glass-research-2026-10-09/menu/system.png": "fac65d6db6e00ce20bd868dc59b4ac03424ba4667759387d725ad09e0431550d"
+  },
+  "source_digests_at_instrumented_run": {
+    "Examples/UIKitCaptureFixture/Sources/App.swift": "3ba0cf6be7fc57c12be3b44e37a8931ca26361a8c6ba30f6f3a839021a66c67b",
+    "Examples/UIKitCaptureFixture/Sources/CaptureResearch.swift": "309db7c6118d53f9e64b5b6ffbf63818b2d70722c006f59ac81e23a9cbb6e338",
+    "Examples/UIKitCaptureFixture/Research/ScreenCaptureKitAPIProbe.swift": "1e90cfa00d4b1aec415290e0b4aa15f66319468d16f7672c279bc5d03fb1a051",
+    "Examples/UIKitCaptureFixture/Research/compare-variants.py": "0cadc7ee567b3bbac9ecd7a8ef8e89fb195b6c8b80304254381bd3134307853b"
+  },
+  "final_source_sha256": {
+    "Examples/UIKitCaptureFixture/Sources/App.swift": "3ba0cf6be7fc57c12be3b44e37a8931ca26361a8c6ba30f6f3a839021a66c67b",
+    "Examples/UIKitCaptureFixture/Sources/CaptureResearch.swift": "2980e646f8593b5bcb52dc96d84195919ffe1dbb52d2dca25c288afcd079cce6",
+    "Examples/UIKitCaptureFixture/Research/ScreenCaptureKitAPIProbe.swift": "1e90cfa00d4b1aec415290e0b4aa15f66319468d16f7672c279bc5d03fb1a051",
+    "Examples/UIKitCaptureFixture/Research/compare-variants.py": "0cadc7ee567b3bbac9ecd7a8ef8e89fb195b6c8b80304254381bd3134307853b"
+  },
+  "final_build_only_binary_sha256": "7f5a0a1a110ca23403e25e42f961064817fe9440d8d6396666c9a46e32ff3520"
+}
