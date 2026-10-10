@@ -214,7 +214,17 @@ Choose **Start recording**, advance the fixture state, capture frames, and stop.
 To inspect these traces, point the MCP server at
 `$HOME/Library/Caches/ScreenerFixture/Traces`.
 
-Run package tests with `swift test`. See the [product scope](docs/PRD.md),
+Run package tests with `swift test`. For warm-cache timeline and contact-sheet measurements:
+
+```sh
+swift run -c release screener-benchmarks --records 10000 --frames 400 --iterations 100
+```
+
+Each query gets three untimed warm-ups. Runs with 100+ samples report median/p95;
+shorter runs report median/max. See the [benchmark guide](docs/capture-guide.md#benchmarks)
+for interpretation.
+
+See the [product scope](docs/PRD.md),
 [architecture decisions](docs/adr), and [changelog](CHANGELOG.md).
 Screener is open source under the [MIT License](LICENSE).
 

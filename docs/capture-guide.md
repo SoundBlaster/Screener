@@ -135,6 +135,19 @@ copy and the plugin into the same consumer.
 swift test
 ```
 
+## Benchmarks
+
+```sh
+swift run -c release screener-benchmarks --records 10000 --frames 400 --iterations 100
+```
+
+Fixture creation is excluded from timing. Each query gets three untimed warm-ups
+before 100 measured runs by default. Results describe warm-cache queries, not
+cold-start latency. At 100+ samples the output reports median and empirical
+nearest-rank p95; shorter runs report median/max. Full runs can take several
+minutes. For a quick smoke run, use `--iterations 7` and interpret the tail as a
+maximum. No wall-clock CI thresholds are enforced.
+
 ## Local MCP server
 
 Build the standalone macOS stdio server (resolve the output path for your toolchain):
