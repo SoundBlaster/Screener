@@ -1,178 +1,219 @@
 # Screener
 
-Screener is a local-first visual flight recorder for debugging transient UI states in iOS and macOS apps. It is designed to let a developer or coding agent inspect a recorded timeline after the interesting state has passed.
+![Screener MCP — captured UI frames on a timeline](docs/assets/screener-mcp-hero.png)
 
-The repository contains the versioned `.vtrace` bundle core, an app-side session/marker API, UIKit, AppKit, and SwiftUI capture adapters, and a separate read-only MCP server. The macOS fixture app exercises state changes, markers, and real window keyframes.
+**The animation is over. Your agent is still taking a screenshot.**
 
-```swift
-import ScreenerKit
+A menu flashes, a sheet jumps, a loading state disappears. By the time your coding
+agent looks, the UI has moved on — and you are left describing what you saw.
 
-let screener = Screener()
-let traceURL = try await screener.startSession(
-    name: "checkout-flow",
-    appBundleID: "com.example.app",
-    tracesDirectory: tracesDirectory
-)
-try await screener.mark("Checkout.submitted", metadata: ["payment": "card"])
-let capture = ScreenerCaptureSession(screener: screener)
-try await capture.capture(
-    from: AppKitCaptureSource(view: window.contentView!),
-    reason: "checkout-submitted"
-)
-try await screener.stopSession()
+Screener gives your agent a visual history of your **iOS or macOS app**: captured
+frames and named events on a timeline. Record a short reproduction, then let the
+agent browse a contact sheet, open individual frames, and relate them to your code
+through a local, read-only **MCP server**.
+
+**Reproduce → capture → inspect with your agent.** No cloud service or account.
+
+> **Early alpha · [v0.1.0-alpha.2](https://github.com/SoundBlaster/Screener/releases/tag/v0.1.0-alpha.2).**
+> Screener records sampled keyframes, not video. It helps investigate transient UI,
+> but sampling can miss a fast transition and hierarchy capture may omit intermediate
+> animation states. It does not guarantee every animation frame or exact system glass.
+
+## Quick start: iOS Simulator → your agent
+
+You need a Mac, Xcode with Swift 6.1 or later, an iOS 16+ app, and an MCP client
+that can display images. This example uses UIKit; SwiftUI apps can capture their
+hosting window with the same adapter.
+
+### 1. Add the package
+
+In Xcode, choose **File → Add Package Dependencies**, enter:
+
+```text
+https://github.com/SoundBlaster/Screener
 ```
 
-When the captured view is its window's content view, `AppKitCaptureSource` fills pixels the view hierarchy leaves transparent with the window's background color, resolved in the view's appearance. A content view usually draws no background, because the window frame paints it, so without this keyframes are mostly transparent and look black in viewers that drop alpha. Subviews keep their transparency by default, because on screen their clear pixels show their ancestors. Pass `background: .window` or `.transparent` to choose explicitly.
-
-UIKit apps can pass a `UIView` to `UIKitCaptureSource`. SwiftUI callers can pass a view to `SwiftUICaptureSource`; that adapter renders the explicit subtree, while a hosted root view can be captured through its UIKit/AppKit host window. UI rendering happens on the main actor; PNG encoding and bundle writes happen after the rendered `CGImage` crosses to the recorder actor. The resulting `.vtrace` directory contains a JSON manifest, append-only JSONL timeline, and PNG keyframes. Reads tolerate an incomplete trailing line from an interrupted append while rejecting malformed complete records.
-
-UIKit capture reads `view.traitCollection.displayScale` on every capture, including
-when the source is a `UIWindow`. Unspecified traits retain UIKit's renderer default.
-This is the display's rendering scale in pixels per point, not a request to resample
-to `UIScreen.nativeScale`. Capture the containing window for visual effects that
-depend on content behind them. `drawHierarchy` does not guarantee system-compositor
-fidelity for blur, glass, system overlays, or GPU-backed content; a successful capture
-only establishes that UIKit rendered the hierarchy. Compare against a system screenshot
-before using material pixels as a regression oracle.
-
-The [UIKit capture fixture](Examples/UIKitCaptureFixture/README.md) provides a
-repeatable native-scale and materials check on iOS Simulator.
-The [glass capture investigation](docs/validation/glass-research-2026-10-09/README.md)
-compares public hierarchy/snapshot paths. The follow-up [physical Air experiment](docs/validation/air-2026-10-09/README.md)
-measures substantially closer glass/menu pixels through an opt-in ScreenCaptureKit
-session on iOS 27, with manually granted recording permission.
-
-For an experimental SDK session, use a **physical iOS 27 device** with an SDK
-that includes ScreenCaptureKit. Retain the capture object until it stops:
+Select **Exact Version → 0.1.0-alpha.2**, then add **ScreenerKit** to your app target.
+For a `Package.swift` project, use:
 
 ```swift
-#if os(iOS) && canImport(ScreenCaptureKit) && !targetEnvironment(simulator) && !targetEnvironment(macCatalyst)
-if #available(iOS 27, *) {
-    let screener = Screener()
-    let traceURL = try await screener.startSession(
-        name: "materials", appBundleID: "com.example.app", tracesDirectory: tracesDirectory
+// In dependencies:
+.package(url: "https://github.com/SoundBlaster/Screener", exact: "0.1.0-alpha.2")
+// In your app target's dependencies:
+.product(name: "ScreenerKit", package: "Screener")
+```
+
+### 2. Record a short reproduction
+
+Add this helper to your app. It captures 20 window keyframes into a local `.vtrace`
+bundle and closes the session, including when capture fails.
+
+```swift
+#if DEBUG
+import UIKit
+import ScreenerKit
+
+@MainActor
+func recordUI(in window: UIWindow) async throws -> URL {
+    let recorder = Screener()
+    let trace = try await recorder.startSession(
+        name: "ui-reproduction",
+        appBundleID: Bundle.main.bundleIdentifier ?? "example.app",
+        tracesDirectory: URL.documentsDirectory.appending(path: "ScreenerTraces")
     )
-    let capture = ScreenCaptureKitSession(screener: screener)
+    let capture = ScreenerCaptureSession(screener: recorder)
     do {
-        try await capture.start() // Waits for the user's system permission choice.
-        // Exercise the app while retaining capture; semantic markers use screener.mark().
+        try await recorder.mark("Reproduction.started")
+        for index in 0..<20 {
+            try await capture.capture(
+                from: UIKitCaptureSource(view: window),
+                reason: "sample-\(index)"
+            )
+            try await Task.sleep(for: .milliseconds(100))
+        }
+        try await recorder.stopSession()
+        return trace
     } catch {
-        // Rejection, task cancellation, and startup errors clean up the capture session.
+        try? await recorder.stopSession()
+        throw error
     }
-    await capture.stop() // Drain accepted samples before closing the trace.
-    let captureFailure = capture.failure // Also check errors after an automatic stop.
-    try await screener.stopSession()
 }
 #endif
 ```
 
-The [SDK Air session report](docs/validation/screen-capture-session-2026-10-09/README.md)
-preserves the recorded menu, timeline, and MCP contact sheet.
+Call it from a Debug button in your `UIViewController`, then reproduce the issue
+while it records:
 
-The caller owns the trace lifecycle. `start()` requires an active trace and each
-capture object is single-use. Only one Screener picker owner may run in the app;
-an already-active system picker is rejected. The session captures the current app
-without audio, microphone, or camera, samples roughly once per second plus a final drain, retains only
-the newest pending sample, and stops after 180 seconds including permission time.
-`stop()` is idempotent and waits for startup, stream stop, writes, and a final drain.
-Check `state`/`failure` for automatic termination and close the trace afterward.
-Always stop explicitly before releasing the capture object; there is no async
-cleanup guarantee on deallocation or process termination.
+```swift
+#if DEBUG
+Task { @MainActor in
+    guard let window = self.view.window else { return }
+    do {
+        let trace = try await recordUI(in: window)
+        print("Trace ready: \(trace.path)")
+    } catch {
+        print("Capture failed: \(error)")
+    }
+}
+#endif
+```
 
-Frames are converted to orientation-corrected RGBA8 sRGB PNGs at the stream's
-default resolution. Metadata includes source PTS (`capture.presentationSeconds`),
-pixel format, orientation, and available content geometry. Timeline timestamps
-describe recorder entry, **not** the original sample time; source PTS is a separate
-clock domain. YCbCr conversion is not pixel-identical to a system RGB screenshot.
-This bounded keyframe backend does not establish transition-rate or performance
-coverage. The type is absent on Simulator, Mac Catalyst, macOS, and SDKs without
-the iOS framework; existing hierarchy capture remains available there.
+The 100 ms sleep is a pause **between** captures, not a frame-rate promise: rendering
+and PNG writes add time. Adjust the sample count and pause for your reproduction.
+Use `recorder.mark("Menu.opened")` in your own recording flow to label an event.
 
-Run the interactive macOS fixture with:
+### 3. Copy the trace to your Mac
+
+After **Trace ready** appears, find your booted Simulator's UUID:
 
 ```sh
-swift run --package-path Examples/ScreenerFixture
+xcrun simctl list devices booted
 ```
 
-Use **Start recording**, advance the fixture state, capture a frame, and stop the session. Bundles are written under the fixture app's Caches directory.
-
-## Codex skill and plugin
-
-The project-local [$screener-visual-trace skill](.agents/skills/screener-visual-trace/SKILL.md)
-selects capture evidence and verifies a Debug recording. It covers UIKit as the
-default, UIKit trace plus `simctl` screenshots for Simulator materials, and a
-manually approved ScreenCaptureKit session on physical iOS 27. It checks the
-consumer's actual SDK pin before using the experimental API.
-
-The [Codex plugin manifest](.codex-plugin/plugin.json) exposes that same skill
-folder for reuse across apps. This is a skills-only Codex package: it does not
-automatically register or launch the MCP server. Connect the built local server
-using the instructions below when needed. Plugin versioning is independent of
-SDK release versioning; installing this skill does not update an app's dependency.
-The layout follows the supported [Codex plugin format](https://developers.openai.com/plugins/build/plugins).
-
-Codex discovers the project skill under `.agents/skills`; if it does not appear,
-start a new chat or restart the app. Example:
-
-```text
-Use $screener-visual-trace to verify PhotoCompressor's Debug menu in Simulator
-with a UIKit trace and a matching system screenshot.
-```
-
-To use only the skill in another project's workspace, copy its entire directory
-(including references) into that project's `.agents/skills/`. Review an existing
-same-named skill before replacing it. The [repo marketplace](.agents/plugins/marketplace.json) exposes `screener` from
-this repository root under the **Screener** source. Refresh/restart the host and
-install it from that source when using the plugin; creating these files alone
-does not install it. For CLI distribution after merge, register the source with
-`codex plugin marketplace add SoundBlaster/Screener`, then install
-`codex plugin add screener@screener-local`. Avoid installing both a standalone
-copy and the plugin into the same consumer.
-
-## Build and test
+Replace `SIMULATOR_UUID` and `YOUR_APP_BUNDLE_ID` below. The bundle ID is in your
+app target's **Signing & Capabilities** settings.
 
 ```sh
-swift test
+APP_DATA=$(xcrun simctl get_app_container SIMULATOR_UUID YOUR_APP_BUNDLE_ID data)
+mkdir -p "$HOME/ScreenerTraces"
+cp -R "$APP_DATA/Documents/ScreenerTraces/." "$HOME/ScreenerTraces/"
 ```
 
-## Local MCP server
+### 4. Connect the MCP server
 
-Build the standalone macOS stdio server:
+In a separate Terminal, build the matching release on your Mac:
 
 ```sh
-swift build --product screener-mcp
-.build/debug/screener-mcp --traces-dir "$HOME/Library/Caches/ScreenerFixture/Traces"
+git clone --branch v0.1.0-alpha.2 https://github.com/SoundBlaster/Screener.git
+cd Screener
+swift build -c release --product screener-mcp
+SCREENER_BIN="$(swift build -c release --show-bin-path)/screener-mcp"
+echo "$SCREENER_BIN"
 ```
 
-Without `--traces-dir`, it checks `~/Library/Caches/Screener/Traces` and `~/Library/Caches/ScreenerFixture/Traces`. Pass the option more than once to add roots. It discovers `.vtrace` directories below each root and exposes four read-only MCP tools:
+For **Codex CLI**, register that binary:
 
-- `screener.sessions` lists session metadata without local file paths.
-- `screener.timeline` returns chronological records in pages of up to 2,000; use `nextOffset` to continue.
-- `screener.contact_sheet` returns a chronological grid of up to 24 downsampled frames plus a numbered cell-to-record map. Use `offset` to page through longer sessions.
-- `screener.frame` returns one PNG/JPEG thumbnail or keyframe by session and record UUID.
+```sh
+codex mcp add screener -- "$SCREENER_BIN" --traces-dir "$HOME/ScreenerTraces"
+```
 
-Tools accept catalog UUIDs rather than arbitrary filesystem paths. Frame references are checked after symlink resolution, image types are limited to PNG/JPEG, and each image is capped at 32 MiB. The executable writes no diagnostics to stdout because stdio carries MCP messages.
-
-Configure an MCP host to launch `.build/debug/screener-mcp` over stdio. If traces are outside the defaults, pass `--traces-dir` and the directory as separate arguments. Simulator-container auto-discovery, semantic inspection, and image diffs remain future work.
-
-For example, an MCP host configuration can use an absolute executable path:
+Start a new agent session to load the server. For another MCP client, use its
+stdio-server settings with the absolute path printed above and your trace directory:
 
 ```json
 {
   "mcpServers": {
     "screener": {
-      "command": "/absolute/path/to/Screener/.build/debug/screener-mcp",
-      "args": ["--traces-dir", "/absolute/path/to/traces"]
+      "command": "/absolute/path/to/screener-mcp",
+      "args": ["--traces-dir", "/Users/you/ScreenerTraces"]
     }
   }
 }
 ```
 
-## Architecture
+### 5. Ask your agent to inspect what happened
 
-- `ScreenerCore` owns the trace format, writer, and reader.
-- `ScreenerKit` owns main-actor capture adapters and does not depend on MCP or OpenTelemetry.
-- `ScreenerMCP` and the separate `screener-mcp` executable read local `.vtrace` bundles and expose session, timeline, and single-frame tools.
-- Optional OpenTelemetry instrumentation may report bounded recorder-health signals, but trace records remain the source of visual history. Telemetry delivery does not imply a trace was captured or persisted.
+```text
+Use Screener to inspect my latest ui-reproduction session.
+Read its timeline and contact sheet, then open the relevant individual frames.
+Explain the visible UI changes and help locate the cause in my code.
+Distinguish what the captured frames show from anything they may have missed.
+```
 
-See [`docs/PRD.md`](docs/PRD.md) and [`docs/adr`](docs/adr) for scope and decisions.
+| MCP tool | What your agent gets |
+| --- | --- |
+| `screener.sessions` | Available recording sessions |
+| `screener.timeline` | Ordered markers and frame records |
+| `screener.contact_sheet` | A numbered grid of captured frames |
+| `screener.frame` | An individual image by session and record ID |
+
+The server reads local trace files. It does not drive your app or start recordings;
+those happen through the app-side SDK. Your MCP client's model and data-handling
+settings determine where images go after the client reads them.
+
+## Choose the right capture
+
+- **UIKit / AppKit:** capture an existing window or view. UIKit uses its current
+  display scale. Useful for layout, state changes, and visual history; blur, glass,
+  overlays, and GPU content can differ from the screen.
+- **SwiftUI:** render an explicit subtree, or capture its hosting window through
+  UIKit / AppKit.
+- **Simulator materials:** pair the trace with `simctl` screenshots to check glass.
+- **Experimental ScreenCaptureKit:** opt-in capture on a physical iOS 27 device
+  with recording permission. Its roughly one-second sampling targets materials
+  and stable states; it is not a fast-animation backend.
+
+See the [capture and MCP guide](docs/capture-guide.md) for backend examples,
+physical-device constraints, pagination, storage, and architecture.
+The [UIKit fixture](Examples/UIKitCaptureFixture/README.md) and
+[Air session report](docs/validation/screen-capture-session-2026-10-09/README.md)
+show what has actually been checked.
+
+## Give your agent the workflow
+
+The optional [Screener skill](.agents/skills/screener-visual-trace/SKILL.md) teaches
+Codex how to choose a capture backend and verify the resulting evidence.
+Install the skills-only plugin:
+
+```sh
+codex plugin marketplace add SoundBlaster/Screener
+codex plugin add screener@screener-local
+```
+
+Then ask it to use `$screener-visual-trace`. The plugin does not install the SDK or
+register the MCP server; complete those steps above. See the
+[plugin guide](docs/capture-guide.md#codex-skill-and-plugin) for project-local use.
+
+## Try the macOS demo or contribute
+
+```sh
+swift run --package-path Examples/ScreenerFixture
+```
+
+Choose **Start recording**, advance the fixture state, capture frames, and stop.
+To inspect these traces, point the MCP server at
+`$HOME/Library/Caches/ScreenerFixture/Traces`.
+
+Run package tests with `swift test`. See the [product scope](docs/PRD.md),
+[architecture decisions](docs/adr), and [changelog](CHANGELOG.md).
+Screener is open source under the [MIT License](LICENSE).
