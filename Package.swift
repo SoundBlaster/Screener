@@ -20,6 +20,7 @@ let package = Package(
         .target(name: "ScreenerMCP", dependencies: ["ScreenerCore", .product(name: "MCP", package: "swift-sdk")]),
         .executableTarget(name: "screener-mcp", dependencies: ["ScreenerMCP", .product(name: "MCP", package: "swift-sdk")]),
         .executableTarget(name: "screener-benchmarks", dependencies: ["ScreenerCore", "ScreenerMCP"]),
+        .testTarget(name: "ScreenerBenchmarksTests", dependencies: ["screener-benchmarks"]),
         .testTarget(name: "ScreenerCoreTests", dependencies: ["ScreenerCore"]),
         .testTarget(name: "ScreenerKitTests", dependencies: ["ScreenerKit", "ScreenerCore"]),
         .testTarget(name: "ScreenerMCPTests", dependencies: ["ScreenerMCP", "ScreenerCore", .product(name: "MCP", package: "swift-sdk")]),

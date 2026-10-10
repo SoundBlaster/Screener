@@ -9,7 +9,7 @@ enum ScreenerBenchmarks {
     private struct Options {
         var records = 10_000
         var frames = 400
-        var iterations = 7
+        var iterations = 100
     }
 
     static func main() throws {
@@ -23,17 +23,17 @@ enum ScreenerBenchmarks {
         let timelineOffset = max(0, options.records - 2_000)
         let contactSheetOffset = max(0, options.frames / 2)
 
-        let timelineSamples = try measure(iterations: options.iterations) {
+        let timelineSamples = try BenchmarkMeasurement.measure(iterations: options.iterations) {
             try catalog.timelinePage(sessionID: manifest.sessionID, offset: timelineOffset, limit: 2_000)
         }
-        let contactSheetSamples = try measure(iterations: options.iterations) {
+        let contactSheetSamples = try BenchmarkMeasurement.measure(iterations: options.iterations) {
             try catalog.contactSheet(sessionID: manifest.sessionID, offset: contactSheetOffset, maxCells: 24)
         }
 
         print("Screener performance benchmark (\(ProcessInfo.processInfo.operatingSystemVersionString))")
-        print("Trace: \(options.records) records, \(options.frames) frames; \(options.iterations) measured iterations")
-        print("timelinePage near tail (up to 2,000 records): \(summary(timelineSamples))")
-        print("contactSheet page (up to 24 frames):       \(summary(contactSheetSamples))")
+        print("Trace: \(options.records) records, \(options.frames) frames; \(BenchmarkMeasurement.warmupIterations) warm-up + \(options.iterations) measured iterations per query")
+        print("timelinePage near tail (up to 2,000 records): \(BenchmarkMeasurement.summary(timelineSamples))")
+        print("contactSheet page (up to 24 frames):       \(BenchmarkMeasurement.summary(contactSheetSamples))")
     }
 
     private static func parseOptions(_ arguments: [String]) throws -> Options {
@@ -121,25 +121,6 @@ enum ScreenerBenchmarks {
         CGImageDestinationAddImage(destination, image, nil)
         guard CGImageDestinationFinalize(destination) else { throw BenchmarkError.fixtureCreation }
         return output as Data
-    }
-
-    private static func measure<T>(iterations: Int, operation: () throws -> T) throws -> [Double] {
-        var samples: [Double] = []
-        samples.reserveCapacity(iterations)
-        for _ in 0..<iterations {
-            let start = ContinuousClock.now
-            _ = try operation()
-            let duration = start.duration(to: .now)
-            let components = duration.components
-            samples.append(Double(components.seconds) * 1_000 + Double(components.attoseconds) / 1e15)
-        }
-        return samples.sorted()
-    }
-
-    private static func summary(_ samples: [Double]) -> String {
-        let median = samples[samples.count / 2]
-        let p95 = samples[min(samples.count - 1, Int(ceil(Double(samples.count) * 0.95)) - 1)]
-        return "p50 \(String(format: "%.2f", median)) ms, p95 \(String(format: "%.2f", p95)) ms"
     }
 
     private enum BenchmarkError: Error, LocalizedError {

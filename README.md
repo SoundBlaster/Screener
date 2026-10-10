@@ -138,10 +138,15 @@ swift test
 Run repeatable local performance measurements for tail timeline paging and contact-sheet generation:
 
 ```sh
-swift run -c release screener-benchmarks --records 10000 --frames 400 --iterations 7
+swift run -c release screener-benchmarks --records 10000 --frames 400 --iterations 100
 ```
 
-The benchmark builds a temporary synthetic trace outside the timed section and reports p50/p95 latency. It intentionally reports measurements without enforcing wall-clock thresholds, so shared CI machines do not fail from timing noise.
+The benchmark builds a temporary synthetic trace outside the timed section and warms up
+each query three times before measuring. The default 100 measured iterations report the
+median and an empirical nearest-rank p95; runs with fewer than 100 iterations report
+median/max instead. These are warm-cache measurements, not cold-start latency estimates.
+It intentionally reports measurements without enforcing wall-clock thresholds, so shared
+CI machines do not fail from timing noise.
 
 ## Local MCP server
 
