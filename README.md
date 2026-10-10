@@ -14,7 +14,7 @@ through a local, read-only **MCP server**.
 
 **Reproduce → capture → inspect with your agent.** No cloud service or account.
 
-> **Early alpha · [v0.1.0-alpha.2](https://github.com/SoundBlaster/Screener/releases/tag/v0.1.0-alpha.2).**
+> **[v0.1.0](https://github.com/SoundBlaster/Screener/releases/tag/v0.1.0).**
 > Screener records sampled keyframes, not video. It helps investigate transient UI,
 > but sampling can miss a fast transition and hierarchy capture may omit intermediate
 > animation states. It does not guarantee every animation frame or exact system glass.
@@ -33,12 +33,12 @@ In Xcode, choose **File → Add Package Dependencies**, enter:
 https://github.com/SoundBlaster/Screener
 ```
 
-Select **Exact Version → 0.1.0-alpha.2**, then add **ScreenerKit** to your app target.
+Select **Exact Version → 0.1.0**, then add **ScreenerKit** to your app target.
 For a `Package.swift` project, use:
 
 ```swift
 // In dependencies:
-.package(url: "https://github.com/SoundBlaster/Screener", exact: "0.1.0-alpha.2")
+.package(url: "https://github.com/SoundBlaster/Screener", exact: "0.1.0")
 // In your app target's dependencies:
 .product(name: "ScreenerKit", package: "Screener")
 ```
@@ -124,7 +124,7 @@ cp -R "$APP_DATA/Documents/ScreenerTraces/." "$HOME/ScreenerTraces/"
 In a separate Terminal, build the matching release on your Mac:
 
 ```sh
-git clone --branch v0.1.0-alpha.2 https://github.com/SoundBlaster/Screener.git
+git clone --branch v0.1.0 https://github.com/SoundBlaster/Screener.git
 cd Screener
 swift build -c release --product screener-mcp
 SCREENER_BIN="$(swift build -c release --show-bin-path)/screener-mcp"

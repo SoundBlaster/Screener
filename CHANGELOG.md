@@ -1,5 +1,25 @@
 # Changelog
 
+## 0.1.0 — 2026-10-10
+
+First stable release of the local visual trace SDK and read-only MCP server.
+
+- UIKit, AppKit and SwiftUI capture adapters, semantic markers, version-1 `.vtrace`
+  bundles, and local PNG keyframes.
+- MCP session discovery, paginated timelines, contact sheets and individual frames.
+- Public README with an end-to-end Simulator quick start, geometric cover, and
+  BuildHunter usage example; detailed capture and plugin guidance in a separate guide.
+- Repeatable release benchmarks with per-query warm-up, 100 measured samples by
+  default, empirical p95 for larger samples, and median/max for short runs.
+- SDK trace manifests and MCP initialize responses now identify version `0.1.0`.
+  Trace format remains version 1; the skills-only plugin is also version `0.1.0`.
+
+The opt-in iOS 27 ScreenCaptureKit backend remains experimental. UIKit/AppKit
+rendering does not guarantee compositor fidelity, and sampled keyframes do not
+cover every animation frame. Recording stays app-side; the MCP server reads traces.
+
+Swift tools 6.1+, iOS 16+, macOS 13+. The MCP executable runs on macOS.
+
 ## 0.1.0-alpha.2 — 2026-10-10
 
 - Experimental `ScreenCaptureKitSession` records current-app compositor frames
