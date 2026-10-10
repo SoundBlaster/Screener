@@ -37,7 +37,8 @@ Open `http://localhost:8000/Screener/` or its `macos/` subdirectory.
 ## GitHub Pages
 
 The documentation workflow builds both sites on pull requests and uploads a preview
-artifact. Only the default branch can deploy. Configure repository Pages settings
+artifact as a tar.gz archive (DocC symbol filenames can contain colons).
+Only the default branch can deploy. Configure repository Pages settings
 to use **GitHub Actions** before the first deployment.
 
 After deployment, the expected entry URLs are

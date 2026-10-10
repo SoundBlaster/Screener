@@ -25,12 +25,14 @@ jobs:
         run: python3 .github/scripts/build_documentation.py
       - name: Validate tutorial output
         run: python3 .github/scripts/validate_documentation.py
+      - name: Package preview
+        run: tar -czf .build/screener-documentation.tar.gz -C .build/docc-site .
       - name: Upload preview
         uses: actions/upload-artifact@v4
         with:
           name: screener-documentation
-          path: .build/docc-site
-          include-hidden-files: true
+          path: .build/screener-documentation.tar.gz
+          if-no-files-found: error
       - name: Upload Pages artifact
         if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
         uses: actions/upload-pages-artifact@v3
