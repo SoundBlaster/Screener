@@ -189,6 +189,13 @@ The [UIKit fixture](Examples/UIKitCaptureFixture/README.md) and
 [Air session report](docs/validation/screen-capture-session-2026-10-09/README.md)
 show what has actually been checked.
 
+## Documentation
+
+The DocC catalogs include an API reference, a guided first-trace tutorial, and
+articles on recording, capture backends, and MCP inspection. See the
+[documentation guide](docs/documentation.md) for local builds, platform-specific
+references, and publishing through GitHub Pages or Swift Package Index.
+
 ## Give your agent the workflow
 
 The optional [Screener skill](.agents/skills/screener-visual-trace/SKILL.md) teaches

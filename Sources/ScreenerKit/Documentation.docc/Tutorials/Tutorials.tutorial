@@ -1,0 +1,9 @@
+@Tutorials(name: "Screener") {
+    @Intro(title: "Give your agent a visual history") {
+        Record an iOS window, label the reproduction, and close a local trace.
+    }
+    @Chapter(name: "Your first trace") {
+        @Image(source: "screener-mcp-hero.png", alt: "Captured UI frames arranged on a timeline")
+        @TutorialReference(tutorial: "doc:FirstTrace")
+    }
+}

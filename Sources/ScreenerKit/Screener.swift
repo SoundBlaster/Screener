@@ -10,6 +10,7 @@ public actor Screener {
     private var operationTail: Task<Void, Error>?
     private let imageEncoder: any PNGImageEncoding
 
+    /// Creates an idle recorder; start a session before recording events.
     public init() {
         imageEncoder = PNGImageEncoder()
     }
@@ -18,6 +19,9 @@ public actor Screener {
         self.imageEncoder = imageEncoder
     }
 
+    /// Creates a new `.vtrace` bundle and records its session-start event.
+    /// - Returns: The bundle URL to export after recording finishes.
+    /// - Throws: An error if a session is active, transitioning, or cannot be created.
     @discardableResult
     public func startSession(
         name: String,
@@ -44,6 +48,8 @@ public actor Screener {
         return bundleURL
     }
 
+    /// Appends a named semantic event to the active session.
+    /// Metadata contains application-defined string values.
     public func mark(_ name: String, metadata: [String: String] = [:]) async throws {
         guard !isTransitioning else { throw ScreenerError.sessionTransitionInProgress }
         guard let writer else { throw ScreenerError.noActiveSession }
@@ -87,6 +93,8 @@ public actor Screener {
         }
     }
 
+    /// Appends the session-end event and closes the writer after queued operations.
+    /// Call this on both success and failure paths of a recording flow.
     public func stopSession() async throws {
         guard !isTransitioning else { throw ScreenerError.sessionTransitionInProgress }
         guard let writer else { throw ScreenerError.noActiveSession }

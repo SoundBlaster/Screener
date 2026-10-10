@@ -1,0 +1,46 @@
+@Tutorial(time: 10) {
+    @Intro(title: "Record your first trace") {
+        Use a Mac with Xcode, Swift 6.1 or later, and an iOS 16+ app running in Simulator.
+        Add the Screener package at version 0.1.0 and link ScreenerKit to the app target.
+        Add the helper below to a Swift file in that target. You will call it from a Debug action
+        on the main actor, passing the visible window from your current scene.
+    }
+    @Section(title: "Create and close a session") {
+        @ContentAndMedia {
+            Each reproduction gets its own local bundle. Closing on both success and failure
+            ensures that a failed recording does not leave the recorder active.
+        }
+        @Steps {
+            @Step {
+                Add the helper that starts a trace and returns its URL after closing it.
+                This first version records only lifecycle events; it contains no images yet.
+                @Code(name: "FirstTrace.swift", file: "FirstTrace-1.swift")
+            }
+        }
+    }
+    @Section(title: "Label the reproduction") {
+        @ContentAndMedia {
+            A marker gives the agent a semantic anchor alongside the captured frames.
+        }
+        @Steps {
+            @Step {
+                Add a named marker before ending the session.
+                @Code(name: "FirstTrace.swift", file: "FirstTrace-2.swift", previousFile: "FirstTrace-1.swift")
+            }
+        }
+    }
+    @Section(title: "Capture the window") {
+        @ContentAndMedia {
+            UIKit renders the current window hierarchy. The pause between captures does not
+            promise a fixed frame rate, and sampling may miss a fast transition.
+        }
+        @Steps {
+            @Step {
+                Add the capture loop, call the helper from your Debug action, and reproduce the issue
+                during recording. After it returns, verify that the bundle contains readable PNGs
+                and a sessionEnded record. Follow <doc:InspectingWithAnAgent> to export it.
+                @Code(name: "FirstTrace.swift", file: "FirstTrace-3.swift", previousFile: "FirstTrace-2.swift")
+            }
+        }
+    }
+}

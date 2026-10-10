@@ -1,10 +1,12 @@
 import Foundation
 
+/// Reads manifests and complete timeline records from an existing trace bundle.
 public struct TraceBundleReader: Sendable {
     public let url: URL
 
     public init(url: URL) { self.url = url }
 
+    /// Decodes the manifest and rejects an unsupported trace format version.
     public func manifest() throws -> TraceManifest {
         let data = try Data(contentsOf: url.appending(path: "manifest.json"))
         let decoder = Self.decoder
@@ -21,6 +23,7 @@ public struct TraceBundleReader: Sendable {
         try timelineResult().records
     }
 
+    /// Returns known records and the names of explicitly optional kinds skipped while reading.
     public func timelineResult() throws -> TraceTimeline {
         _ = try manifest()
         let timelineURL = url.appending(path: "timeline.jsonl")

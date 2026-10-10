@@ -1,0 +1,7 @@
+version: 1
+builder:
+  configs:
+    - platform: ios
+      documentation_targets: [ScreenerKit]
+    - platform: macos-spm
+      documentation_targets: [ScreenerCore, ScreenerMCP]

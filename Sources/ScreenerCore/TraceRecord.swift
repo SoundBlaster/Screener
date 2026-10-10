@@ -1,5 +1,6 @@
 import Foundation
 
+/// An ordered event with timestamps, semantic metadata, and an optional blob reference.
 public struct TraceRecord: Codable, Sendable, Equatable, Identifiable {
     public enum Kind: String, Codable, Sendable {
         case sessionStarted

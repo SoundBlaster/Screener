@@ -1,7 +1,10 @@
 import Foundation
 import MCP
 
+/// Constructs the read-only local trace server and its four MCP tools.
 public enum ScreenerMCPServer {
+    /// Creates a server whose tool handlers read from the supplied catalog.
+    /// The caller connects the returned server to its chosen transport.
     public static func make(catalog: TraceCatalog = TraceCatalog()) async -> Server {
         let server = Server(
             name: "screener-mcp",

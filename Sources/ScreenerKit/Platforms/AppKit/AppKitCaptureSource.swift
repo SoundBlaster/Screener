@@ -1,6 +1,8 @@
 #if canImport(AppKit)
 import AppKit
 
+/// Captures an existing AppKit view, optionally completing its window background.
+/// View rendering may differ from compositor screenshots for system materials.
 @MainActor
 public struct AppKitCaptureSource: ScreenerCaptureSource {
     /// What fills pixels the view hierarchy leaves transparent.
