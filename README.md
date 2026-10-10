@@ -217,3 +217,14 @@ To inspect these traces, point the MCP server at
 Run package tests with `swift test`. See the [product scope](docs/PRD.md),
 [architecture decisions](docs/adr), and [changelog](CHANGELOG.md).
 Screener is open source under the [MIT License](LICENSE).
+
+## In use: BuildHunter
+
+This 44-frame overview follows BuildHunter from launch through menu interactions,
+opening a workspace, and changes to its chart. A sequence like this gives your
+agent context to compare UI states and inspect the frames around a change, instead
+of relying on a single screenshot of the final screen.
+
+[![BuildHunter UI sequence: launch, menus, workspace, and chart changes](docs/assets/buildhunter-ui-sequence.jpg)](docs/assets/buildhunter-ui-sequence.jpg)
+
+*Open the image at full size to inspect the numbered frames.*
