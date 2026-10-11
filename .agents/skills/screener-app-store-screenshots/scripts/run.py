@@ -188,6 +188,8 @@ def capture(config, args, root, out, runner):
     owned = json.loads(registry.read_text()) if registry.exists() else {}
     key = config["deviceType"] + ":" + config["runtime"]
     udid = args.simulator or owned.get(key)
+    if not args.simulator and not any(d["udid"] == udid for d in available):
+        udid = None  # A deleted owned device is a cache miss, not an explicit selection.
     if not udid:
         if shutil.disk_usage(root).free < 5 * 1024**3:
             raise ValueError("Need 5 GiB free to create a capture simulator; pass an existing --simulator")
@@ -249,7 +251,7 @@ def capture(config, args, root, out, runner):
             for target in test_targets(plan):
                 target.setdefault("TestingEnvironmentVariables", {}).update({
                     "SCREENER_TEST": "1", "SCREENER_CONTAINERS_ROOT": str(data.parent), "SCREENER_BUNDLE_ID": config["bundleID"],
-                    "SCREENER_ORIENTATIONS": ",".join(config["orientations"]), "SCREENER_LANGUAGE": locale.split("-")[0],
+                    "SCREENER_ORIENTATIONS": ",".join(config["orientations"]), "SCREENER_LANGUAGE": locale,
                     "SCREENER_LOCALE": locale.replace("-", "_"),
                     "SCREENER_APP_ARGUMENTS": json.dumps(config.get("launchArguments", [])),
                     "SCREENER_APP_ENVIRONMENT": json.dumps(config.get("launchEnvironment", {}))})

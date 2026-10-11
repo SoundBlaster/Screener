@@ -12,8 +12,11 @@ The installer creates `screenshots/tools/run.py`, `prepare.swift`, app-side
 It makes no project-file edits. Project source discovery/generation must include both Swift files.
 `ScreenerKit` 0.1.0 is sufficient; preserve a compatible existing pin where appropriate.
 
-Create a screenshot configuration with `SCREENER_SCREENSHOTS` on the app target and an
-isolated bundle ID. A Debug-based configuration also needs inherited `DEBUG` if existing
+Create an opt-in screenshot target with `SCREENER_SCREENSHOTS` and an isolated bundle ID. Link ScreenerKit only to that
+target: source guards alone do not isolate a package dependency. Prefer an opt-in
+project-generation spec that adds the package and screenshot targets; the normal
+spec must omit the package. Generate into the canonical project, then regenerate
+from the normal spec before ordinary development or release builds. A Debug-based configuration also needs inherited `DEBUG` if existing
 fixtures use it. SDK-qualified compilation conditions can override unqualified settings;
 inspect resolved settings and preserve the app's existing conditions.
 
@@ -144,3 +147,7 @@ non-native geometry, changed raw hashes or failed PNG preparation. Preserve diag
 never mark a failed original invocation as successful because recovery later succeeded.
 An in-flight capture can finish after a budget; process termination can leave an unclosed trace.
 The collector rejects it. Cancellation attempts to close the caller-owned session.
+
+Preserve complete BCP 47 locale identifiers in `SCREENER_LANGUAGE`, including
+script/region qualifiers. A deleted registry-owned Simulator is recreated; an
+invalid explicit `--simulator` is rejected instead of silently substituted.
