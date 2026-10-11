@@ -207,7 +207,12 @@ codex plugin marketplace add SoundBlaster/Screener
 codex plugin add screener@screener-local
 ```
 
-Then ask it to use `$screener-visual-trace`. The plugin does not install the SDK or
+Then ask it to use `$screener-visual-trace`, or use
+[`$screener-app-store-screenshots`](.agents/skills/screener-app-store-screenshots/SKILL.md)
+to integrate a repeatable Simulator screenshot batch with real UI checkpoints,
+paired Screener/system PNGs and a review gallery. The screenshot skill includes
+a reusable runner, PNG preparer and app/test adapters; app-specific navigation
+and readiness remain in the consuming repository. The plugin does not install the SDK or
 register the MCP server; complete those steps above. See the
 [plugin guide](docs/capture-guide.md#codex-skill-and-plugin) for project-local use.
 
