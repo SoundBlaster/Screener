@@ -123,6 +123,10 @@ bypass to this runner.
 ## Artifacts and timing
 
 Raw captures, `.vtrace`, system references and diagnostic copies remain separate.
+For an interactive baseline, verify the PNG header of the UI tool output before
+using it as a native asset: a tool can call its screenshot full-size while encoding
+1× point dimensions. Use native `simctl io screenshot` if needed; do not upscale.
+Record that its compositor reference backend differs from XCUIScreen.
 Prepared PNGs remove only opaque alpha, normalize EXIF and retain native RGB depth/color space;
 `prepare.log` confirms decoded equality. `manifest.json` records binary/config/tool identity,
 raw/prepared hashes, geometry, scale and trace/record links. `review.html` is a labelled gallery.

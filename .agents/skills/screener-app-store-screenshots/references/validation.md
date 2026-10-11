@@ -73,6 +73,29 @@ metrics were preserved byte-for-byte.
 Full manifests/metrics and verification limits are in the consuming repository's
 `screenshots/README.md` and `screenshots/validation/2026-10-11/`.
 
+## Matched interactive experiment
+
+A later single-pair comparison reused the same CityChain binary, fixture,
+harness, collector and preparer, with four UI states/eight native PNGs and no
+builds. Interactive agent navigation took **111.571s**, configured automation
+**78.744s**: **32.827s / 29.42% less elapsed time**. Agent-visible nested tool
+calls were **33 versus 2** (launch and completion collection for automation).
+Internal CLI subprocesses are not model/tool round trips. This is an equipped
+agent versus a ready XCTest scenario, not a human-speed benchmark or token bill.
+
+The first interactive attempt failed because DeviceInteraction screenshotPath
+encoded1× point dimensions; the successful rerun used native simctl screenshots.
+The automated reference uses XCUIScreen, so compositor implementations differ.
+An automated disk-preflight failure/cache cleanup is also recorded separately.
+Both completed batches pass native geometry, trace and pixel-preserving preparation
+checks; all16prepared images were inspected in a comparison contact sheet.
+One pair, cache/order effects and different shutdown scheduling limit inference.
+
+Detailed timings, failed attempts and identities: SwiftDecision-Examples
+`screenshots/validation/2026-10-11/ab/README.md` in
+[the consumer PR](https://github.com/SoundBlaster/SwiftDecision-Examples/pull/67).
+No model-token or billed-cost savings were measured.
+
 ## SDK scope
 
 This change adds skill/plugin resources and a consumer example. No ScreenerCore or
