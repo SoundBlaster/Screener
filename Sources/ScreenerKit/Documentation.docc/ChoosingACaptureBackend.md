@@ -24,6 +24,27 @@ content, overlays, and animation presentation states. On Simulator, pair the tra
 with `xcrun simctl io SIMULATOR_UUID screenshot screenshot.png` to compare materials.
 A screenshot is an additional observation, not a replacement frame in the trace.
 
+## GPU surfaces
+
+Hierarchy capture can omit an entire GPU surface while producing a valid PNG.
+In the local Dreams pilot on macOS 27.0, AppKit omitted the MTKView region at all
+14 checkpoints. A consumer-local macOS ScreenCaptureKit screenshot path matched
+the system window screenshot's RGB pixels exactly at 1280×880, 2×, including a
+production `framebufferOnly=true` profile.
+
+That finding applies to the tested SDR Metal window. RealityKit, HDR/EDR,
+protected content, occlusion and sustained capture remain unverified; macOS evidence
+does not establish iOS-device or Simulator GPU fidelity. Use matched system references
+and inspect content, not just PNG geometry. The historical pilot used a consumer-local adapter. The working source now
+supplies the optional ScreenerScreenCaptureKit product for macOS 14+ window stills,
+feeding the same `recordFrame` API. It is unreleased; older pins do not gain it
+when a plugin or reader is updated. A fresh packaged-adapter pilot repeats the
+14 native comparisons; RealityKit/HDR/continuous capture remain unverified.
+
+The repository preserves measurements and identities under
+`docs/validation/metal-2026-10-12/` and platform routing in
+`docs/capture-capabilities.md`. Custom source inputs are covered in <doc:CustomFrames>.
+
 ## Experimental ScreenCaptureKit
 
 `ScreenCaptureKitSession` is an opt-in backend for a physical iOS 27 device. It is

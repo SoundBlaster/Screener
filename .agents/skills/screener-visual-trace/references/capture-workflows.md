@@ -3,6 +3,44 @@
 Read only the mode relevant to the task. Commands use placeholders resolved from
 current device/project/container discovery; do not copy a prior run's UUIDs.
 
+## GPU surfaces and platform routing
+
+Choose the adapter independently of the recorder/reader. A successful write or
+native-size PNG does not establish capture fidelity. In a 2026-10-12 Dreams
+pilot on macOS 27.0, Screener 0.1.0 AppKit capture omitted the entire MTKView
+surface at 14 checkpoints. A consumer-local Apple `SCScreenshotManager` path,
+recorded using Screener's existing `recordFrame`, matched the system window
+screenshot RGB pixels exactly at 1280×880, 2×. Transparent/opaque surfaces and
+production `framebufferOnly=true` were included.
+
+This confirms that tested SDR Metal case; RealityKit, HDR/EDR, protected content,
+occlusion and sustained recording remain unknown. The live probe paused the
+renderer for paired captures. Do not generalize macOS evidence to iOS/Simulator.
+The source report, measurements and identities are preserved in the Screener
+repository at `docs/validation/metal-2026-10-12/`; platform matrix is
+`docs/capture-capabilities.md`.
+
+- **macOS:** the historical 0.1.0 SDK has no SCK adapter. The working source adds
+  an unreleased optional `ScreenerScreenCaptureKit` product with macOS 14+
+  `ScreenCaptureKitWindowSource`. Verify the consumer pin actually includes it.
+  A fresh Dreams probe through this module repeated all 14 exact native comparisons;
+  see `docs/validation/packaged-backend-2026-10-12/` in the Screener repository.
+  `capture()` returns an image; `record(to:reason:metadata:)` captures/persists
+  through Kit. Select an explicit window ID and expected PID (caller by default).
+  It checks existing Screen Recording access, owner and native geometry, and never
+  prompts, falls back to desktop/hierarchy, or starts a continuous stream.
+  Keep the app-owned trace active until awaited still captures finish.
+- **Physical iOS 27:** the experimental SDK session uses manual current-app picker
+  approval. The Air materials experiment is not a GPU-surface validation.
+- **Simulator:** use the Mac host's `simctl` or XCTest system screenshot with
+  semantic checkpoints. There is no iOS recording picker for that path. SCK is
+  absent from the locally checked iPhoneSimulator 27.1 SDK and the SDK session
+  explicitly excludes Simulator/Catalyst. Recheck future toolchains.
+
+Compare actual native content against a matched system reference. Keep backend,
+permission, geometry, SDK/app identities and scene state explicit. Never relabel
+a compositor image as hierarchy evidence or silently substitute capture backends.
+
 ## UIKit Debug capture
 
 Capture the containing `UIWindow` for effects that depend on content behind them.

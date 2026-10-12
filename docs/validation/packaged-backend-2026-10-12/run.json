@@ -1,0 +1,59 @@
+{
+  "sourceRevision": "c55774a1ac637d73d5caf6c5cf54a36b4c24517b",
+  "screenerPath": "/Users/egor/Development/GitHub/Screener",
+  "screenerRevision": "d16d63d5f571429195ba99cbdd10843d3f92ba0a",
+  "screenerSourceSHA256": {
+    "Sources/ScreenerKit/Capture/CapturedFrame.swift": "97cacbd3e724729c505605a26c844e884e1548402b2487224e2cede6517cf2a2",
+    "Sources/ScreenerKit/Capture/CapturedImage+CoreVideo.swift": "48327ff9c37b6a3bf4768061aa746c41d0cfa5f7f193138e8db7e39ca1e6b2e1",
+    "Sources/ScreenerKit/Capture/CapturedImage+Inputs.swift": "4b63c750d637bc15da7949a80d1dd7a384ddfbcfb3527fae17a405205b213586",
+    "Sources/ScreenerKit/Capture/CapturedImage+PlatformImages.swift": "c6daf4d0b9d76d93737b238e825a4727f8fb62f8478bc4c56d5ef8e17aac0de5",
+    "Sources/ScreenerKit/Capture/CapturedImage.swift": "11bc16bf31d7d08746b70ec04af790b127087d7bf66b3128a0d10ef2dded8c84",
+    "Sources/ScreenerKit/Capture/LatestFrameSlot.swift": "e6e331b9d35d572cdfda2b9526a48d1318e1f6e759604745348cee53d4c4da2e",
+    "Sources/ScreenerKit/Capture/ScreenCaptureKitSession.swift": "dcb3757f8c198a6db1f033d448243ead21dcd3bde8b82a1ea7d82df064ccd0cd",
+    "Sources/ScreenerKit/Capture/ScreenerCaptureError.swift": "07f55dd60bfc535f83dccee29507894f1114786621b6d5ca0aa2cc58fa58012b",
+    "Sources/ScreenerKit/Capture/ScreenerCaptureSession.swift": "4b0d32983ce4d64184bc01de2664726a4339ac77e6ff6d69cb838f36acfd0824",
+    "Sources/ScreenerKit/Capture/ScreenerCaptureSource.swift": "a070f8c047337eaafef8eeb574322fc11d08d5288664b945d42eb210123d475b",
+    "Sources/ScreenerKit/Documentation.docc/Tutorials/FirstTrace-1.swift": "36e019d77e8470684de2107a32c402203ce62711931d29db9eb80113df3bcf7e",
+    "Sources/ScreenerKit/Documentation.docc/Tutorials/FirstTrace-2.swift": "75ff5a26003827e288b7b65d676c1660763bf7c66f5c619673a2df5e24f43e2e",
+    "Sources/ScreenerKit/Documentation.docc/Tutorials/FirstTrace-3.swift": "b2f38454570742c155b299262a958b48bddc4ecb45327fd02075ea7877b643f4",
+    "Sources/ScreenerKit/Platforms/AppKit/AppKitCaptureSource.swift": "fe1393e5568d886de3d3360546e9698dd5a2c502971843fcceed0a49b17926ee",
+    "Sources/ScreenerKit/Platforms/SwiftUI/SwiftUICaptureSource.swift": "720c3f305cf2a1f30211bc4bc59893e9e03364a165c9c007ed4c03fb004151df",
+    "Sources/ScreenerKit/Platforms/UIKit/UIKitCaptureSource.swift": "db48188df2455f7f4d30db5b77b3c4cc52172abe41d5fb355f7396d2f98e916e",
+    "Sources/ScreenerKit/Screener.swift": "970efeede876949bd9e56e9096f7cf008b95103ffbdc463466ad1bc8cf06906b",
+    "Sources/ScreenerScreenCaptureKit/ScreenCaptureKitWindowSource.swift": "ef6bc1d82d6421cefc343d0102ff43d7e014870c1bf418699dae6a25f465f638"
+  },
+  "buildSeconds": 10.313195083,
+  "binarySHA256": "ad753509dbcf028660108c483b067fd528d13c6eb13c3882e7b52522c1f239cb",
+  "runs": [
+    {
+      "name": "transparent-1",
+      "seconds": 2.4886412910000004,
+      "trace": "/Users/egor/Development/GitHub/.worktrees/Dreams-metal-pilot/artifacts/metal-pilot/20261012T181959Z/transparent-1/traces/902C6C76-4C6D-49D0-8BAE-C8368569B6E9.vtrace",
+      "rows": 2
+    },
+    {
+      "name": "transparent-2",
+      "seconds": 2.0649331659999994,
+      "trace": "/Users/egor/Development/GitHub/.worktrees/Dreams-metal-pilot/artifacts/metal-pilot/20261012T181959Z/transparent-2/traces/C4DABD0A-AB12-4830-A3FD-9CE6A9191785.vtrace",
+      "rows": 2
+    },
+    {
+      "name": "opaque",
+      "seconds": 1.9929979580000001,
+      "trace": "/Users/egor/Development/GitHub/.worktrees/Dreams-metal-pilot/artifacts/metal-pilot/20261012T181959Z/opaque/traces/F63ACCB4-59C0-46D5-A008-4915277E0BE8.vtrace",
+      "rows": 2
+    },
+    {
+      "name": "live",
+      "seconds": 4.728261832999998,
+      "trace": "/Users/egor/Development/GitHub/.worktrees/Dreams-metal-pilot/artifacts/metal-pilot/20261012T181959Z/live/traces/65278025-2D90-4A47-A341-7C080B79D3F0.vtrace",
+      "rows": 6
+    },
+    {
+      "name": "production-surface",
+      "seconds": 1.8866613749999992,
+      "trace": "/Users/egor/Development/GitHub/.worktrees/Dreams-metal-pilot/artifacts/metal-pilot/20261012T181959Z/production-surface/traces/58A717C1-08B8-4BAB-909C-4E3A17D13E9F.vtrace",
+      "rows": 2
+    }
+  ]
+}

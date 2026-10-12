@@ -1,0 +1,21 @@
+{
+  "baseRevision": "c55774a1ac637d73d5caf6c5cf54a36b4c24517b",
+  "sourceSHA256": {
+    "Package.swift": "096cb70a2b425035d5e3c74f78e739e22a28c209d97b17156ac472b8ce39b2be",
+    "Sources/Dreams/app/entrypoint/DreamsMain.swift": "e43585b4c058712920a00e8960b900eee91e9a1bffda9c339f9a1aec05637839",
+    "Sources/Dreams/app/diagnostics/MetalCapturePilot.swift": "e1fd4d1b7d5ff7485bce6149bce600ec6562e782c72a0f21f5586686406ecb00",
+    "Sources/Dreams/features/rain/ui/RainRenderer.swift": "172674857f1e85a51dc50dc3a04a8fcccee489695077c10f825513e4caf3c9ae",
+    "scripts/metal-capture-pilot.py": "96aa27f3992c0839c0ce8f13f88ccf6e3f1966176d8f4f3f8bee2294b923e78d",
+    "scripts/analyze-metal-pilot.py": "4ad1217e12660443bfe5ece1623130e0f85263f2246d04d47ef8902068d1a44c"
+  },
+  "run": "/Users/egor/Development/GitHub/.worktrees/Dreams-metal-pilot/artifacts/metal-pilot/20261012T093830Z",
+  "sdk": "Screener 0.1.0 fd6cc12f37c875ed57f62454318363cbf3de8705",
+  "nativeGeometry": [
+    1280,
+    880
+  ],
+  "scale": 2,
+  "macOS": "ProductName:\t\tmacOS\nProductVersion:\t\t27.0\nBuildVersion:\t\t26A428\n",
+  "swift": "Apple Swift version 6.4 (swiftlang-6.4.0.34.1 clang-2100.3.34.1)\nTarget: arm64-apple-macosx27.0.0\n",
+  "scope": "local pilot; no CI or release validation"
+}

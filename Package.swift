@@ -7,6 +7,7 @@ let package = Package(
     products: [
         .library(name: "ScreenerCore", targets: ["ScreenerCore"]),
         .library(name: "ScreenerKit", targets: ["ScreenerKit"]),
+        .library(name: "ScreenerScreenCaptureKit", targets: ["ScreenerScreenCaptureKit"]),
         .library(name: "ScreenerMCP", targets: ["ScreenerMCP"]),
         .executable(name: "screener-mcp", targets: ["screener-mcp"]),
         .executable(name: "screener-benchmarks", targets: ["screener-benchmarks"]),
@@ -18,6 +19,7 @@ let package = Package(
     targets: [
         .target(name: "ScreenerCore"),
         .target(name: "ScreenerKit", dependencies: ["ScreenerCore"]),
+        .target(name: "ScreenerScreenCaptureKit", dependencies: ["ScreenerKit"]),
         .target(name: "ScreenerMCP", dependencies: ["ScreenerCore", .product(name: "MCP", package: "swift-sdk")]),
         .executableTarget(name: "screener-mcp", dependencies: ["ScreenerMCP", .product(name: "MCP", package: "swift-sdk")]),
         .executableTarget(name: "screener-benchmarks", dependencies: ["ScreenerCore", "ScreenerMCP"]),

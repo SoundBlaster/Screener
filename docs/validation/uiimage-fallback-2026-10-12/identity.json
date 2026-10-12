@@ -1,0 +1,13 @@
+{
+  "reviewedHead": "9cff63ca8c645eef6af8a1314114b5eb3387dcb2",
+  "thread": "PRRT_kwDOU9DjLc6rlJae",
+  "comment": "https://github.com/SoundBlaster/Screener/pull/16#discussion_r4251242529",
+  "resultBundle": "/tmp/screener-uiimage-review-fixed-20261012.xcresult",
+  "sourceSHA256": {
+    "Sources/ScreenerKit/Capture/CapturedImage+PlatformImages.swift": "d235243752c5a67a25202a6a8ba1adb0a13e4337ea29b4c7520f44c945b2bb38",
+    "Tests/ScreenerKitTests/UIKitCaptureTests.swift": "c24a5dafa3876e0e9bf78caeca03dca6881dbfaf278574222433596d1e4f934a"
+  },
+  "target": "iOS Simulator 27.0, iPhone Air, arm64",
+  "cache": "repository .build/DerivedData; one generated UIKitCaptureFixture project",
+  "scope": "focused UIKit suite; no physical-device or Metal rerun"
+}

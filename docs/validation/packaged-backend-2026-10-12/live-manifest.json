@@ -1,0 +1,157 @@
+{
+  "framebufferOnly" : false,
+  "instrumentation" : "posed\/frozen or paused live checkpoints; GPU blit reference only with framebufferOnly=false",
+  "live" : true,
+  "rows" : [
+    {
+      "appkitMS" : 4.5612083631567657,
+      "appkitPixels" : [
+        1280,
+        880
+      ],
+      "framesRendered" : 9,
+      "framesRenderedAfterCaptures" : 9,
+      "gpuPixels" : [
+        1200,
+        720
+      ],
+      "gpuReadbackMS" : 12.934166647028178,
+      "name" : "live-00",
+      "posedTime" : 0,
+      "screenCaptureKitBackend" : "ScreenerScreenCaptureKit.window",
+      "screenCaptureKitPixels" : [
+        1280,
+        880
+      ],
+      "screenCaptureKitRecordMS" : 134.17529163416475,
+      "screenCaptureKitScale" : 2,
+      "systemScreenshotExit" : 0
+    },
+    {
+      "appkitMS" : 1.9022916676476598,
+      "appkitPixels" : [
+        1280,
+        880
+      ],
+      "framesRendered" : 16,
+      "framesRenderedAfterCaptures" : 16,
+      "gpuPixels" : [
+        1200,
+        720
+      ],
+      "gpuReadbackMS" : 3.9124999893829226,
+      "name" : "live-01",
+      "posedTime" : 1,
+      "screenCaptureKitBackend" : "ScreenerScreenCaptureKit.window",
+      "screenCaptureKitPixels" : [
+        1280,
+        880
+      ],
+      "screenCaptureKitRecordMS" : 79.466541646979749,
+      "screenCaptureKitScale" : 2,
+      "systemScreenshotExit" : 0
+    },
+    {
+      "appkitMS" : 2.2664583520963788,
+      "appkitPixels" : [
+        1280,
+        880
+      ],
+      "framesRendered" : 24,
+      "framesRenderedAfterCaptures" : 24,
+      "gpuPixels" : [
+        1200,
+        720
+      ],
+      "gpuReadbackMS" : 12.790625041816384,
+      "name" : "live-02",
+      "posedTime" : 2,
+      "screenCaptureKitBackend" : "ScreenerScreenCaptureKit.window",
+      "screenCaptureKitPixels" : [
+        1280,
+        880
+      ],
+      "screenCaptureKitRecordMS" : 86.036375025287271,
+      "screenCaptureKitScale" : 2,
+      "systemScreenshotExit" : 0
+    },
+    {
+      "appkitMS" : 2.7701666695065796,
+      "appkitPixels" : [
+        1280,
+        880
+      ],
+      "framesRendered" : 32,
+      "framesRenderedAfterCaptures" : 32,
+      "gpuPixels" : [
+        1200,
+        720
+      ],
+      "gpuReadbackMS" : 13.514499994926155,
+      "name" : "live-03",
+      "posedTime" : 3,
+      "screenCaptureKitBackend" : "ScreenerScreenCaptureKit.window",
+      "screenCaptureKitPixels" : [
+        1280,
+        880
+      ],
+      "screenCaptureKitRecordMS" : 83.197833329904824,
+      "screenCaptureKitScale" : 2,
+      "systemScreenshotExit" : 0
+    },
+    {
+      "appkitMS" : 2.2877916926518083,
+      "appkitPixels" : [
+        1280,
+        880
+      ],
+      "framesRendered" : 39,
+      "framesRenderedAfterCaptures" : 39,
+      "gpuPixels" : [
+        1200,
+        720
+      ],
+      "gpuReadbackMS" : 19.063249987084419,
+      "name" : "live-04",
+      "posedTime" : 4,
+      "screenCaptureKitBackend" : "ScreenerScreenCaptureKit.window",
+      "screenCaptureKitPixels" : [
+        1280,
+        880
+      ],
+      "screenCaptureKitRecordMS" : 83.799500018358231,
+      "screenCaptureKitScale" : 2,
+      "systemScreenshotExit" : 0
+    },
+    {
+      "appkitMS" : 2.1447916515171528,
+      "appkitPixels" : [
+        1280,
+        880
+      ],
+      "framesRendered" : 47,
+      "framesRenderedAfterCaptures" : 47,
+      "gpuPixels" : [
+        1200,
+        720
+      ],
+      "gpuReadbackMS" : 13.719999988097697,
+      "name" : "live-05",
+      "posedTime" : 5,
+      "screenCaptureKitBackend" : "ScreenerScreenCaptureKit.window",
+      "screenCaptureKitPixels" : [
+        1280,
+        880
+      ],
+      "screenCaptureKitRecordMS" : 91.255499981343746,
+      "screenCaptureKitScale" : 2,
+      "systemScreenshotExit" : 0
+    }
+  ],
+  "scale" : 2,
+  "scope" : "SDR BGRA8 sRGB; one window; paused checkpoints; real animation between live checkpoints",
+  "screenRecordingPermission" : true,
+  "trace" : "\/Users\/egor\/Development\/GitHub\/.worktrees\/Dreams-metal-pilot\/artifacts\/metal-pilot\/20261012T181959Z\/live\/traces\/65278025-2D90-4A47-A341-7C080B79D3F0.vtrace",
+  "transparent" : true,
+  "windowID" : 12237
+}

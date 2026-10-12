@@ -1,0 +1,128 @@
+[
+  {
+    "profile": "live",
+    "recordID": "E557064F-EA33-43E8-8E28-85AFA42332E2",
+    "pixels": [
+      1280,
+      880
+    ],
+    "exactSystemMatch": true
+  },
+  {
+    "profile": "live",
+    "recordID": "F3DD3196-DAF7-49ED-97CE-A71D5D64FED2",
+    "pixels": [
+      1280,
+      880
+    ],
+    "exactSystemMatch": true
+  },
+  {
+    "profile": "live",
+    "recordID": "5A3FEF57-C37B-41BF-BE16-23146249B67A",
+    "pixels": [
+      1280,
+      880
+    ],
+    "exactSystemMatch": true
+  },
+  {
+    "profile": "live",
+    "recordID": "8A00EE23-DD99-44E3-B20B-2AB95DEDFA3F",
+    "pixels": [
+      1280,
+      880
+    ],
+    "exactSystemMatch": true
+  },
+  {
+    "profile": "live",
+    "recordID": "E3A13456-8129-4C58-8F4B-24E7C6C2B2D9",
+    "pixels": [
+      1280,
+      880
+    ],
+    "exactSystemMatch": true
+  },
+  {
+    "profile": "live",
+    "recordID": "891FBC6C-EB47-47FD-8137-CA4AA070254D",
+    "pixels": [
+      1280,
+      880
+    ],
+    "exactSystemMatch": true
+  },
+  {
+    "profile": "opaque",
+    "recordID": "89C729CC-947C-4E08-A14B-BE5B0E400836",
+    "pixels": [
+      1280,
+      880
+    ],
+    "exactSystemMatch": true
+  },
+  {
+    "profile": "opaque",
+    "recordID": "D7FF63AA-8CDB-4A59-B6E2-A1625D85FD3E",
+    "pixels": [
+      1280,
+      880
+    ],
+    "exactSystemMatch": true
+  },
+  {
+    "profile": "production-surface",
+    "recordID": "50340BC7-F756-475B-87DA-83F8DB1D64D0",
+    "pixels": [
+      1280,
+      880
+    ],
+    "exactSystemMatch": true
+  },
+  {
+    "profile": "production-surface",
+    "recordID": "6190C401-B701-4575-AFAD-16A380431E39",
+    "pixels": [
+      1280,
+      880
+    ],
+    "exactSystemMatch": true
+  },
+  {
+    "profile": "transparent-1",
+    "recordID": "C013C5A6-BE1D-4B9F-B097-3B523EF38250",
+    "pixels": [
+      1280,
+      880
+    ],
+    "exactSystemMatch": true
+  },
+  {
+    "profile": "transparent-1",
+    "recordID": "9EEE3BE2-FE8D-4405-AA4F-B49C710425E6",
+    "pixels": [
+      1280,
+      880
+    ],
+    "exactSystemMatch": true
+  },
+  {
+    "profile": "transparent-2",
+    "recordID": "7586D704-FFC8-4391-89D6-41E2B87EC1CE",
+    "pixels": [
+      1280,
+      880
+    ],
+    "exactSystemMatch": true
+  },
+  {
+    "profile": "transparent-2",
+    "recordID": "A8A71149-61A5-4C3D-AEB6-FD8B6618F7BA",
+    "pixels": [
+      1280,
+      880
+    ],
+    "exactSystemMatch": true
+  }
+]

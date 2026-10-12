@@ -23,6 +23,12 @@ for platform, path, expected, excluded in [
                     "--tutorial-json", str(tutorials[0])], check=True)
     print(f"PASS: {platform} modules, conditional symbols, and tutorial diffs")
 
+# The optional compositor module is published only in the macOS site.
+backend = site / "macos/data/documentation/screenerscreencapturekit"
+assert (backend / "screencapturekitwindowsource.json").is_file()
+assert not (site / "data/documentation/screenerscreencapturekit.json").exists()
+print("PASS: optional macOS backend documentation")
+
 # Compile tutorial snapshots and complete article listings against the iOS modules.
 import re
 import tempfile
@@ -45,3 +51,10 @@ with tempfile.TemporaryDirectory() as temporary:
     snippet.write_text(listing)
     subprocess.run([*command, str(snippet)], check=True)
 print("PASS: iOS recording article example")
+custom = (catalog / "CustomFrames.md").read_text()
+listing = re.search(r"```swift\n(.*?)```", custom, re.S).group(1)
+with tempfile.TemporaryDirectory() as temporary:
+    snippet = Path(temporary) / "CustomFramesExample.swift"
+    snippet.write_text(listing)
+    subprocess.run([*command, str(snippet)], check=True)
+print("PASS: iOS custom-frame article example")

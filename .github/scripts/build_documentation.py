@@ -18,16 +18,19 @@ for platform, destination, base_path, options in [
     ("macOS", output / "macos", "Screener/macos", []),
 ]:
     print(f"Building {platform} documentation", flush=True)
+    modules = ["ScreenerKit", "ScreenerCore", "ScreenerMCP"]
+    if platform == "macOS":
+        modules.append("ScreenerScreenCaptureKit")
+    target_options = [argument for module in modules for argument in ("--target", module)]
     run("swift", "package", *options, "--allow-writing-to-directory", str(root / ".build"),
-        "generate-documentation", "--target", "ScreenerKit", "--target", "ScreenerCore",
-        "--target", "ScreenerMCP",
+        "generate-documentation", *target_options,
         "--output-path", str(root / ".build" / f"docc-{platform}-archives"), "--transform-for-static-hosting",
         "--hosting-base-path", base_path, "--warnings-as-errors")
     archives = root / ".build" / f"docc-{platform}-archives"
     if destination.exists():
         shutil.rmtree(destination)
     run("xcrun", "docc", "merge", *(str(archives / f"{name}.doccarchive")
-        for name in ["ScreenerKit", "ScreenerCore", "ScreenerMCP"]),
+        for name in modules),
         "--output-path", str(destination))
     run(sys.executable, ".github/scripts/prepare_docc_pages.py", "--output-path", str(destination),
         "--target", "ScreenerKit")

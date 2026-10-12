@@ -1,0 +1,8 @@
+{
+  "result": "normal Release build passed, without DREAMS_METAL_PILOT or local Screener override",
+  "compilerReportedBuildSeconds": 8.37,
+  "pilotMarkerAbsent": true,
+  "binarySHA256": "6ff620c66824fef401fe505ebf09845872e0520c03cc307649a44a01e8944af1",
+  "normalPinsRestored": true,
+  "note": "Compiler build time excludes dependency resolution; no app execution."
+}
