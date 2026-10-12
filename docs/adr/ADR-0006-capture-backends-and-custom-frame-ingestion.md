@@ -179,3 +179,13 @@ consumer-local pilot remains unchanged. Runtime coverage for custom inputs is
 limited to raw BGRA8 in Dreams; the other converters have compilation evidence.
 Ownership-reuse, invalid-input, permission-denial and cancellation application
 tests were not added/run. Structural and documentation checks are separate evidence.
+
+### UIImage review follow-up
+
+PR #16 review identified a gap in the existing UIImage conversion contract:
+renderable images need not expose either CGImage or CIImage backing. The converter
+now draws that case at the source size/scale and applies orientation only once.
+The public API and module boundaries are unchanged. See the
+[focused UIKit validation](../validation/uiimage-fallback-2026-10-12/README.md).
+Earlier Metal evidence stays bound to its recorded source hashes; this UIKit-only
+change does not relabel those runs as evidence for the updated UIImage converter.

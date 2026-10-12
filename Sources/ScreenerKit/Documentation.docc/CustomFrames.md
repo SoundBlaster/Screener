@@ -23,7 +23,7 @@ converters copy synchronously so the producer can reuse its buffer after convers
 | CIImage | `CapturedImage(ciImage:colorSpace:orientation:scale:)` | Finite integral extent, explicit RGB conversion, SDR RGBA8 |
 | CVPixelBuffer | `CapturedImage(pixelBuffer:colorSpace:orientation:premultipliedAlpha:scale:)` | Synchronous read-locked copy; nonplanar BGRA8/RGBA8 only |
 | CMSampleBuffer | `CapturedFrame(sampleBuffer:colorSpace:orientation:premultipliedAlpha:scale:)` | Complete image-bearing sample; copies pixels and carries numeric source PTS |
-| UIImage | `CapturedImage(uiImage:)` | MainActor, source scale and orientation, SDR sRGB rasterization |
+| UIImage | `CapturedImage(uiImage:)` | MainActor, source scale/orientation; UIKit drawing at source size/scale when no CG/CI backing is exposed; SDR sRGB |
 | NSImage | `CapturedImage(nsImage:pixelWidth:pixelHeight:scale:)` | MainActor, explicit raster dimensions including vector sources, SDR sRGB |
 
 Unsupported pixel formats, including YUV/planar and HDR buffers, throw an explicit

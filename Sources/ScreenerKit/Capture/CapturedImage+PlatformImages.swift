@@ -19,11 +19,31 @@ extension CapturedImage {
         case .rightMirrored: orientation = .rightMirrored
         @unknown default: throw ScreenerCaptureError.invalidImage
         }
-        guard let source = uiImage.cgImage.map({ CIImage(cgImage: $0) }) ?? uiImage.ciImage else {
-            throw ScreenerCaptureError.imageUnavailable
+        let source: CIImage
+        let sourceOrientation: CGImagePropertyOrientation
+        if let backing = uiImage.cgImage.map({ CIImage(cgImage: $0) }) ?? uiImage.ciImage {
+            source = backing
+            sourceOrientation = orientation
+        } else {
+            let size = uiImage.size
+            guard size.width.isFinite, size.height.isFinite, size.width > 0, size.height > 0,
+                  uiImage.scale.isFinite, uiImage.scale > 0 else {
+                throw ScreenerCaptureError.invalidImage
+            }
+            let format = UIGraphicsImageRendererFormat()
+            format.scale = uiImage.scale
+            format.opaque = false
+            format.preferredRange = .standard
+            let raster = UIGraphicsImageRenderer(size: size, format: format).image { _ in
+                uiImage.draw(in: CGRect(origin: .zero, size: size))
+            }
+            guard let image = raster.cgImage else { throw ScreenerCaptureError.imageUnavailable }
+            source = CIImage(cgImage: image)
+            // UIKit drawing has already applied the UIImage's orientation.
+            sourceOrientation = .up
         }
         try self.init(ciImage: source, colorSpace: CGColorSpace(name: CGColorSpace.sRGB)!,
-            orientation: orientation, scale: Double(uiImage.scale))
+            orientation: sourceOrientation, scale: Double(uiImage.scale))
     }
 }
 #endif

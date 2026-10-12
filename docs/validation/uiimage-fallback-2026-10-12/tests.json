@@ -1,0 +1,133 @@
+{
+  "devices" : [
+    {
+      "architecture" : "arm64",
+      "deviceId" : "F94C64BF-387D-41BC-BAC8-C8C30D933B0A",
+      "deviceName" : "Screener-UIImage-Review",
+      "modelName" : "iPhone Air",
+      "osBuildNumber" : "24A434",
+      "osVersion" : "27.0",
+      "platform" : "iOS Simulator"
+    }
+  ],
+  "testNodes" : [
+    {
+      "children" : [
+        {
+          "children" : [
+            {
+              "children" : [
+                {
+                  "duration" : "0.021s",
+                  "durationInSeconds" : 0.021308183670043945,
+                  "name" : "windowCaptureUsesDisplayScale()",
+                  "nodeIdentifier" : "UIKitCaptureTests/windowCaptureUsesDisplayScale()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/UIKitCaptureFixture/UIKitCaptureFixtureTests/UIKitCaptureTests/windowCaptureUsesDisplayScale()",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "children" : [
+                    {
+                      "duration" : "0.026s",
+                      "durationInSeconds" : 0.026209115982055664,
+                      "name" : "1.0",
+                      "nodeIdentifierURL" : "test://com.apple.xcode/UIKitCaptureFixture/UIKitCaptureFixtureTests/UIKitCaptureTests/captureUsesCurrentViewTraits(scale:)?args=6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b",
+                      "nodeType" : "Arguments",
+                      "result" : "Passed"
+                    },
+                    {
+                      "duration" : "0.014s",
+                      "durationInSeconds" : 0.013902902603149414,
+                      "name" : "2.0",
+                      "nodeIdentifierURL" : "test://com.apple.xcode/UIKitCaptureFixture/UIKitCaptureFixtureTests/UIKitCaptureTests/captureUsesCurrentViewTraits(scale:)?args=d4735e3a265e16eee03f59718b9b5d03019c07d8b6c51f90da3a666eec13ab35",
+                      "nodeType" : "Arguments",
+                      "result" : "Passed"
+                    },
+                    {
+                      "duration" : "0.013s",
+                      "durationInSeconds" : 0.012552976608276367,
+                      "name" : "3.0",
+                      "nodeIdentifierURL" : "test://com.apple.xcode/UIKitCaptureFixture/UIKitCaptureFixtureTests/UIKitCaptureTests/captureUsesCurrentViewTraits(scale:)?args=4e07408562bedb8b60ce05c1decfe3ad16b72230967de01f640b7e4729b49fce",
+                      "nodeType" : "Arguments",
+                      "result" : "Passed"
+                    }
+                  ],
+                  "duration" : "0.018s",
+                  "durationInSeconds" : 0.01755499839782715,
+                  "name" : "captureUsesCurrentViewTraits(scale:)",
+                  "nodeIdentifier" : "UIKitCaptureTests/captureUsesCurrentViewTraits(scale:)",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/UIKitCaptureFixture/UIKitCaptureFixtureTests/UIKitCaptureTests/captureUsesCurrentViewTraits(scale:)",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "duration" : "0.061s",
+                  "durationInSeconds" : 0.06106400489807129,
+                  "name" : "uiImageWithoutBitmapBackingIsRasterized()",
+                  "nodeIdentifier" : "UIKitCaptureTests/uiImageWithoutBitmapBackingIsRasterized()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/UIKitCaptureFixture/UIKitCaptureFixtureTests/UIKitCaptureTests/uiImageWithoutBitmapBackingIsRasterized()",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "duration" : "0.54s",
+                  "durationInSeconds" : 0.5440971851348877,
+                  "name" : "systemSymbolUIImageCanBeCaptured()",
+                  "nodeIdentifier" : "UIKitCaptureTests/systemSymbolUIImageCanBeCaptured()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/UIKitCaptureFixture/UIKitCaptureFixtureTests/UIKitCaptureTests/systemSymbolUIImageCanBeCaptured()",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "duration" : "0.0068s",
+                  "durationInSeconds" : 0.00684809684753418,
+                  "name" : "bitmapUIImageKeepsScaleAndAppliesOrientationOnce()",
+                  "nodeIdentifier" : "UIKitCaptureTests/bitmapUIImageKeepsScaleAndAppliesOrientationOnce()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/UIKitCaptureFixture/UIKitCaptureFixtureTests/UIKitCaptureTests/bitmapUIImageKeepsScaleAndAppliesOrientationOnce()",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "duration" : "0.002s",
+                  "durationInSeconds" : 0.002001047134399414,
+                  "name" : "emptyUIImageFailsWithoutStartingRenderer()",
+                  "nodeIdentifier" : "UIKitCaptureTests/emptyUIImageFailsWithoutStartingRenderer()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/UIKitCaptureFixture/UIKitCaptureFixtureTests/UIKitCaptureTests/emptyUIImageFailsWithoutStartingRenderer()",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "duration" : "0.00014s",
+                  "durationInSeconds" : 0.00014495849609375,
+                  "name" : "emptyViewFailsCapture()",
+                  "nodeIdentifier" : "UIKitCaptureTests/emptyViewFailsCapture()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/UIKitCaptureFixture/UIKitCaptureFixtureTests/UIKitCaptureTests/emptyViewFailsCapture()",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                }
+              ],
+              "name" : "UIKit capture",
+              "nodeIdentifierURL" : "test://com.apple.xcode/UIKitCaptureFixture/UIKitCaptureFixtureTests/UIKitCaptureTests",
+              "nodeType" : "Test Suite",
+              "result" : "Passed"
+            }
+          ],
+          "name" : "UIKitCaptureFixtureTests",
+          "nodeIdentifierURL" : "test://com.apple.xcode/UIKitCaptureFixture/UIKitCaptureFixtureTests",
+          "nodeType" : "Unit test bundle",
+          "result" : "Passed"
+        }
+      ],
+      "name" : "UIKitCaptureFixture",
+      "nodeType" : "Test Plan",
+      "result" : "Passed"
+    }
+  ],
+  "testPlanConfigurations" : [
+    {
+      "configurationId" : "1",
+      "configurationName" : "Test Scheme Action"
+    }
+  ]
+}
