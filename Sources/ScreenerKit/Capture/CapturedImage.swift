@@ -6,6 +6,8 @@ public struct CapturedImage: Sendable {
     public let scale: Double
 
     /// Validates positive image dimensions and a finite, positive display scale.
+    /// The caller must keep externally backed image pixels stable until awaited recording finishes.
+    /// Use a copying buffer initializer when the producer reuses mutable memory.
     public init(cgImage: CGImage, scale: Double) throws {
         guard cgImage.width > 0, cgImage.height > 0, scale.isFinite, scale > 0 else {
             throw ScreenerCaptureError.invalidImage

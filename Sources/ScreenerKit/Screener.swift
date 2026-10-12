@@ -93,6 +93,20 @@ public actor Screener {
         }
     }
 
+    /// Stores a custom frame and its source PTS without changing recorder timeline time.
+    /// Source PTS from the frame takes precedence over caller-supplied PTS metadata.
+    public func recordFrame(
+        _ frame: CapturedFrame, reason: String, metadata: [String: String] = [:]
+    ) async throws {
+        var fields = metadata
+        if let seconds = frame.presentationSeconds {
+            fields["capture.presentationSeconds"] = String(seconds)
+        } else {
+            fields.removeValue(forKey: "capture.presentationSeconds")
+        }
+        try await recordFrame(frame.image, reason: reason, metadata: fields)
+    }
+
     /// Appends the session-end event and closes the writer after queued operations.
     /// Call this on both success and failure paths of a recording flow.
     public func stopSession() async throws {

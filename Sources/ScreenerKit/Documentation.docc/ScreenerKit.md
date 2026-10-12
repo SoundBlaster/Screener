@@ -22,6 +22,7 @@ The guided <doc:Tutorials> walks through creating and closing your first trace.
 - <doc:Tutorials>
 - <doc:RecordingAReproduction>
 - <doc:ChoosingACaptureBackend>
+- <doc:CustomFrames>
 - <doc:InspectingWithAnAgent>
 
 ### Recording
@@ -30,11 +31,13 @@ The guided <doc:Tutorials> walks through creating and closing your first trace.
 - ``ScreenerCaptureSession``
 - ``ScreenerCaptureSource``
 - ``CapturedImage``
+- ``CapturedFrame``
 
 ### Failure handling
 
 - ``ScreenerError``
 - ``ScreenerCaptureError``
+- ``CapturedImageConversionError``
 
 ## See Also
 
