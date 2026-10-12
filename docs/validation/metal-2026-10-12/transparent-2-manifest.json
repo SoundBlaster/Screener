@@ -1,0 +1,57 @@
+{
+  "framebufferOnly" : false,
+  "instrumentation" : "posed\/frozen or paused live checkpoints; GPU blit reference only with framebufferOnly=false",
+  "live" : false,
+  "rows" : [
+    {
+      "appkitMS" : 1.9622916588559747,
+      "appkitPixels" : [
+        1280,
+        880
+      ],
+      "framesRendered" : 2,
+      "framesRenderedAfterCaptures" : 2,
+      "gpuPixels" : [
+        1200,
+        720
+      ],
+      "gpuReadbackMS" : 15.105500002391636,
+      "name" : "01-fixed",
+      "posedTime" : 6,
+      "screenCaptureKitMS" : 73.31312500173226,
+      "screenCaptureKitPixels" : [
+        1280,
+        880
+      ],
+      "systemScreenshotExit" : 0
+    },
+    {
+      "appkitMS" : 1.5499583096243441,
+      "appkitPixels" : [
+        1280,
+        880
+      ],
+      "framesRendered" : 3,
+      "framesRenderedAfterCaptures" : 3,
+      "gpuPixels" : [
+        1200,
+        720
+      ],
+      "gpuReadbackMS" : 15.648666711058468,
+      "name" : "02-advanced",
+      "posedTime" : 10,
+      "screenCaptureKitMS" : 28.762666624970734,
+      "screenCaptureKitPixels" : [
+        1280,
+        880
+      ],
+      "systemScreenshotExit" : 0
+    }
+  ],
+  "scale" : 2,
+  "scope" : "SDR BGRA8 sRGB; one window; paused checkpoints; real animation between live checkpoints",
+  "screenRecordingPermission" : true,
+  "trace" : "\/Users\/egor\/Development\/GitHub\/.worktrees\/Dreams-metal-pilot\/artifacts\/metal-pilot\/20261012T093830Z\/transparent-2\/traces\/B5097B73-96F7-452C-B128-AB853D7C40D4.vtrace",
+  "transparent" : true,
+  "windowID" : 10403
+}

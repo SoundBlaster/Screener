@@ -1,6 +1,6 @@
 ---
 name: screener-visual-trace
-description: Integrate or inspect Screener Debug visual traces on iOS, choose UIKit or opt-in ScreenCaptureKit capture, and compare system materials with Simulator screenshots. Use for layout, transient UI, glass/blur, capture scale, or .vtrace verification; not for general screen recording.
+description: Integrate or inspect Screener Debug visual traces on iOS or macOS, choose hierarchy or opt-in ScreenCaptureKit capture, and compare system materials with Simulator screenshots. Use for layout, transient UI, glass/blur, Metal/GPU capture limits, capture scale, or .vtrace verification; not for general screen recording.
 ---
 
 # Screener visual trace
@@ -16,15 +16,22 @@ both capture modes merely because this skill is installed.
 | --- | --- | --- |
 | Layout, gestures, state sequence on device or Simulator | UIKit window capture → `.vtrace` | No recording permission; app instrumentation still required |
 | Glass/blur/menu pixels on Simulator | UIKit trace + matching `simctl` screenshot | No screen-recording picker; screenshot stays separate reference evidence |
+| macOS ordinary layout/state | AppKit window hierarchy → `.vtrace` | No recording prompt; inspect GPU/material limitations |
+| macOS GPU/compositor window stills | Optional `ScreenerScreenCaptureKit` window source → `.vtrace` | Verify resolved source; macOS 14+, existing Screen Recording access; no stream |
 | Current-app glass/menu pixels on physical iOS 27 | Opt-in `ScreenCaptureKitSession` → `.vtrace` | Manual system permission; experimental, device SDK required |
 
-UIKit is the default. It uses the view's current `traitCollection.displayScale`
+For Metal/RealityKit or macOS compositor capture, read
+[GPU and platform routing](references/capture-workflows.md#gpu-surfaces-and-platform-routing).
+A trace with correct dimensions may still omit the entire GPU surface.
+
+UIKit is the default for ordinary iOS hierarchy traces. It uses the view's current `traitCollection.displayScale`
 (including a UIWindow), not a hard-coded 1× or `UIScreen.nativeScale` resample.
 `drawHierarchy` can miss compositor materials even when it reports success.
 A system screenshot is a better comparison reference for the displayed materials,
 not a guarantee of pixel identity or proof that the trace captured those pixels.
 
-ScreenCaptureKit is absent from the current iOS Simulator SDK. Verify the local
+ScreenCaptureKit is absent from the locally checked iPhoneSimulator 27.1 SDK;
+the current Screener session also explicitly excludes Simulator. Verify the local
 SDK/availability before integrating it; never route Simulator to the physical
 capture API or silently replace the requested physical device with a simulator.
 The recorded Air experiment establishes portrait base/menu behavior, not rotation,
@@ -60,7 +67,7 @@ provider and does not grant permission to automate system consent.
 
 Record a bounded sequence such as base → menu/gesture → settled → stop, adding
 semantic markers around the app actions. Reuse the same approved stream for all
-states. ScreenCaptureKit `start()` waits for manual permission; never tap the
+states. Physical-iOS `ScreenCaptureKitSession.start()` waits for manual permission; never tap the
 positive consent button automatically, repeatedly relaunch to obtain it, or
 claim approval was automated. If the user is unavailable, stop at the permission
 boundary and report that capture has not started.

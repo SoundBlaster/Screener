@@ -96,6 +96,43 @@ swift run --package-path Examples/ScreenerFixture
 
 Use **Start recording**, advance the fixture state, capture a frame, and stop the session. Bundles are written under the fixture app's Caches directory.
 
+## GPU content and platform routing
+
+Read the [capture capability matrix](capture-capabilities.md) before selecting a
+backend for Metal, RealityKit or system materials. The [Dreams Metal pilot](validation/metal-2026-10-12/README.md)
+reproduced complete MTKView omission in AppKit capture, while a consumer-local
+macOS ScreenCaptureKit adapter matched all 14 native system reference frames.
+A fresh [packaged-backend pilot](validation/packaged-backend-2026-10-12/README.md)
+repeats the comparison through the new optional module in working source.
+Neither pilot establishes universal GPU fidelity or availability in older SDK pins.
+The matrix also distinguishes physical iOS capture from host-side Simulator screenshots.
+
+## Custom frames and optional capture modules
+
+The existing `CapturedImage(cgImage:scale:)` and
+`Screener.recordFrame(_:reason:metadata:)` APIs accept a custom image directly,
+without starting system capture. [ADR-0006](adr/ADR-0006-capture-backends-and-custom-frame-ingestion.md)
+describes the implemented optional macOS ScreenCaptureKit module and public typed
+image/buffer conversion at this boundary. These additions are unreleased; inspect
+the actual resolved source before using them. See the DocC `CustomFrames` article
+for formats, color conversion, memory ownership and source timestamps.
+
+The new module provides macOS 14+ async window stills:
+
+```swift
+import ScreenerKit
+import ScreenerScreenCaptureKit
+
+// On MainActor; recorder already has an active trace and access was granted.
+let source = ScreenCaptureKitWindowSource(windowID: selectedWindowID)
+let image = try await source.record(to: recorder, reason: "window.checkpoint")
+// Stop producers and await recorder.stopSession() when the reproduction ends.
+```
+
+By default the window must belong to the calling process. Supply the expected
+`processID` explicitly for another app. Authorization, native geometry and owner
+checks fail explicitly; there is no desktop/hierarchy fallback or sampling loop.
+
 ## Codex skill and plugin
 
 The project-local [$screener-visual-trace skill](../.agents/skills/screener-visual-trace/SKILL.md)

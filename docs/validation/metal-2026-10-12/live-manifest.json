@@ -1,0 +1,145 @@
+{
+  "framebufferOnly" : false,
+  "instrumentation" : "posed\/frozen or paused live checkpoints; GPU blit reference only with framebufferOnly=false",
+  "live" : true,
+  "rows" : [
+    {
+      "appkitMS" : 2.771875006146729,
+      "appkitPixels" : [
+        1280,
+        880
+      ],
+      "framesRendered" : 8,
+      "framesRenderedAfterCaptures" : 8,
+      "gpuPixels" : [
+        1200,
+        720
+      ],
+      "gpuReadbackMS" : 10.28058334486559,
+      "name" : "live-00",
+      "posedTime" : 0,
+      "screenCaptureKitMS" : 70.159083348698914,
+      "screenCaptureKitPixels" : [
+        1280,
+        880
+      ],
+      "systemScreenshotExit" : 0
+    },
+    {
+      "appkitMS" : 1.9932499853894114,
+      "appkitPixels" : [
+        1280,
+        880
+      ],
+      "framesRendered" : 16,
+      "framesRenderedAfterCaptures" : 16,
+      "gpuPixels" : [
+        1200,
+        720
+      ],
+      "gpuReadbackMS" : 10.343458328861743,
+      "name" : "live-01",
+      "posedTime" : 1,
+      "screenCaptureKitMS" : 39.488291658926755,
+      "screenCaptureKitPixels" : [
+        1280,
+        880
+      ],
+      "systemScreenshotExit" : 0
+    },
+    {
+      "appkitMS" : 1.9512499566189945,
+      "appkitPixels" : [
+        1280,
+        880
+      ],
+      "framesRendered" : 23,
+      "framesRenderedAfterCaptures" : 23,
+      "gpuPixels" : [
+        1200,
+        720
+      ],
+      "gpuReadbackMS" : 9.8469999502412975,
+      "name" : "live-02",
+      "posedTime" : 2,
+      "screenCaptureKitMS" : 34.267708368133754,
+      "screenCaptureKitPixels" : [
+        1280,
+        880
+      ],
+      "systemScreenshotExit" : 0
+    },
+    {
+      "appkitMS" : 1.8032083171419799,
+      "appkitPixels" : [
+        1280,
+        880
+      ],
+      "framesRendered" : 31,
+      "framesRenderedAfterCaptures" : 31,
+      "gpuPixels" : [
+        1200,
+        720
+      ],
+      "gpuReadbackMS" : 6.5185833373107016,
+      "name" : "live-03",
+      "posedTime" : 3,
+      "screenCaptureKitMS" : 29.077499988488853,
+      "screenCaptureKitPixels" : [
+        1280,
+        880
+      ],
+      "systemScreenshotExit" : 0
+    },
+    {
+      "appkitMS" : 1.701916684396565,
+      "appkitPixels" : [
+        1280,
+        880
+      ],
+      "framesRendered" : 38,
+      "framesRenderedAfterCaptures" : 38,
+      "gpuPixels" : [
+        1200,
+        720
+      ],
+      "gpuReadbackMS" : 12.824666686356068,
+      "name" : "live-04",
+      "posedTime" : 4,
+      "screenCaptureKitMS" : 27.800791664049029,
+      "screenCaptureKitPixels" : [
+        1280,
+        880
+      ],
+      "systemScreenshotExit" : 0
+    },
+    {
+      "appkitMS" : 1.5537500148639083,
+      "appkitPixels" : [
+        1280,
+        880
+      ],
+      "framesRendered" : 46,
+      "framesRenderedAfterCaptures" : 46,
+      "gpuPixels" : [
+        1200,
+        720
+      ],
+      "gpuReadbackMS" : 8.6645417031832039,
+      "name" : "live-05",
+      "posedTime" : 5,
+      "screenCaptureKitMS" : 30.53600003477186,
+      "screenCaptureKitPixels" : [
+        1280,
+        880
+      ],
+      "systemScreenshotExit" : 0
+    }
+  ],
+  "scale" : 2,
+  "scope" : "SDR BGRA8 sRGB; one window; paused checkpoints; real animation between live checkpoints",
+  "screenRecordingPermission" : true,
+  "trace" : "\/Users\/egor\/Development\/GitHub\/.worktrees\/Dreams-metal-pilot\/artifacts\/metal-pilot\/20261012T093830Z\/live\/traces\/78C77EB3-F899-4975-A140-04B2A3733038.vtrace",
+  "transparent" : true,
+  "windowID" : 10417
+}

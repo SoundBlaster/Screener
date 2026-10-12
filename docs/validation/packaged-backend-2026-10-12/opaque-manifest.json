@@ -1,0 +1,61 @@
+{
+  "framebufferOnly" : false,
+  "instrumentation" : "posed\/frozen or paused live checkpoints; GPU blit reference only with framebufferOnly=false",
+  "live" : false,
+  "rows" : [
+    {
+      "appkitMS" : 2.465708355884999,
+      "appkitPixels" : [
+        1280,
+        880
+      ],
+      "framesRendered" : 2,
+      "framesRenderedAfterCaptures" : 2,
+      "gpuPixels" : [
+        1200,
+        720
+      ],
+      "gpuReadbackMS" : 12.102791632059962,
+      "name" : "01-fixed",
+      "posedTime" : 6,
+      "screenCaptureKitBackend" : "ScreenerScreenCaptureKit.window",
+      "screenCaptureKitPixels" : [
+        1280,
+        880
+      ],
+      "screenCaptureKitRecordMS" : 132.41787499282509,
+      "screenCaptureKitScale" : 2,
+      "systemScreenshotExit" : 0
+    },
+    {
+      "appkitMS" : 2.0361250499263406,
+      "appkitPixels" : [
+        1280,
+        880
+      ],
+      "framesRendered" : 3,
+      "framesRenderedAfterCaptures" : 3,
+      "gpuPixels" : [
+        1200,
+        720
+      ],
+      "gpuReadbackMS" : 8.4706666530109942,
+      "name" : "02-advanced",
+      "posedTime" : 10,
+      "screenCaptureKitBackend" : "ScreenerScreenCaptureKit.window",
+      "screenCaptureKitPixels" : [
+        1280,
+        880
+      ],
+      "screenCaptureKitRecordMS" : 92.123250011354685,
+      "screenCaptureKitScale" : 2,
+      "systemScreenshotExit" : 0
+    }
+  ],
+  "scale" : 2,
+  "scope" : "SDR BGRA8 sRGB; one window; paused checkpoints; real animation between live checkpoints",
+  "screenRecordingPermission" : true,
+  "trace" : "\/Users\/egor\/Development\/GitHub\/.worktrees\/Dreams-metal-pilot\/artifacts\/metal-pilot\/20261012T181959Z\/opaque\/traces\/F63ACCB4-59C0-46D5-A008-4915277E0BE8.vtrace",
+  "transparent" : false,
+  "windowID" : 12231
+}

@@ -4,6 +4,12 @@ Screener has DocC catalogs for `ScreenerKit`, `ScreenerCore`, and `ScreenerMCP`.
 ScreenerKit is the entry point, with a three-step tutorial and articles covering
 capture, backend limits, export, and agent inspection.
 
+## Capture evidence
+
+- [Platform/backend capability matrix and GPU limits](capture-capabilities.md).
+- [Historical Dreams Metal comparison](validation/metal-2026-10-12/README.md).
+- [Packaged backend validation and source identities](validation/packaged-backend-2026-10-12/README.md).
+
 ## Build locally
 
 With Xcode and Swift 6.1 or later selected:
@@ -19,7 +25,8 @@ The build treats DocC warnings as errors. It generates two static sites beneath
 - `/Screener/`: iOS symbols, including UIKit capture.
 - `/Screener/macos/`: macOS symbols, including AppKit capture.
 
-Both sites contain all three modules. Conditional APIs reflect their build SDK;
+Both sites contain ScreenerKit, ScreenerCore and ScreenerMCP. The macOS site
+also includes the optional ScreenerScreenCaptureKit product and its window-still API. Conditional APIs reflect their build SDK;
 for example, ScreenCaptureKitSession needs an iOS 27 SDK and is excluded from
 Simulator symbol graphs. The tutorial's code is for iOS, including when viewed
 in the macOS documentation.
@@ -49,7 +56,7 @@ A successful PR build alone does not establish that either URL is live.
 ## Swift Package Index
 
 The root `.spi.yml` requests iOS documentation for ScreenerKit and macOS SwiftPM
-documentation for ScreenerCore and ScreenerMCP. This keeps the SDK's UIKit reference
+documentation for ScreenerCore, ScreenerMCP and ScreenerScreenCaptureKit. This keeps the SDK's UIKit reference
 available in the Index while generating the reader modules on their host platform.
 The separate Pages site also provides ScreenerKit's AppKit reference.
 

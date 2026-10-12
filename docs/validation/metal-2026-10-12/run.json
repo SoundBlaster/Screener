@@ -1,0 +1,37 @@
+{
+  "sourceRevision": "c55774a1ac637d73d5caf6c5cf54a36b4c24517b",
+  "buildSeconds": 10.052393959,
+  "binarySHA256": "6e1b70c35013e62fb337fa80fa260c75de0be7902c7acb4d0a6703c68834be4d",
+  "runs": [
+    {
+      "name": "transparent-1",
+      "seconds": 3.7556794169999996,
+      "trace": "/Users/egor/Development/GitHub/.worktrees/Dreams-metal-pilot/artifacts/metal-pilot/20261012T093830Z/transparent-1/traces/90088B34-F755-4B14-82D8-32A46F22DACA.vtrace",
+      "rows": 2
+    },
+    {
+      "name": "transparent-2",
+      "seconds": 2.1031999169999995,
+      "trace": "/Users/egor/Development/GitHub/.worktrees/Dreams-metal-pilot/artifacts/metal-pilot/20261012T093830Z/transparent-2/traces/B5097B73-96F7-452C-B128-AB853D7C40D4.vtrace",
+      "rows": 2
+    },
+    {
+      "name": "opaque",
+      "seconds": 2.0548037080000014,
+      "trace": "/Users/egor/Development/GitHub/.worktrees/Dreams-metal-pilot/artifacts/metal-pilot/20261012T093830Z/opaque/traces/97652090-AAD5-479C-9381-45A4B3B64416.vtrace",
+      "rows": 2
+    },
+    {
+      "name": "live",
+      "seconds": 4.649364584000001,
+      "trace": "/Users/egor/Development/GitHub/.worktrees/Dreams-metal-pilot/artifacts/metal-pilot/20261012T093830Z/live/traces/78C77EB3-F899-4975-A140-04B2A3733038.vtrace",
+      "rows": 6
+    },
+    {
+      "name": "production-surface",
+      "seconds": 1.8816691249999984,
+      "trace": "/Users/egor/Development/GitHub/.worktrees/Dreams-metal-pilot/artifacts/metal-pilot/20261012T093830Z/production-surface/traces/3CF9C0C9-FA04-4FF0-B247-25275F39FA69.vtrace",
+      "rows": 2
+    }
+  ]
+}

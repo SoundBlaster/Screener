@@ -1,0 +1,508 @@
+{
+  "live": {
+    "scale": 2,
+    "permission": true,
+    "rows": [
+      {
+        "appkitMS": 4.561208363156766,
+        "appkitPixels": [
+          1280,
+          880
+        ],
+        "framesRendered": 9,
+        "framesRenderedAfterCaptures": 9,
+        "gpuPixels": [
+          1200,
+          720
+        ],
+        "gpuReadbackMS": 12.934166647028178,
+        "name": "live-00",
+        "posedTime": 0,
+        "screenCaptureKitBackend": "ScreenerScreenCaptureKit.window",
+        "screenCaptureKitPixels": [
+          1280,
+          880
+        ],
+        "screenCaptureKitRecordMS": 134.17529163416475,
+        "screenCaptureKitScale": 2,
+        "systemScreenshotExit": 0,
+        "appkitMetalROIVariance": 0.0,
+        "sckVsSystemMAE": 0.0,
+        "sckVsSystemMax": 0,
+        "sckVsSystemExactPixelFraction": 1.0,
+        "appkitVsSystemMAE": 0.946064453125,
+        "systemMetalROIVariance": 226.8395115645787
+      },
+      {
+        "appkitMS": 1.9022916676476598,
+        "appkitPixels": [
+          1280,
+          880
+        ],
+        "framesRendered": 16,
+        "framesRenderedAfterCaptures": 16,
+        "gpuPixels": [
+          1200,
+          720
+        ],
+        "gpuReadbackMS": 3.9124999893829226,
+        "name": "live-01",
+        "posedTime": 1,
+        "screenCaptureKitBackend": "ScreenerScreenCaptureKit.window",
+        "screenCaptureKitPixels": [
+          1280,
+          880
+        ],
+        "screenCaptureKitRecordMS": 79.46654164697975,
+        "screenCaptureKitScale": 2,
+        "systemScreenshotExit": 0,
+        "appkitMetalROIVariance": 0.0,
+        "sckVsSystemMAE": 0.0,
+        "sckVsSystemMax": 0,
+        "sckVsSystemExactPixelFraction": 1.0,
+        "appkitVsSystemMAE": 2.2235005326704544,
+        "systemMetalROIVariance": 456.9048938652267,
+        "metalChangedSincePreviousFraction": 0.08400810185185185
+      },
+      {
+        "appkitMS": 2.266458352096379,
+        "appkitPixels": [
+          1280,
+          880
+        ],
+        "framesRendered": 24,
+        "framesRenderedAfterCaptures": 24,
+        "gpuPixels": [
+          1200,
+          720
+        ],
+        "gpuReadbackMS": 12.790625041816384,
+        "name": "live-02",
+        "posedTime": 2,
+        "screenCaptureKitBackend": "ScreenerScreenCaptureKit.window",
+        "screenCaptureKitPixels": [
+          1280,
+          880
+        ],
+        "screenCaptureKitRecordMS": 86.03637502528727,
+        "screenCaptureKitScale": 2,
+        "systemScreenshotExit": 0,
+        "appkitMetalROIVariance": 0.0,
+        "sckVsSystemMAE": 0.0,
+        "sckVsSystemMax": 0,
+        "sckVsSystemExactPixelFraction": 1.0,
+        "appkitVsSystemMAE": 3.9168282433712123,
+        "systemMetalROIVariance": 770.3273261118998,
+        "metalChangedSincePreviousFraction": 0.14021180555555557
+      },
+      {
+        "appkitMS": 2.7701666695065796,
+        "appkitPixels": [
+          1280,
+          880
+        ],
+        "framesRendered": 32,
+        "framesRenderedAfterCaptures": 32,
+        "gpuPixels": [
+          1200,
+          720
+        ],
+        "gpuReadbackMS": 13.514499994926155,
+        "name": "live-03",
+        "posedTime": 3,
+        "screenCaptureKitBackend": "ScreenerScreenCaptureKit.window",
+        "screenCaptureKitPixels": [
+          1280,
+          880
+        ],
+        "screenCaptureKitRecordMS": 83.19783332990482,
+        "screenCaptureKitScale": 2,
+        "systemScreenshotExit": 0,
+        "appkitMetalROIVariance": 0.0,
+        "sckVsSystemMAE": 0.0,
+        "sckVsSystemMax": 0,
+        "sckVsSystemExactPixelFraction": 1.0,
+        "appkitVsSystemMAE": 6.031068300189394,
+        "systemMetalROIVariance": 957.9659946016851,
+        "metalChangedSincePreviousFraction": 0.22083796296296296
+      },
+      {
+        "appkitMS": 2.2877916926518083,
+        "appkitPixels": [
+          1280,
+          880
+        ],
+        "framesRendered": 39,
+        "framesRenderedAfterCaptures": 39,
+        "gpuPixels": [
+          1200,
+          720
+        ],
+        "gpuReadbackMS": 19.06324998708442,
+        "name": "live-04",
+        "posedTime": 4,
+        "screenCaptureKitBackend": "ScreenerScreenCaptureKit.window",
+        "screenCaptureKitPixels": [
+          1280,
+          880
+        ],
+        "screenCaptureKitRecordMS": 83.79950001835823,
+        "screenCaptureKitScale": 2,
+        "systemScreenshotExit": 0,
+        "appkitMetalROIVariance": 0.0,
+        "sckVsSystemMAE": 0.0,
+        "sckVsSystemMax": 0,
+        "sckVsSystemExactPixelFraction": 1.0,
+        "appkitVsSystemMAE": 8.995675011837122,
+        "systemMetalROIVariance": 1241.744810930128,
+        "metalChangedSincePreviousFraction": 0.31844675925925925
+      },
+      {
+        "appkitMS": 2.144791651517153,
+        "appkitPixels": [
+          1280,
+          880
+        ],
+        "framesRendered": 47,
+        "framesRenderedAfterCaptures": 47,
+        "gpuPixels": [
+          1200,
+          720
+        ],
+        "gpuReadbackMS": 13.719999988097697,
+        "name": "live-05",
+        "posedTime": 5,
+        "screenCaptureKitBackend": "ScreenerScreenCaptureKit.window",
+        "screenCaptureKitPixels": [
+          1280,
+          880
+        ],
+        "screenCaptureKitRecordMS": 91.25549998134375,
+        "screenCaptureKitScale": 2,
+        "systemScreenshotExit": 0,
+        "appkitMetalROIVariance": 0.0,
+        "sckVsSystemMAE": 0.0,
+        "sckVsSystemMax": 0,
+        "sckVsSystemExactPixelFraction": 1.0,
+        "appkitVsSystemMAE": 12.587800071022727,
+        "systemMetalROIVariance": 1729.2475598518408,
+        "metalChangedSincePreviousFraction": 0.41552083333333334
+      }
+    ]
+  },
+  "opaque": {
+    "scale": 2,
+    "permission": true,
+    "rows": [
+      {
+        "appkitMS": 2.465708355884999,
+        "appkitPixels": [
+          1280,
+          880
+        ],
+        "framesRendered": 2,
+        "framesRenderedAfterCaptures": 2,
+        "gpuPixels": [
+          1200,
+          720
+        ],
+        "gpuReadbackMS": 12.102791632059962,
+        "name": "01-fixed",
+        "posedTime": 6,
+        "screenCaptureKitBackend": "ScreenerScreenCaptureKit.window",
+        "screenCaptureKitPixels": [
+          1280,
+          880
+        ],
+        "screenCaptureKitRecordMS": 132.4178749928251,
+        "screenCaptureKitScale": 2,
+        "systemScreenshotExit": 0,
+        "appkitMetalROIVariance": 0.0,
+        "sckVsSystemMAE": 0.0,
+        "sckVsSystemMax": 0,
+        "sckVsSystemExactPixelFraction": 1.0,
+        "appkitVsSystemMAE": 25.30270448626894,
+        "systemMetalROIVariance": 3472.7682784067583
+      },
+      {
+        "appkitMS": 2.0361250499263406,
+        "appkitPixels": [
+          1280,
+          880
+        ],
+        "framesRendered": 3,
+        "framesRenderedAfterCaptures": 3,
+        "gpuPixels": [
+          1200,
+          720
+        ],
+        "gpuReadbackMS": 8.470666653010994,
+        "name": "02-advanced",
+        "posedTime": 10,
+        "screenCaptureKitBackend": "ScreenerScreenCaptureKit.window",
+        "screenCaptureKitPixels": [
+          1280,
+          880
+        ],
+        "screenCaptureKitRecordMS": 92.12325001135468,
+        "screenCaptureKitScale": 2,
+        "systemScreenshotExit": 0,
+        "appkitMetalROIVariance": 0.0,
+        "sckVsSystemMAE": 0.0,
+        "sckVsSystemMax": 0,
+        "sckVsSystemExactPixelFraction": 1.0,
+        "appkitVsSystemMAE": 19.867513612689393,
+        "systemMetalROIVariance": 2009.9122047128858,
+        "metalChangedSincePreviousFraction": 0.9973032407407407
+      }
+    ]
+  },
+  "production-surface": {
+    "scale": 2,
+    "permission": true,
+    "rows": [
+      {
+        "appkitMS": 6.783041637390852,
+        "appkitPixels": [
+          1280,
+          880
+        ],
+        "framesRendered": 2,
+        "framesRenderedAfterCaptures": 2,
+        "name": "01-fixed",
+        "posedTime": 6,
+        "screenCaptureKitBackend": "ScreenerScreenCaptureKit.window",
+        "screenCaptureKitPixels": [
+          1280,
+          880
+        ],
+        "screenCaptureKitRecordMS": 151.3423750293441,
+        "screenCaptureKitScale": 2,
+        "systemScreenshotExit": 0,
+        "appkitMetalROIVariance": 0.0,
+        "sckVsSystemMAE": 0.0,
+        "sckVsSystemMax": 0,
+        "sckVsSystemExactPixelFraction": 1.0,
+        "appkitVsSystemMAE": 21.15681522253788,
+        "systemMetalROIVariance": 2182.3903298602004
+      },
+      {
+        "appkitMS": 5.220999999437481,
+        "appkitPixels": [
+          1280,
+          880
+        ],
+        "framesRendered": 3,
+        "framesRenderedAfterCaptures": 3,
+        "name": "02-advanced",
+        "posedTime": 10,
+        "screenCaptureKitBackend": "ScreenerScreenCaptureKit.window",
+        "screenCaptureKitPixels": [
+          1280,
+          880
+        ],
+        "screenCaptureKitRecordMS": 107.21937497146428,
+        "screenCaptureKitScale": 2,
+        "systemScreenshotExit": 0,
+        "appkitMetalROIVariance": 0.0,
+        "sckVsSystemMAE": 0.0,
+        "sckVsSystemMax": 0,
+        "sckVsSystemExactPixelFraction": 1.0,
+        "appkitVsSystemMAE": 26.764156309185605,
+        "systemMetalROIVariance": 1760.6815987830935,
+        "metalChangedSincePreviousFraction": 0.9976111111111111
+      }
+    ]
+  },
+  "transparent-1": {
+    "scale": 2,
+    "permission": true,
+    "rows": [
+      {
+        "appkitMS": 2.4211250129155815,
+        "appkitPixels": [
+          1280,
+          880
+        ],
+        "framesRendered": 2,
+        "framesRenderedAfterCaptures": 2,
+        "gpuPixels": [
+          1200,
+          720
+        ],
+        "gpuReadbackMS": 10.685875022318214,
+        "name": "01-fixed",
+        "posedTime": 6,
+        "screenCaptureKitBackend": "ScreenerScreenCaptureKit.window",
+        "screenCaptureKitPixels": [
+          1280,
+          880
+        ],
+        "screenCaptureKitRecordMS": 140.53774997591972,
+        "screenCaptureKitScale": 2,
+        "systemScreenshotExit": 0,
+        "appkitMetalROIVariance": 0.0,
+        "sckVsSystemMAE": 0.0,
+        "sckVsSystemMax": 0,
+        "sckVsSystemExactPixelFraction": 1.0,
+        "appkitVsSystemMAE": 21.15681522253788,
+        "systemMetalROIVariance": 2182.3903298602004
+      },
+      {
+        "appkitMS": 1.8346249707974494,
+        "appkitPixels": [
+          1280,
+          880
+        ],
+        "framesRendered": 3,
+        "framesRenderedAfterCaptures": 3,
+        "gpuPixels": [
+          1200,
+          720
+        ],
+        "gpuReadbackMS": 15.47433331143111,
+        "name": "02-advanced",
+        "posedTime": 10,
+        "screenCaptureKitBackend": "ScreenerScreenCaptureKit.window",
+        "screenCaptureKitPixels": [
+          1280,
+          880
+        ],
+        "screenCaptureKitRecordMS": 104.95191666996107,
+        "screenCaptureKitScale": 2,
+        "systemScreenshotExit": 0,
+        "appkitMetalROIVariance": 0.0,
+        "sckVsSystemMAE": 0.0,
+        "sckVsSystemMax": 0,
+        "sckVsSystemExactPixelFraction": 1.0,
+        "appkitVsSystemMAE": 26.764156309185605,
+        "systemMetalROIVariance": 1760.6815987830935,
+        "metalChangedSincePreviousFraction": 0.9976111111111111
+      }
+    ]
+  },
+  "transparent-2": {
+    "scale": 2,
+    "permission": true,
+    "rows": [
+      {
+        "appkitMS": 2.850750053767115,
+        "appkitPixels": [
+          1280,
+          880
+        ],
+        "framesRendered": 2,
+        "framesRenderedAfterCaptures": 2,
+        "gpuPixels": [
+          1200,
+          720
+        ],
+        "gpuReadbackMS": 11.83874998241663,
+        "name": "01-fixed",
+        "posedTime": 6,
+        "screenCaptureKitBackend": "ScreenerScreenCaptureKit.window",
+        "screenCaptureKitPixels": [
+          1280,
+          880
+        ],
+        "screenCaptureKitRecordMS": 132.6929166680202,
+        "screenCaptureKitScale": 2,
+        "systemScreenshotExit": 0,
+        "appkitMetalROIVariance": 0.0,
+        "sckVsSystemMAE": 0.0,
+        "sckVsSystemMax": 0,
+        "sckVsSystemExactPixelFraction": 1.0,
+        "appkitVsSystemMAE": 21.15681522253788,
+        "systemMetalROIVariance": 2182.3903298602004
+      },
+      {
+        "appkitMS": 1.9175416673533618,
+        "appkitPixels": [
+          1280,
+          880
+        ],
+        "framesRendered": 3,
+        "framesRenderedAfterCaptures": 3,
+        "gpuPixels": [
+          1200,
+          720
+        ],
+        "gpuReadbackMS": 16.078541695605963,
+        "name": "02-advanced",
+        "posedTime": 10,
+        "screenCaptureKitBackend": "ScreenerScreenCaptureKit.window",
+        "screenCaptureKitPixels": [
+          1280,
+          880
+        ],
+        "screenCaptureKitRecordMS": 97.94887498719618,
+        "screenCaptureKitScale": 2,
+        "systemScreenshotExit": 0,
+        "appkitMetalROIVariance": 0.0,
+        "sckVsSystemMAE": 0.0,
+        "sckVsSystemMax": 0,
+        "sckVsSystemExactPixelFraction": 1.0,
+        "appkitVsSystemMAE": 26.764156309185605,
+        "systemMetalROIVariance": 1760.6815987830935,
+        "metalChangedSincePreviousFraction": 0.9976111111111111
+      }
+    ]
+  },
+  "sourcePNGSHA256": {
+    "live/live-00-appkit.png": "f583272e1002e928bffa7395bafa56c8985292853816a4cba2be0263e01f40d5",
+    "live/live-00-gpu.png": "c53efcb69b56696bc99ce0ddd56c402fb57b2b5edeaa139f7f6ee7b313ef2df1",
+    "live/live-00-sck.png": "61b1793c49abf6186105413b305554dfe445c2443a1f7737d16c8ab7e2fe5c96",
+    "live/live-00-system.png": "17a427bb800a3705df9eb1d50fabe07f8e4a9c239ad24c47d4fd2646429516c3",
+    "live/live-01-appkit.png": "6e233564e6073602d6dba09646222acc52ed97eaec6291a301143f7f186029f3",
+    "live/live-01-gpu.png": "dae10d02ff6b607f43d41844f8a30d3a00a48567406302d85905971a986af82e",
+    "live/live-01-sck.png": "a2bbc616b17515f5b4892579ce4422df78f812662588b8fd1152b269b1918777",
+    "live/live-01-system.png": "5c45f43254e715bce8d771c6506f521c45374b6dd7297db32e8a1cdd32998213",
+    "live/live-02-appkit.png": "dc676951e04d24b69fdf96f3bf177ba6600564edf890545c1766de1b0b5927d3",
+    "live/live-02-gpu.png": "64384c494e2a783571512dd324c61846977fb690d9e977247870310370e205eb",
+    "live/live-02-sck.png": "4f37c32be0702cd3e97bc8c05075d54e22c13c6f6eee3abf676c0729c0e35d0f",
+    "live/live-02-system.png": "61e6a15ca12dc61f82e98722c2170c4120adb107ee53ff08fc16616d3c118321",
+    "live/live-03-appkit.png": "a12d2aa9cbc31cc6ff69ec747f1efa6ed06fd0b52fa757825c2b1edf887c0c82",
+    "live/live-03-gpu.png": "c90c084048fa6b897227f2428569ee367cb9ab335ab059a9a4bc7c4c3a56d5c2",
+    "live/live-03-sck.png": "1eafe2f2c83da5690528d70fde210fe8d768f8498fe82eb8c2e4ac4c2d1607f4",
+    "live/live-03-system.png": "32e4454d14c9ad182805739cd315c339b0abe9d65586101a4c2b80165bd9b76a",
+    "live/live-04-appkit.png": "fb6b6580016e362bc580c963fc66e41792f74b62ef4ba0ec085da51fca0fb254",
+    "live/live-04-gpu.png": "9f13c0db706100d7af9e985ba13d5f961943cbd80fcf9646ebec48cfd0b583d0",
+    "live/live-04-sck.png": "a9d1ba2b87eb54b3b92f1803c6d95ec72d036a262a3eff9891dd84cf574f9ce0",
+    "live/live-04-system.png": "97e00f85a2114934e014fe1a357ff48812c7a9753c4d720c7ed52be6a25b5247",
+    "live/live-05-appkit.png": "1f87ddef5c80eb37b4b5521061e43782fbeb9be232ab44cbe96abfeb5c389fa2",
+    "live/live-05-gpu.png": "e6ecb41a09b9e0a916c8495e43f33998d107b0b8a0d28420108e1efd9293b733",
+    "live/live-05-sck.png": "0baab511aed86d53d0a3f9b75d7824f883b7a52619e5a48aa168b5f679bd97ae",
+    "live/live-05-system.png": "6c0d9ce64a1f00df0da0e2aeb8dd27b485057a95efdda0217a342189bed61c4a",
+    "opaque/01-fixed-appkit.png": "9c8af1eca9fb3627e60ea517f9693e1f5fa8f12b48452d9ae38f8a89fd80aeea",
+    "opaque/01-fixed-gpu.png": "62c4e5de0aeabff96cc6087f8c0a132fec4a49e3e7267de6720ad4f2008fa779",
+    "opaque/01-fixed-sck.png": "c72893af86cc467521eb59b3d6ae8ccbba74203ec683e1a70115863169e02fbf",
+    "opaque/01-fixed-system.png": "62a658c302bf88a83416456ca848c3eb6f49a458ed8409b17f54de8a2aba56c8",
+    "opaque/02-advanced-appkit.png": "b9c20d321b13db4dc8c80e4e2b300f6f8df25324d176dcf804a39da9b54918de",
+    "opaque/02-advanced-gpu.png": "a0978b996e8a8bd949abf5b80a10b9be7c6b0ea27ed6e19cec8071f871387265",
+    "opaque/02-advanced-sck.png": "f5137965cb60c7ec8d2dbe09283bd21612a2b9a14c231e4ce3c263e3d893eba8",
+    "opaque/02-advanced-system.png": "4937594f4068d06b82d5c4fea11d78d72a423100fbf4585b59dc085a9f5d6e63",
+    "production-surface/01-fixed-appkit.png": "9c8af1eca9fb3627e60ea517f9693e1f5fa8f12b48452d9ae38f8a89fd80aeea",
+    "production-surface/01-fixed-sck.png": "9e11e9f0daff306b3378ad121ad6121805147f04eb1cfbf8022db9153d6481e2",
+    "production-surface/01-fixed-system.png": "c7e9895a985a231a64bdba8b9ba75e934864032eaad558448402ddb4d946a6a6",
+    "production-surface/02-advanced-appkit.png": "b9c20d321b13db4dc8c80e4e2b300f6f8df25324d176dcf804a39da9b54918de",
+    "production-surface/02-advanced-sck.png": "3f2719be9fb2a0a50cae427d48c03331495a3fe472f86984a09fa843312f01ed",
+    "production-surface/02-advanced-system.png": "3d00be2a26338ab2696dd216cb9204a85f265ab3d263d4886a378ab06ee3d6a3",
+    "transparent-1/01-fixed-appkit.png": "9c8af1eca9fb3627e60ea517f9693e1f5fa8f12b48452d9ae38f8a89fd80aeea",
+    "transparent-1/01-fixed-gpu.png": "6fe539064dec840c3448243e2aa94dbb4174289a48e42763e2b13384266b2647",
+    "transparent-1/01-fixed-sck.png": "9e11e9f0daff306b3378ad121ad6121805147f04eb1cfbf8022db9153d6481e2",
+    "transparent-1/01-fixed-system.png": "c7e9895a985a231a64bdba8b9ba75e934864032eaad558448402ddb4d946a6a6",
+    "transparent-1/02-advanced-appkit.png": "b9c20d321b13db4dc8c80e4e2b300f6f8df25324d176dcf804a39da9b54918de",
+    "transparent-1/02-advanced-gpu.png": "a4fea251ae681038f3b729aa33e5087535227d1c6b41540345db66f116b7de9c",
+    "transparent-1/02-advanced-sck.png": "3f2719be9fb2a0a50cae427d48c03331495a3fe472f86984a09fa843312f01ed",
+    "transparent-1/02-advanced-system.png": "3d00be2a26338ab2696dd216cb9204a85f265ab3d263d4886a378ab06ee3d6a3",
+    "transparent-2/01-fixed-appkit.png": "9c8af1eca9fb3627e60ea517f9693e1f5fa8f12b48452d9ae38f8a89fd80aeea",
+    "transparent-2/01-fixed-gpu.png": "6fe539064dec840c3448243e2aa94dbb4174289a48e42763e2b13384266b2647",
+    "transparent-2/01-fixed-sck.png": "9e11e9f0daff306b3378ad121ad6121805147f04eb1cfbf8022db9153d6481e2",
+    "transparent-2/01-fixed-system.png": "c7e9895a985a231a64bdba8b9ba75e934864032eaad558448402ddb4d946a6a6",
+    "transparent-2/02-advanced-appkit.png": "b9c20d321b13db4dc8c80e4e2b300f6f8df25324d176dcf804a39da9b54918de",
+    "transparent-2/02-advanced-gpu.png": "a4fea251ae681038f3b729aa33e5087535227d1c6b41540345db66f116b7de9c",
+    "transparent-2/02-advanced-sck.png": "3f2719be9fb2a0a50cae427d48c03331495a3fe472f86984a09fa843312f01ed",
+    "transparent-2/02-advanced-system.png": "3d00be2a26338ab2696dd216cb9204a85f265ab3d263d4886a378ab06ee3d6a3"
+  },
+  "repeatFixedMAE": 0.0
+}

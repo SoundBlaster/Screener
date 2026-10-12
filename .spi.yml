@@ -4,4 +4,4 @@ builder:
     - platform: ios
       documentation_targets: [ScreenerKit]
     - platform: macos-spm
-      documentation_targets: [ScreenerCore, ScreenerMCP]
+      documentation_targets: [ScreenerCore, ScreenerMCP, ScreenerScreenCaptureKit]
