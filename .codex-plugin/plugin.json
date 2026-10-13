@@ -1,6 +1,6 @@
 {
   "name": "screener",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Capture and inspect visual traces and automate native Simulator or macOS window screenshot batches.",
   "author": {
     "name": "SoundBlaster"

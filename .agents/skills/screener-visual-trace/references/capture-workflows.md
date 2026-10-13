@@ -20,8 +20,8 @@ The source report, measurements and identities are preserved in the Screener
 repository at `docs/validation/metal-2026-10-12/`; platform matrix is
 `docs/capture-capabilities.md`.
 
-- **macOS:** the historical 0.1.0 SDK has no SCK adapter. The working source adds
-  an unreleased optional `ScreenerScreenCaptureKit` product with macOS 14+
+- **macOS:** the historical 0.1.0 SDK has no SCK adapter. Version 0.2.0 adds
+  an optional `ScreenerScreenCaptureKit` product with macOS 14+
   `ScreenCaptureKitWindowSource`. Verify the consumer pin actually includes it.
   A fresh Dreams probe through this module repeated all 14 exact native comparisons;
   see `docs/validation/packaged-backend-2026-10-12/` in the Screener repository.
