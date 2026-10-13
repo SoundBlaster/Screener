@@ -1,6 +1,7 @@
 # Capture capabilities and GPU surfaces
 
-Evidence snapshot: 2026-10-12. Select a capture backend separately from the trace
+Evidence snapshot: 2026-10-12; release availability updated for 0.2.0 on 2026-10-13.
+Select a capture backend separately from the trace
 writer and MCP reader: a valid `.vtrace` does not prove the displayed pixels were captured.
 
 ## Platform and backend matrix
@@ -8,17 +9,17 @@ writer and MCP reader: a valid `.vtrace` does not prove the displayed pixels wer
 | Target | Path | Permission / availability | What is established |
 | --- | --- | --- | --- |
 | macOS, ordinary views | Screener `AppKitCaptureSource` | In-process hierarchy capture; no screen-recording prompt | Existing AppKit fixtures; materials may differ from compositor |
-| macOS 14+, Metal window | Optional `ScreenerScreenCaptureKit` → Kit recorder | Working source, unreleased; explicit window/PID and existing Screen Recording access | Packaged Dreams MTKView pilot, 14 checkpoints, native 2×; matches system RGB screenshot |
+| macOS 14+, Metal window | Optional `ScreenerScreenCaptureKit` → Kit recorder | Available in 0.2.0; explicit window/PID and existing Screen Recording access | Packaged Dreams MTKView pilot, 14 checkpoints, native 2×; matches system RGB screenshot |
 | Physical iOS 27 | Screener `ScreenCaptureKitSession` | SDK with iOS framework; manually approved current-app system picker | Air base/menu capture; not a Metal or RealityKit test |
 | Physical iOS / Simulator | Screener `UIKitCaptureSource` | In-process hierarchy capture; no screen-recording prompt | Native rendering scale; glass and GPU fidelity are not guaranteed |
 | iOS Simulator | Mac host `simctl io <UDID> screenshot` or XCTest system screenshot | Host-driven Simulator display capture; no iOS recording picker | Native screenshot pipeline exercised in PhotoCompressor/CityChain; GPU scenes not tested here |
 | Mac Catalyst | Platform-appropriate existing hierarchy adapter | Current Screener SCK session is explicitly excluded | No SCK consumer pilot here |
 
 Apple's macOS ScreenCaptureKit framework and Screener's shipped adapter are distinct.
-The historical Screener 0.1.0 pin has **no macOS SCK adapter**. The working source
-now provides the optional product; the fresh Dreams probe consumes it through an
-explicit local package path. This does not establish a tagged release or availability
-in applications still pinned to 0.1.0.
+The historical Screener 0.1.0 pin has **no macOS SCK adapter**. Release 0.2.0
+provides the optional product. The recorded Dreams probe consumed the implementation
+through an explicit local package path; its evidence does not make the product
+available in applications still pinned to 0.1.0.
 
 Apple documents [current-app capture on iOS](https://developer.apple.com/documentation/screencapturekit/capturing-screen-content-on-ios)
 for a physical iOS 27+ device. In the locally installed **iPhoneSimulator 27.1 SDK**,

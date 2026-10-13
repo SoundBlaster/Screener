@@ -89,8 +89,8 @@ The separate Pages site also provides ScreenerKit's AppKit reference.
 The package still needs to be submitted through
 [Add a Package](https://swiftpackageindex.com/add-a-package).
 The repository URL is `https://github.com/SoundBlaster/Screener.git`.
-Documentation added after v0.1.0 becomes available on the default branch after
-merge; a new tagged release is needed for these catalogs to accompany a release.
+The v0.2.0 release includes the iOS/macOS catalogs and examples added after v0.1.0.
+Later documentation changes remain on the default branch until another release.
 Do not move the existing v0.1.0 tag.
 
 Follow [SPIManifest's documentation configuration](https://github.com/SwiftPackageIndex/SPIManifest/blob/main/Sources/SPIManifest/Documentation.docc/CommonUseCases.md)

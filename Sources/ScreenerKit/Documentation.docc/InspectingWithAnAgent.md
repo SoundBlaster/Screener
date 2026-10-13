@@ -20,7 +20,7 @@ The MCP process on your Mac cannot directly read an iPhone's app sandbox.
 ## Build and register the server
 
 ```sh
-git clone --branch v0.1.0 https://github.com/SoundBlaster/Screener.git
+git clone --branch v0.2.0 https://github.com/SoundBlaster/Screener.git
 cd Screener
 swift build -c release --product screener-mcp
 SCREENER_BIN="$(swift build -c release --show-bin-path)/screener-mcp"

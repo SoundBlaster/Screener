@@ -1,5 +1,38 @@
 # Changelog
 
+## 0.2.0 — 2026-10-13
+
+- New `screener-app-store-screenshots` skill: repeatable iOS/iPadOS Simulator
+  batches with real XCTest navigation, flag-gated app checkpoints, paired native
+  Screener/system PNGs, pixel-preserving preparation and a review gallery.
+- Experimental macOS whole-window screenshot adapter, validated with BuildHunter;
+  explicit window queries, app-owned readiness, scoped runner entitlements,
+  local ad hoc signing and documented developer/UI Automation setup.
+- Public custom-frame ingestion for images, encoded data, pixel buffers and raw
+  RGBA8/BGRA8 buffers, with explicit conversion, ownership and source timestamps.
+- Optional `ScreenerScreenCaptureKit` product supplies macOS 14+ async window
+  stills with explicit window/owner checks, native geometry validation and
+  existing Screen Recording access. It does not start a continuous stream.
+- UIKit image capture handles draw-only `UIImage` values without CG/CI backing.
+- iOS/macOS DocC API reference, tutorial and custom-frame examples; updated
+  capture guidance and source-bound PhotoCompressor, CityChain, BuildHunter and
+  Dreams evidence.
+- README screenshot-skill hero and clearer first-integration/repeat/recovery
+  workflows. Prose/image-only changes skip heavy CI; screenshot-tool checks
+  run on Linux and Swift/DocC checks follow their actual inputs.
+- Trace producer, MCP server and skills-only plugin identify version `0.2.0`.
+  Trace format remains version 1; existing 0.1.0 traces remain readable.
+
+Screenshot automation requires consuming app/test integration and content review;
+it does not upload to Apple or establish App Store acceptance. macOS screenshot
+automation remains experimental. Hierarchy capture can omit GPU content and
+render materials differently; the settled SDR Dreams Metal comparison does not
+establish RealityKit, HDR/EDR or universal GPU fidelity. The opt-in physical iOS 27
+ScreenCaptureKit session still requires manual system permission.
+
+Swift tools 6.1+, iOS 16+, macOS 13+; the optional macOS compositor module needs
+macOS 14+. The MCP executable runs on macOS.
+
 ## 0.1.0 — 2026-10-10
 
 First stable release of the local visual trace SDK and read-only MCP server.

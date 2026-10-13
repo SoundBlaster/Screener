@@ -1,7 +1,7 @@
 @Tutorial(time: 10) {
     @Intro(title: "Record your first trace") {
         Use a Mac with Xcode, Swift 6.1 or later, and an iOS 16+ app running in Simulator.
-        Add the Screener package at version 0.1.0 and link ScreenerKit to the app target.
+        Add the Screener package at version 0.2.0 and link ScreenerKit to the app target.
         Add the helper below to a Swift file in that target. You will call it from a Debug action
         on the main actor, passing the visible window from your current scene.
     }

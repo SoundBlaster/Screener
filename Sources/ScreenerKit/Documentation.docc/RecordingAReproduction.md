@@ -5,7 +5,7 @@ Capture a short sequence from an existing window and close the resulting trace.
 ## Add the SDK
 
 Add `https://github.com/SoundBlaster/Screener` in Xcode's Package Dependencies,
-select version `0.1.0`, and link the `ScreenerKit` product to your app target.
+select version `0.2.0`, and link the `ScreenerKit` product to your app target.
 Keep recording behind `#if DEBUG`; recording is an explicit development action.
 
 ## Capture an iOS window

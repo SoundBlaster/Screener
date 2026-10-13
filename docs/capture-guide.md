@@ -113,8 +113,8 @@ The existing `CapturedImage(cgImage:scale:)` and
 `Screener.recordFrame(_:reason:metadata:)` APIs accept a custom image directly,
 without starting system capture. [ADR-0006](adr/ADR-0006-capture-backends-and-custom-frame-ingestion.md)
 describes the implemented optional macOS ScreenCaptureKit module and public typed
-image/buffer conversion at this boundary. These additions are unreleased; inspect
-the actual resolved source before using them. See the DocC `CustomFrames` article
+image/buffer conversion at this boundary. These additions ship in 0.2.0; verify
+the consumer's resolved version includes them. See the DocC `CustomFrames` article
 for formats, color conversion, memory ownership and source timestamps.
 
 The new module provides macOS 14+ async window stills:

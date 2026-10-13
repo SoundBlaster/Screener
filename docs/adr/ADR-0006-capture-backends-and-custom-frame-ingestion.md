@@ -1,6 +1,6 @@
 # ADR-0006 — Optional capture backends and public frame ingestion
 
-Status: Accepted; first implementation slice complete (unreleased)
+Status: Accepted; first implementation slice included in 0.2.0
 Date: 2026-10-12
 
 ## Context
