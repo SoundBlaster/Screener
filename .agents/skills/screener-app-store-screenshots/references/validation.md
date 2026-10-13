@@ -1,5 +1,21 @@
 # Validation and reusable example
 
+## Coverage at a glance
+
+These are recorded consumer runs, not a promise that every configured profile works.
+Later changes keep their own source bindings and verification scope.
+
+| Consumer | Recorded matrix | Outcome and limits |
+| --- | --- | --- |
+| PhotoCompressor | iPad Pro 13-inch M5, iOS 27, en/ru, portrait/landscapeLeft | 16 UI states, 16 system + 16 Screener PNGs; RGB8/RGB16 preparation. |
+| CityChain | Same iPad profile, en-US/light, main/Atlas, both orientations | Integration and same-binary repeat passed; 4 states, 8 PNGs each. Matched timing experiment below. |
+| BuildHunter | Apple Silicon macOS 27.0, en-US/light, 1280×800pt at 2x, main/results/diagram | Two scoped tests, 3 states, 6 PNGs; buildless repeat passed. Visible Debug mock controls. |
+
+macOS remains an experimental adapter with one validated consumer. No automatic
+Duo unfolding, Intel macOS, physical-device store batch, RealityKit, HDR/EDR or
+Apple acceptance is established. AppKit can omit Metal content; paired system
+PNGs need content inspection even when native geometry is valid.
+
 ## Origin: PhotoCompressor
 
 The app-specific pilot supplied the starting mechanics: one iPad Pro 13-inch M5
@@ -32,6 +48,13 @@ they do not replace ImageIO pixel verification or a Simulator integration run.
 
 The skill frontmatter passes the Codex skill validator. These checks do not prove
 that arbitrary app readiness adapters or screenshots are correct.
+
+The documentation review on 2026-10-13 reran all 13 tool tests and the skill
+validator. Local Markdown targets resolved, both complete example JSON configs
+parsed (including macOS profile validation), and installation into temporary
+roots confirmed each copied runner's documented CLI options. SDK, adapter and
+runner code were unchanged; no application capture/build was repeated for that
+documentation review.
 
 ## Second consumer: CityChain
 
@@ -118,9 +141,9 @@ produced. This is runner startup failure, not a product-scenario failure.
 Developer mode disabled; the user was asked before any system permission change.
 Treat that as an environment observation, not a proven sole cause.
 
-Do not claim a successful macOS PNG batch, pixel fidelity, repeat-run time or
-screen-recording-permission outcome until the fresh UI result and PNGs are reviewed.
-The portable tooling checks do not substitute for that runtime evidence.
+At this stage, there was no successful macOS PNG batch or repeat-run measurement.
+The portable tooling checks did not substitute for runtime evidence. The later
+verified runs are recorded separately below.
 
 The 2026-10-13 retry rebuilt successfully (166.143s) but timed out before test
 startup. The copied XCTest runner had an invalid resource seal with signing
@@ -186,6 +209,20 @@ source hashes. This follow-up changes registration lifetime; it does not relabel
 those runs as verification of overlapping-probe replacement. The current repair
 is checked by source review, copy identity, skill structure and an app build;
 application tests are not added or rerun for this follow-up.
+
+### Merged consumer and CI scope
+
+Screener #17 merged at `10271cc0951636d6f13c5ad5b90bc438259b25db` and BuildHunter
+#64 at `8dcf7a4de22862831b224abec1ff714069449654` on 2026-10-13. Both PR heads
+had green CI and resolved review threads. After main integration, BuildHunter's
+normal Debug and screenshot app builds passed; the consumer records new source
+hashes in `main-integration-identity.json`. Its ordinary CI also passed unit/UI,
+performance and Release checks. These do not rerun the flag-gated screenshot batch
+or replace the original PNG source identities.
+
+Screener's successful retry passed the portable tool/package/UIKit fixture checks
+and DocC. The earlier 15-minute job timeout and a later unavailable hosted runner
+were CI infrastructure outcomes, separate from consumer screenshot behavior.
 
 ## SDK scope
 
