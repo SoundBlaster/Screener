@@ -15,11 +15,19 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  changes:
+    uses: ./.github/workflows/changes.yml
+
   build:
     name: Build and validate DocC
+    needs: changes
+    if: ${{ !cancelled() && (needs.changes.result != 'success' || needs.changes.outputs.documentation == 'true') }}
     runs-on: macos-26
     timeout-minutes: 20
     steps:
+      - name: Require successful change selection
+        if: needs.changes.result != 'success'
+        run: exit 1
       - uses: actions/checkout@v4
       - name: Build iOS and macOS documentation
         run: python3 .github/scripts/build_documentation.py

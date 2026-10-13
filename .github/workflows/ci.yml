@@ -4,6 +4,7 @@ on:
   push:
     branches: [main]
   pull_request:
+  workflow_dispatch:
 
 permissions:
   contents: read
@@ -13,18 +14,38 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  changes:
+    uses: ./.github/workflows/changes.yml
+
+  screenshot-tools:
+    name: Screenshot skill tools
+    needs: changes
+    if: ${{ !cancelled() && (needs.changes.result != 'success' || needs.changes.outputs.tools == 'true') }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Require successful change selection
+        if: needs.changes.result != 'success'
+        run: exit 1
+      - uses: actions/checkout@v4
+      - name: Test screenshot skill tools
+        run: python3 .agents/skills/screener-app-store-screenshots/scripts/test_tools.py
+
   swift-test:
     name: Swift package tests
+    needs: changes
+    if: ${{ !cancelled() && (needs.changes.result != 'success' || needs.changes.outputs.swift == 'true') }}
     runs-on: macos-26
     # A cold hosted Simulator can spend 11+ minutes starting the test session.
     # Leave room for package builds and runner cleanup as well as the tests.
     timeout-minutes: 30
     steps:
+      - name: Require successful change selection
+        if: needs.changes.result != 'success'
+        run: exit 1
       - uses: actions/checkout@v4
       - name: Show Swift version
         run: swift --version
-      - name: Test screenshot skill tools
-        run: python3 .agents/skills/screener-app-store-screenshots/scripts/test_tools.py
       - name: Test package
         run: swift test
       - name: Build for iOS Simulator

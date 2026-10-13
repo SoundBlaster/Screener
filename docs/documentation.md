@@ -41,9 +41,35 @@ python3 -m http.server 8000 --directory .build/docc-preview
 
 Open `http://localhost:8000/Screener/` or its `macos/` subdirectory.
 
+## CI check selection
+
+Both workflows first inspect the complete Git diff on a small Linux runner.
+They keep their existing check names and skip irrelevant jobs with job conditions,
+so a prose-only PR does not wait for a macOS runner or Simulator startup.
+
+| Changed inputs | Checks selected |
+| --- | --- |
+| README, skill instructions/UI metadata, images, historical evidence | No builds or tests; only changed-path selection. |
+| Screenshot skill scripts and non-image adapter assets | Screenshot tool checks on Linux. |
+| `Sources/**/Documentation.docc/**`, including tutorial snapshots | DocC build, tutorial validation and preview. |
+| SDK/package inputs, `Tests/` or `Examples/` | Swift/package/Simulator/fixture checks and DocC. |
+| CI files or an unclassified path | All checks. |
+
+The selector uses PR merge-base-to-head or push-before-to-after changes and includes
+deleted paths and both sides of renames. Missing diff inputs conservatively select
+all checks; a failed selection job makes dependent checks fail rather than silently
+accepting a skipped build. Manual workflow dispatch also selects the full pipeline.
+No top-level path filter suppresses a required check. See GitHub's
+[job condition behavior](https://docs.github.com/en/actions/how-tos/write-workflows/choose-when-workflows-run/control-jobs-with-conditions).
+
+The selector is `.github/scripts/ci_changes.py`, shared through
+`.github/workflows/changes.yml`. When adding a new build input, keep the conservative
+default or classify it explicitly. Changes to these CI rules run the full pipeline
+once; subsequent prose/image-only changes skip its expensive jobs.
+
 ## GitHub Pages
 
-The documentation workflow builds both sites on pull requests and uploads a preview
+For relevant changes, the documentation workflow builds both sites on pull requests and uploads a preview
 artifact as a tar.gz archive (DocC symbol filenames can contain colons).
 Only the default branch can deploy. Configure repository Pages settings
 to use **GitHub Actions** before the first deployment.

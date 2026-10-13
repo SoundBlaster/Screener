@@ -196,6 +196,28 @@ articles on recording, capture backends, and MCP inspection. See the
 [documentation guide](docs/documentation.md) for local builds, platform-specific
 references, and publishing through GitHub Pages or Swift Package Index.
 
+## Automate App Store screenshots
+
+![Screener screenshot skill — devices, capture and App Store](.agents/skills/screener-app-store-screenshots/assets/hero-app-store-screenshots.png)
+
+Use [`$screener-app-store-screenshots`](.agents/skills/screener-app-store-screenshots/SKILL.md)
+to give your app a repeatable screenshot command: launch, navigate real controls,
+capture named screens, and collect native PNGs with a labelled review gallery.
+It supports iOS/iPadOS Simulator and an experimental macOS whole-window adapter.
+
+The first integration adds flag-gated app/test adapters, readiness policy and a UI
+scenario; later runs reuse them across configured languages and orientations or
+window profiles. Each checkpoint pairs a Screener image with a system reference.
+Review the prepared system PNGs before selecting store assets; Apple upload is
+separate. This workflow uses ScreenerKit in the app and does not require an MCP server.
+
+After installing the plugin below, ask your agent:
+
+```text
+Use $screener-app-store-screenshots to integrate or rerun this app's screenshot
+batch, then show the native system PNGs and review gallery.
+```
+
 ## Give your agent the workflow
 
 The optional [Screener skill](.agents/skills/screener-visual-trace/SKILL.md) teaches

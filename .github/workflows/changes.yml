@@ -1,0 +1,31 @@
+name: Select checks
+
+on:
+  workflow_call:
+    outputs:
+      swift:
+        value: ${{ jobs.changes.outputs.swift }}
+      tools:
+        value: ${{ jobs.changes.outputs.tools }}
+      documentation:
+        value: ${{ jobs.changes.outputs.documentation }}
+
+permissions:
+  contents: read
+
+jobs:
+  changes:
+    name: Inspect changed paths
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    outputs:
+      swift: ${{ steps.select.outputs.swift }}
+      tools: ${{ steps.select.outputs.tools }}
+      documentation: ${{ steps.select.outputs.documentation }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Select affected checks
+        id: select
+        run: python3 .github/scripts/ci_changes.py
