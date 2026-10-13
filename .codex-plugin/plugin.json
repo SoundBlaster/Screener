@@ -1,7 +1,7 @@
 {
   "name": "screener",
   "version": "0.1.0",
-  "description": "Capture and inspect visual traces and automate native Simulator screenshot batches.",
+  "description": "Capture and inspect visual traces and automate native Simulator or macOS window screenshot batches.",
   "author": {
     "name": "SoundBlaster"
   },
@@ -11,13 +11,13 @@
   "interface": {
     "displayName": "Screener",
     "shortDescription": "Visual traces and repeatable native screenshot batches.",
-    "longDescription": "Choose UIKit or physical ScreenCaptureKit traces, or integrate a flag-gated XCTest workflow for native Simulator screenshot batches with system references and review galleries.",
+    "longDescription": "Choose UIKit or physical ScreenCaptureKit traces, or integrate a flag-gated XCTest workflow for native Simulator and macOS window screenshot batches with system references and review galleries.",
     "developerName": "SoundBlaster",
     "category": "Developer tools",
     "capabilities": [],
     "defaultPrompt": [
       "Use the Screener plugin to capture and verify a Debug UI trace on the selected device.",
-      "Use the Screener screenshot skill to integrate or run a native Simulator screenshot batch."
+      "Use the Screener screenshot skill to integrate or run a native Simulator or macOS window screenshot batch."
     ]
   }
 }

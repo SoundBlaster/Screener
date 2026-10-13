@@ -23,10 +23,11 @@ Run from the Screener repository:
 python3 .agents/skills/screener-app-store-screenshots/scripts/test_tools.py
 ```
 
-Nine focused tests cover installer SHA provenance, refusal to overwrite, all-target
+Thirteen focused tests cover installer SHA provenance, refusal to overwrite, all-target
 preflight, path escape rejection, incomplete collection, trace closure/order,
 checkpoint identity, missing stop acknowledgement, raw-capture mutation and
-separate preparation metrics. Synthetic PNG headers exercise collection logic;
+separate preparation metrics, macOS adapter selection, host-relative XCTest plan
+paths and exact window/native geometry. Synthetic PNG headers exercise collection logic;
 they do not replace ImageIO pixel verification or a Simulator integration run.
 
 The skill frontmatter passes the Codex skill validator. These checks do not prove
@@ -95,6 +96,81 @@ Detailed timings, failed attempts and identities: SwiftDecision-Examples
 `screenshots/validation/2026-10-11/ab/README.md` in
 [the consumer PR](https://github.com/SoundBlaster/SwiftDecision-Examples/pull/67).
 No model-token or billed-cost savings were measured.
+
+## macOS consumer: BuildHunter
+
+### Historical startup failures
+
+BuildHunter already had AppKit diagram tracing, Debug mock states and real XCTest
+navigation. The macOS adapter reuses these with a dedicated screenshot configuration,
+isolated app bundle, app-owned SpecificationCore readiness, explicit presentation
+windows and paired AppKit/XCTest whole-window PNG checkpoints. Its existing SDK pin
+`e447751afd8815de0ad1ec50ba2e4ca7c469d68e` remains unchanged. Checkpoint metadata is
+stored in a marker because that SDK's `recordFrame` has no extra metadata parameter.
+
+The app and both test bundles build on macOS 27.0 / Xcode 27.1. A cached rebuild
+took 5.508s after the initial dependency compilation. The requested profile is
+English/light, empty → results → diagram, 1280×800 points at native 2×.
+The fresh UI invocation failed after 346.258s with **“The test runner hung before
+establishing connection.”** No screenshot test case executed and no PNG batch was
+produced. This is runner startup failure, not a product-scenario failure.
+`DevToolsSecurity -status` reported
+Developer mode disabled; the user was asked before any system permission change.
+Treat that as an environment observation, not a proven sole cause.
+
+Do not claim a successful macOS PNG batch, pixel fidelity, repeat-run time or
+screen-recording-permission outcome until the fresh UI result and PNGs are reviewed.
+The portable tooling checks do not substitute for that runtime evidence.
+
+The 2026-10-13 retry rebuilt successfully (166.143s) but timed out before test
+startup. The copied XCTest runner had an invalid resource seal with signing
+disabled. The macOS tool now uses team-free local ad hoc signing; a fresh rebuild
+(10.610s) passed signature verification. XCTest still reported **The test runner
+hung before establishing connection** after 344.725s, with no screenshot scenario
+executed and no PNG batch. Signing fixes a concrete defect but is not established
+as the startup hang's cause. Developer mode was disabled for both runs; enabling
+it was separately authorized for another diagnostic retry. Evidence is retained
+in BuildHunter's screenshot worktree at `screenshots/validation/2026-10-13/`.
+
+After the user enabled developer mode, two same-binary retries reached the runner's
+`Running tests...` log, then failed initialization with **Timed out while enabling
+automation mode** after approximately 60s. No scenario or PNG batch executed.
+The system reports UI Automation disabled and authentication required; this is a
+separate gate from developer mode. Unattended automation authentication was not
+enabled. Those runs did not establish macOS batch runtime support.
+
+### Verified batch and repeat (2026-10-13)
+
+After the user completed XCTest's UI Automation prompt, both test bodies executed.
+The real scenario exposed sandbox file-write failures. The screenshot UI-test target
+now uses the copied entitlement template, scoped to its isolated app checkpoint cache
+and normalized output root. The app sandbox is retained. Directory paths need leading
+and trailing slashes, including home-relative paths.
+
+The consumer opens its main window through File → New BuildHunter Window when a
+relaunch has no windows, using the helper's app-owned `prepare` closure. It applies
+the requested SwiftUI theme at the root through SpecificationCore policy. Earlier
+geometry-valid batches with mixed light/dark rendering are preserved as intermediate
+results, not relabelled as accepted light-theme evidence.
+
+Final light batch `20261013T170307215242Z` passed both scoped UI tests and produced
+three states / six native RGB8 opaque PNGs at 2560×1600, 1280×800 points, 2x:
+empty → completed fixture results → separate diagram window. Preparation verified
+decoded pixel equality, raw hashes and closed consecutive trace timelines.
+Elapsed command time was **44.849s**, including an incremental build. A same-binary
+buildless repeat `20261013T170459869382Z` passed again in **35.972s**, with another
+six PNGs. These are local command timings, not a manual-versus-automation benchmark.
+
+Full-size selected system PNGs were reviewed for the actual light theme, text,
+window content and diagram. This is an English/light Apple Silicon macOS 27.0
+fixture pilot; it does not establish dark/localized matrices, arbitrary apps,
+Metal/RealityKit fidelity, normal-release runtime or Apple acceptance. The Debug
+mock-state toolbar remains visible in the pilot images.
+Metrics, manifests, summaries, source hashes and PNG evidence are retained in
+BuildHunter `screenshots/validation/2026-10-13/`.
+After restoring the ordinary project, its Debug app build passed using the same
+DerivedData. The remaining stale Rust-library path warning is documented in the
+consumer report; normal runtime and Release behavior were not checked.
 
 ## SDK scope
 

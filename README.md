@@ -209,7 +209,7 @@ codex plugin add screener@screener-local
 
 Then ask it to use `$screener-visual-trace`, or use
 [`$screener-app-store-screenshots`](.agents/skills/screener-app-store-screenshots/SKILL.md)
-to integrate a repeatable Simulator screenshot batch with real UI checkpoints,
+to integrate a repeatable Simulator or macOS window screenshot batch with real UI checkpoints,
 paired Screener/system PNGs and a review gallery. The screenshot skill includes
 a reusable runner, PNG preparer and app/test adapters; app-specific navigation
 and readiness remain in the consuming repository. The plugin does not install the SDK or

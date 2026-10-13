@@ -9,13 +9,18 @@ parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument("--root", type=Path, required=True)
 parser.add_argument("--app-sources", required=True)
 parser.add_argument("--test-sources", required=True)
+parser.add_argument("--platform", choices=["iOS", "macOS"], default="iOS")
 args = parser.parse_args()
 root = args.root.resolve()
 skill = Path(__file__).resolve().parents[1]
+suffix = "Mac" if args.platform == "macOS" else ""
 entries = [(skill / "scripts/run.py", "screenshots/tools/run.py"),
            (skill / "scripts/prepare.swift", "screenshots/tools/prepare.swift"),
-           (skill / "assets/ScreenshotHarness.swift", args.app_sources + "/ScreenshotHarness.swift"),
-           (skill / "assets/ScreenshotScenario.swift", args.test_sources + "/ScreenshotScenario.swift")]
+           (skill / ("assets/ScreenshotHarness" + suffix + ".swift"), args.app_sources + "/ScreenshotHarness.swift"),
+           (skill / ("assets/ScreenshotScenario" + suffix + ".swift"), args.test_sources + "/ScreenshotScenario.swift")]
+if suffix:
+    entries.append((skill / "scripts/run_macos.py", "screenshots/tools/run_macos.py"))
+    entries.append((skill / "assets/ScreenshotRunnerMac.entitlements", args.test_sources + "/ScreenshotRunner.entitlements"))
 for source, relative in entries:
     target = (root / relative).resolve()
     if not target.is_relative_to(root):

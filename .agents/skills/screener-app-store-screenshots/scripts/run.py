@@ -114,7 +114,8 @@ def collect(cache, previous, out, locale, config):
         if orientation not in config["orientations"] or orientation in found:
             raise ValueError("Unexpected or repeated orientation")
         found.add(orientation)
-        expected = config["nativePortraitPixels"] if orientation == "portrait" else config["nativePortraitPixels"][::-1]
+        expected = (config["nativeWindowPixels"] if config.get("platform") == "macOS" else
+                    config["nativePortraitPixels"] if orientation == "portrait" else config["nativePortraitPixels"][::-1])
         frames = [r for r in rows if r["kind"] == "keyframe"]
         if [r["name"] for r in frames] != names:
             raise ValueError("Missing, duplicate or reordered checkpoints")
@@ -131,7 +132,7 @@ def collect(cache, previous, out, locale, config):
                 destination.parent.mkdir(parents=True, exist_ok=True)
                 shutil.copyfile(blob, destination)
                 encoded, depth = png_info(destination)
-                if encoded != expected and not (backend == "system" and encoded == expected[::-1]):
+                if encoded != expected and not (config.get("platform") != "macOS" and backend == "system" and encoded == expected[::-1]):
                     raise ValueError("Non-native PNG dimensions")
                 assets.append({"backend": backend, "locale": locale, "orientation": orientation, "screen": frame["name"],
                                "source": str(destination.relative_to(out)), "pixels": expected, "encodedPixels": encoded,
@@ -174,7 +175,7 @@ def prepare(out, runner):
     (out / "review.html").write_text('<!doctype html><meta charset="utf-8"><title>Screenshot batch</title>'
         '<style>body{font:14px system-ui;background:#eee}main{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}'
         'img{width:100%;height:280px;object-fit:contain}span{display:block}</style><h1>Screener / system references</h1>'
-        '<p>UIKit omits system chrome and may differ for glass. Review system PNGs for App Store use.</p><main>' + ''.join(cards) + '</main>')
+        '<p>View-hierarchy and system captures can differ for glass and chrome. Review system PNGs for App Store use.</p><main>' + ''.join(cards) + '</main>')
     manifest["state"], manifest["preparedAt"] = "complete", datetime.now(timezone.utc).isoformat()
     write_json(out / "manifest.json", manifest)
     (out / "failure.json").unlink(missing_ok=True)

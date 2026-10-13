@@ -1,13 +1,21 @@
 ---
 name: screener-app-store-screenshots
-description: Integrate and run repeatable native iOS Simulator screenshot batches using real XCTest navigation and flag-gated Screener checkpoints. Use for App Store screenshot automation, localized device matrices, PNG collection, or repeated layout capture.
+description: Integrate and run repeatable native iOS Simulator or macOS window screenshot batches using real XCTest navigation and flag-gated Screener checkpoints. Use for App Store screenshot automation, localized device/window matrices, PNG collection, or repeated layout capture.
 ---
 
 # Screener App Store screenshots
 
+![App Store screenshot workflow: prepare, capture, review](assets/hero-app-store-screenshots.png)
+
 Deliver a repeatable local screenshot command and a labelled review gallery.
 Use the bundled runner/adapters rather than rebuilding orchestration in each chat.
 The first integration changes the consuming app; later runs reuse its scenario.
+
+Choose the platform adapter before installing: the default UIKit/Simulator runner
+uses device orientations; [macOS window capture](references/macos.md) uses AppKit,
+explicit window queries and a fixed point/pixel profile. Both reuse collection,
+pixel-preserving preparation and the review gallery. Do not substitute a desktop
+screenshot for an explicitly selected macOS window.
 
 ## Establish scope
 
@@ -17,7 +25,8 @@ orientations and a Simulator profile with known native pixels. A configured prof
 is not evidence that it was checked. Preserve existing source, icons and user simulators.
 
 Keep app instrumentation behind `SCREENER_SCREENSHOTS` in an explicit build configuration,
-plus runtime opt-in, valid run UUID and Simulator. Use an isolated bundle identifier.
+plus runtime opt-in and a valid run UUID; the UIKit adapter also requires Simulator.
+Use an isolated bundle identifier.
 The normal app must remain unaffected. Debug-based configuration is appropriate when
 using an existing Debug fixture; identify it honestly when selecting store assets.
 
@@ -61,10 +70,15 @@ closed consecutive timelines, native dimensions and decoded pixel-preserving pre
 The preparer preserves RGB8/RGB16 depth, source color space and raw files, applies EXIF
 rotation without resizing, and rejects nonopaque pixels.
 
-The first version captures **both** UIKit Screener and XCUIScreen reference PNGs.
-UIKit omits system status chrome and may differ for glass/compositor effects. Select and
+The adapters capture **both** Screener view-hierarchy and XCTest system reference PNGs.
+UIKit omits system status chrome; UIKit/AppKit may differ for glass/compositor effects. Select and
 review the system images for App Store use; native resolution alone does not establish
-fidelity or Apple acceptance. Neither Simulator backend requires screen-recording consent.
+fidelity or Apple acceptance. For Metal/RealityKit, inspect actual GPU content: the Dreams pilot found complete
+MTKView omission in AppKit despite valid native dimensions. Read the macOS guide's
+GPU limits; no universal GPU fidelity is established. Neither Simulator backend
+requires screen-recording consent.
+The macOS window pilot uses XCTest automation rather than a ScreenCaptureKit recording
+session; macOS automation permissions must still be available.
 For physical-device traces, use the separate `screener-visual-trace` workflow.
 
 Report the actual profile/theme/language/orientation matrix, binary/fixture/tool identities,
@@ -79,5 +93,8 @@ capture, 800ms geometry settling, a 12s eligibility wait, 180s session and 16 ch
 per orientation. Adapt these local budgets when justified; they are not SDK-wide promises.
 Readiness/geometry do not prove map tiles, network content or every animation settled.
 Automatic Duo unfolding, physical capture and App Store upload are outside this runner.
+The macOS adapter uses a fixed whole-window frame, the window's own backing scale,
+and app-owned readiness for each registered presentation. See its platform guide
+for desktop fit, sandbox path handoff and window chrome limitations.
 
 See [validation and reusable-example evidence](references/validation.md) for what was actually exercised.
