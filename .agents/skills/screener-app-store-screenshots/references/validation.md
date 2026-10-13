@@ -167,7 +167,8 @@ fixture pilot; it does not establish dark/localized matrices, arbitrary apps,
 Metal/RealityKit fidelity, normal-release runtime or Apple acceptance. The Debug
 mock-state toolbar remains visible in the pilot images.
 Metrics, manifests, summaries, source hashes and PNG evidence are retained in
-BuildHunter `screenshots/validation/2026-10-13/`.
+BuildHunter `screenshots/validation/2026-10-13/`, published with
+[the consumer pilot](https://github.com/SoundBlaster/BuildHunter/pull/64).
 After restoring the ordinary project, its Debug app build passed using the same
 DerivedData. The remaining stale Rust-library path warning is documented in the
 consumer report; normal runtime and Release behavior were not checked.
