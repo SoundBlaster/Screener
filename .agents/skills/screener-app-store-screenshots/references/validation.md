@@ -173,6 +173,20 @@ After restoring the ordinary project, its Debug app build passed using the same
 DerivedData. The remaining stale Rust-library path warning is documented in the
 consumer report; normal runtime and Release behavior were not checked.
 
+### Probe ownership review follow-up
+
+PR #17 identified that dismantling an old probe could erase a replacement's
+registration for the same presentation. Registry entries now weakly identify
+their owning NSView; detach/dismantle removes only that owner's entries. Reusing
+a probe for another presentation also retires only its own previous entry, and
+capture requires a live owner. The consumer copy in BuildHunter #64 is synchronized.
+
+The preceding screenshot batches remain historical evidence for their recorded
+source hashes. This follow-up changes registration lifetime; it does not relabel
+those runs as verification of overlapping-probe replacement. The current repair
+is checked by source review, copy identity, skill structure and an app build;
+application tests are not added or rerun for this follow-up.
+
 ## SDK scope
 
 This change adds skill/plugin resources and a consumer example. No ScreenerCore or
