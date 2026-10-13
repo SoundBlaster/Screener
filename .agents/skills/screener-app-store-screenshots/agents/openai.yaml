@@ -1,4 +1,4 @@
 interface:
   display_name: "Screener App Store Screenshots"
-  short_description: "Capture repeatable native Simulator screenshot batches"
+  short_description: "Capture native Simulator and macOS window screenshot batches"
   default_prompt: "Use $screener-app-store-screenshots to add and run a repeatable screenshot batch for this app."

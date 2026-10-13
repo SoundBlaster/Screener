@@ -16,7 +16,9 @@ jobs:
   swift-test:
     name: Swift package tests
     runs-on: macos-26
-    timeout-minutes: 15
+    # A cold hosted Simulator can spend 11+ minutes starting the test session.
+    # Leave room for package builds and runner cleanup as well as the tests.
+    timeout-minutes: 30
     steps:
       - uses: actions/checkout@v4
       - name: Show Swift version

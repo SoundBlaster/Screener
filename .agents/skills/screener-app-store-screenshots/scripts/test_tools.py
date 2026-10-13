@@ -12,6 +12,8 @@ HERE = Path(__file__).resolve().parent
 spec = importlib.util.spec_from_file_location("screenshot_runner", HERE / "run.py")
 runner = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(runner)
+sys.path.insert(0, str(HERE))
+import run_macos
 
 
 class ScreenshotToolTests(unittest.TestCase):
@@ -20,9 +22,34 @@ class ScreenshotToolTests(unittest.TestCase):
         self.addCleanup(self.temp.cleanup)
         self.root = Path(self.temp.name)
 
-    def install(self, app="App", tests="AppUITests"):
+    def install(self, app="App", tests="AppUITests", platform="iOS"):
         return subprocess.run([sys.executable, str(HERE / "install.py"), "--root", str(self.root),
-                               "--app-sources", app, "--test-sources", tests], capture_output=True)
+                               "--app-sources", app, "--test-sources", tests, "--platform", platform], capture_output=True)
+
+    def test_macos_installer_selects_appkit_and_window_adapters(self):
+        self.assertEqual(self.install(platform="macOS").returncode, 0)
+        manifest = json.loads((self.root / "screenshots/tool-provenance.json").read_text())
+        self.assertEqual(len(manifest), 6)
+        for item in manifest:
+            self.assertEqual(runner.digest(self.root / item["target"]), item["sha256"])
+        self.assertTrue((self.root / "screenshots/tools/run_macos.py").is_file())
+        self.assertIn("AppKit", (self.root / "App/ScreenshotHarness.swift").read_text())
+
+    def test_macos_native_geometry_configuration(self):
+        config = {"platform": "macOS", "orientations": ["window"], "locales": ["en-US"],
+                  "checkpoints": ["01-main"], "windowPoints": [1280, 800], "nativeWindowPixels": [2560, 1600]}
+        run_macos.validate(config)
+        with self.assertRaisesRegex(ValueError, "never resample"):
+            run_macos.validate(config | {"nativeWindowPixels": [2560, 800]})
+        with self.assertRaisesRegex(ValueError, "unique safe names"):
+            run_macos.validate(config | {"locales": ["../escape"]})
+
+    def test_macos_plan_uses_host_relative_bundle_path(self):
+        target = {"BlueprintName": "AppUITests", "TestBundlePath": "__TESTHOST__/Contents/PlugIns/AppUITests.xctest",
+                  "TestHostPath": "__TESTROOT__/Screenshots/AppUITests-Runner.app"}
+        config = {"testTarget": "AppUITests", "buildConfiguration": "Screenshots"}
+        self.assertTrue(run_macos.matches_plan({"TestConfigurations": [{"TestTargets": [target]}]}, config))
+        self.assertFalse(run_macos.matches_plan({"TestTargets": [target]}, config | {"buildConfiguration": "Release"}))
 
     def test_installer_provenance_and_no_overwrite(self):
         self.assertEqual(self.install().returncode, 0)
@@ -113,6 +140,19 @@ class ScreenshotToolTests(unittest.TestCase):
         recovery.run(sys.executable, "-c", "pass")
         self.assertEqual(json.loads((self.root / "metrics.json").read_text()), original)
         self.assertEqual(len(json.loads((self.root / "preparation-metrics.json").read_text())["operations"]), 1)
+
+    def test_macos_window_pair_requires_exact_system_geometry(self):
+        cache, config = self.fixture()
+        trace = cache / "uuid/trace.vtrace/timeline.jsonl"
+        trace.write_text(trace.read_text().replace('"portrait"', '"window"'))
+        config.update(platform="macOS", orientations=["window"], nativeWindowPixels=[10, 20])
+        self.assertEqual(len(runner.collect(cache, set(), self.root / "valid", "en-US", config)), 2)
+        system = cache / "uuid/system/01-main.png"
+        data = bytearray(system.read_bytes())
+        data[16:24] = struct.pack(">II", 20, 10)
+        system.write_bytes(data)
+        with self.assertRaisesRegex(ValueError, "Non-native"):
+            runner.collect(cache, set(), self.root / "invalid", "en-US", config)
 
 
 if __name__ == "__main__":
