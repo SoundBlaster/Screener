@@ -1,10 +1,19 @@
-# Consuming application integration
+# iOS/iPadOS Simulator integration
+
+Use this guide for UIKit/SwiftUI apps running in Simulator. For a macOS app,
+use [the macOS guide](macos.md); its API names and entitlement handoff differ.
+For an already integrated app, inspect its existing config/scenario/provenance
+and go to [Configuration](#configuration) rather than installing again.
+
+Prerequisites: macOS, Xcode with the selected Simulator runtime, Python 3.10+,
+an Xcode project/shared scheme and a UI-test target. Install/use the app's existing
+project generator if needed. Screener MCP is not used by the runner.
 
 ## Copy reusable assets
 
 ```sh
 python3 /path/to/skill/scripts/install.py --root /path/to/app \
-  --app-sources App/shared/screener --test-sources AppUITests
+  --platform iOS --app-sources App/shared/screener --test-sources AppUITests
 ```
 
 The installer creates `screenshots/tools/run.py`, `prepare.swift`, app-side
@@ -12,11 +21,13 @@ The installer creates `screenshots/tools/run.py`, `prepare.swift`, app-side
 It makes no project-file edits. Project source discovery/generation must include both Swift files.
 `ScreenerKit` 0.1.0 is sufficient; preserve a compatible existing pin where appropriate.
 
-Create an opt-in screenshot target with `SCREENER_SCREENSHOTS` and an isolated bundle ID. Link ScreenerKit only to that
-target: source guards alone do not isolate a package dependency. Prefer an opt-in
-project-generation spec that adds the package and screenshot targets; the normal
-spec must omit the package. Generate into the canonical project, then regenerate
-from the normal spec before ordinary development or release builds. A Debug-based configuration also needs inherited `DEBUG` if existing
+Create an opt-in screenshot target/configuration with `SCREENER_SCREENSHOTS` and
+an isolated bundle ID. If ScreenerKit is new to the app, scope its dependency to
+the screenshot target; source guards alone do not isolate linkage. An opt-in
+project-generation spec can add that package/target while the normal spec omits
+the newly introduced dependency. Preserve an existing Screener integration and its
+working scope/pin. Generate into the canonical project, then regenerate from the
+normal spec before ordinary development or release builds. A Debug-based configuration also needs inherited `DEBUG` if existing
 fixtures use it. SDK-qualified compilation conditions can override unqualified settings;
 inspect resolved settings and preserve the app's existing conditions.
 
@@ -45,6 +56,13 @@ Fixture launch arguments/environment are configured in JSON, not shell-interpola
 Keep personal content and secrets out of fixtures and manifests.
 
 ## UI scenario
+
+Import XCTest in the test file. Replace the example identifiers and navigation
+with the app's real controls; the installer does not generate them. Keep the
+scenario's checkpoint names/order identical to `capture.json`. Each body runs
+once per configured orientation and locale. Add a language-specific content
+assertion where the app exposes translated text; passing `AppleLanguages` alone
+does not prove the UI uses that language.
 
 ```swift
 @MainActor
@@ -86,7 +104,7 @@ Put `capture.json` under the consuming `screenshots/` directory:
   "testTarget": "AppUITests",
   "testClass": "AppScreenshotTests",
   "derivedData": ".build/DerivedData",
-  "generate": ["xcodegen", "generate", "--spec", "project.yml"],
+  "generate": ["xcodegen", "generate", "--spec", "project.screenshots.yml"],
   "deviceType": "com.apple.CoreSimulator.SimDeviceType.iPad-Pro-13-inch-M5-12GB",
   "runtime": "com.apple.CoreSimulator.SimRuntime.iOS-27-0",
   "nativePortraitPixels": [2064, 2752],
@@ -100,8 +118,13 @@ Put `capture.json` under the consuming `screenshots/` directory:
 }
 ```
 
+`projectRoot` is resolved from the config file's directory; project, generator
+arguments, DerivedData and output paths are then relative to that root. Here the
+optional `project.screenshots.yml` must define the screenshot configuration and
+include both app/test adapter files. Replace sample names/device/runtime/dimensions
+with the real installed profile; this JSON does not create those project settings.
 Remove `generate` when the project has no generator. Existing build/project conventions
-win. `commandPrefix` optionally supplies a local wrapper, e.g. `["rtk", "proxy"]`;
+win. `commandPrefix` defaults to `[]` and optionally supplies a local wrapper, e.g. `["rtk", "proxy"]`;
 it is not required by Screener. `output` defaults to `screenshots/output`, which should be ignored.
 The runner requires macOS/Xcode, Python 3.10+ and the configured Simulator runtime.
 
@@ -110,6 +133,20 @@ python3 screenshots/tools/run.py --config screenshots/capture.json
 python3 screenshots/tools/run.py --config screenshots/capture.json --simulator UUID --skip-build
 python3 screenshots/tools/run.py --prepare-output screenshots/output/RUN
 ```
+
+Use the first command for a new or changed binary. `--skip-build` uses the selected
+configuration's existing app and xctestrun plan; it does not prove they include
+unbuilt source edits. After the process finishes, restore the normal project if
+needed, e.g. `xcodegen generate --spec project.yml`. The runner does not restore it.
+
+Each device/runtime profile and appearance needs its own config invocation; only
+locales and the supported orientations are iterated within a run. Repeat this
+command for each requested matrix cell rather than claiming unrun profiles.
+
+Prefer the runner-owned Simulator. An explicit `--simulator` must match the profile;
+capture installs the isolated app, changes appearance and overrides status-bar
+values. Those settings/app remain afterward. The runner preserves initial boot
+state, shuts down devices it booted and never erases a device.
 
 A Make target may wrap the first command with `$(SCREENSHOT_ARGS)`.
 Creating a new Simulator requires 5GiB free. The configured headroom is a preflight,
@@ -124,6 +161,23 @@ and approve that target through Xcode with authorization; do not add a global va
 bypass to this runner.
 
 ## Artifacts and timing
+
+The runner prints `Ready: .../review.html` on successful preparation. Under that
+run directory, use:
+
+| Path | Purpose |
+| --- | --- |
+| `manifest.json` | `state: complete`, exact matrix, identities and raw/prepared hashes. |
+| `png/system/<locale>/<orientation>/<checkpoint>.png` | Prepared native system candidates for store review. |
+| `png/screener/<locale>/<orientation>/<checkpoint>.png` | Prepared view-hierarchy comparisons. |
+| `review.html` | Labelled gallery linking the full-size prepared files. |
+| `raw/`, `traces/`, `diagnostics/` | Preserved originals, closed traces and any partial evidence. |
+| `<locale>.xcresult`, `<locale>.log`, `build.log` | Actual XCTest/build evidence; inspect the fresh xcresult. |
+
+The iOS runner checks command success and collected artifacts; unlike the macOS
+runner, it does not export a separate test-summary JSON. Read the xcresult to
+confirm the expected scenarios executed and passed; a complete manifest is not
+an independent assertion that every desired test ran.
 
 Raw captures, `.vtrace`, system references and diagnostic copies remain separate.
 For an interactive baseline, verify the PNG header of the UI tool output before
@@ -151,3 +205,12 @@ The collector rejects it. Cancellation attempts to close the caller-owned sessio
 Preserve complete BCP 47 locale identifiers in `SCREENER_LANGUAGE`, including
 script/region qualifiers. A deleted registry-owned Simulator is recreated; an
 invalid explicit `--simulator` is rejected instead of silently substituted.
+
+The supplied app harness allows 16 checkpoints per orientation, 180s per session,
+12s per eligibility wait and 800ms stable geometry. The UI helper waits up to 20s
+for acknowledgements; the runner's UI-test command timeout is 420s per locale.
+Adapt these local budgets together when justified; they are not SDK-wide limits.
+Cold hosted Simulator startup can dominate CI time. The Screener CI run on
+2026-10-13 passed its tests but exceeded a 15-minute overall job budget during
+cleanup; its job budget was increased to 30 minutes. Diagnose infrastructure
+startup separately from a failed screenshot scenario.

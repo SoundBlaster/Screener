@@ -213,7 +213,8 @@ to integrate a repeatable Simulator or macOS window screenshot batch with real U
 paired Screener/system PNGs and a review gallery. The screenshot skill includes
 a reusable runner, PNG preparer and app/test adapters; app-specific navigation
 and readiness remain in the consuming repository. The plugin does not install the SDK or
-register the MCP server; complete those steps above. See the
+register the MCP server. Screenshot batches need ScreenerKit linked into the app;
+they do not use the MCP server. See the
 [plugin guide](docs/capture-guide.md#codex-skill-and-plugin) for project-local use.
 
 ## Try the macOS demo or contribute

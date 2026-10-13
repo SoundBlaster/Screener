@@ -1,100 +1,91 @@
 ---
 name: screener-app-store-screenshots
-description: Integrate and run repeatable native iOS Simulator or macOS window screenshot batches using real XCTest navigation and flag-gated Screener checkpoints. Use for App Store screenshot automation, localized device/window matrices, PNG collection, or repeated layout capture.
+description: Integrate or rerun automated App Store screenshot batches for iOS/iPadOS Simulator and macOS apps, using real XCTest navigation, flag-gated Screener checkpoints, native PNGs and a review gallery. Use for repeatable localized screenshot capture; use screener-visual-trace for transient UI diagnosis or physical-device traces.
 ---
 
 # Screener App Store screenshots
 
 ![App Store screenshot workflow: prepare, capture, review](assets/hero-app-store-screenshots.png)
 
-Deliver a repeatable local screenshot command and a labelled review gallery.
-Use the bundled runner/adapters rather than rebuilding orchestration in each chat.
-The first integration changes the consuming app; later runs reuse its scenario.
+Produce a repeatable local command that opens the app, navigates its real controls,
+captures named UI states and delivers native PNGs with a labelled review gallery.
+The first integration adds app/test code; later runs reuse that scenario. The runner
+does not discover arbitrary app navigation or generate a marketing composition.
+It uses ScreenerKit inside the app and local Xcode/Python tools; no Screener MCP
+server or screen-recording session is needed for these adapters.
 
-Choose the platform adapter before installing: the default UIKit/Simulator runner
-uses device orientations; [macOS window capture](references/macos.md) uses AppKit,
-explicit window queries and a fixed point/pixel profile. Both reuse collection,
-pixel-preserving preparation and the review gallery. Do not substitute a desktop
-screenshot for an explicitly selected macOS window.
+## Choose the task and platform
 
-## Establish scope
+| Task | Start here |
+| --- | --- |
+| First integration | Inspect the consuming app, install the matching adapter, add readiness/scenario/configuration. |
+| Repeat an existing batch | Read its config, scenario and tool provenance; reuse them without reinstalling. |
+| Recover PNG preparation | With complete collection, use `--prepare-output RUN`; no app launch or navigation. |
 
-Inspect the app's instructions, project generator, scheme, package pin, fixture path,
-UI-test target and existing accessibility identifiers. Choose actual screens, languages,
-orientations and a Simulator profile with known native pixels. A configured profile
-is not evidence that it was checked. Preserve existing source, icons and user simulators.
+| Platform | App / XCTest API | Copied runner | Instructions |
+| --- | --- | --- | --- |
+| iOS/iPadOS Simulator | `ScreenshotProbe` / `ScreenshotScenario` | `screenshots/tools/run.py` | Read [Simulator integration](references/integration.md). |
+| macOS, Apple Silicon (experimental) | `MacScreenshotProbe` / `MacScreenshotScenario` | `screenshots/tools/run_macos.py` | Read [macOS integration](references/macos.md), including permissions and window fit. |
 
-Keep app instrumentation behind `SCREENER_SCREENSHOTS` in an explicit build configuration,
-plus runtime opt-in and a valid run UUID; the UIKit adapter also requires Simulator.
-Use an isolated bundle identifier.
-The normal app must remain unaffected. Debug-based configuration is appropriate when
-using an existing Debug fixture; identify it honestly when selecting store assets.
+Both paths use the shared collector and PNG preparer. macOS captures an explicitly
+queried whole window, including its title bar; it does not crop the desktop.
+Automatic Duo unfolding, physical-device capture and Apple upload are outside these
+runners. For transient UI diagnosis or physical traces, use `screener-visual-trace`.
 
-## Integrate once
+## Workflow
 
-Read [integration](references/integration.md) for configuration and API details.
-Run `scripts/install.py` with the consuming root and app/test source directories;
-it copies the runner, PNG preparer and Swift adapters without overwriting files.
-Record the ScreenerKit revision actually linked into the app. The plugin reader
-and the app SDK can be different versions.
+1. **Define the matrix.** Inspect repository instructions, project tooling, scheme,
+   SDK pin, fixtures, UI-test target and accessibility identifiers. Choose screens,
+   languages, appearance and native device/orientation or window point/pixel profiles.
+   Use deterministic app-owned content; identify visible Debug controls and fixtures.
+   A configured profile is not evidence that it was exercised.
+2. **Integrate if missing.** Follow the selected platform guide. The installer copies
+   assets without overwriting and records their hashes; it does not edit the project
+   or create a runnable scenario/config. Wire the copied sources and compatible
+   ScreenerKit through existing project tooling. Keep new instrumentation behind
+   `SCREENER_SCREENSHOTS`, runtime opt-in and a valid run UUID, with an isolated bundle
+   ID; UIKit also requires Simulator. Preserve existing tracing/dependency scope.
+3. **Supply app semantics.** Add app-owned readiness and presentation IDs to probes;
+   keep policy in the consuming app's policy framework. Add a scoped XCTest class
+   with real navigation, content/language assertions, named checkpoints and a runtime
+   opt-out check. A Boolean readiness result plus stable geometry does not prove map
+   tiles, network content or every animation settled. Fixture injection does not
+   establish that an import/picker flow was exercised.
+4. **Run the copied command.** Use the guide's config and commands. Build is the default;
+   use `--skip-build` only for the intended existing binary, whose hash is recorded.
+   Reuse one project/DerivedData, serialize builds and wait on the actual process.
+   Restore the normal project generation afterward when the capture config generated
+   a different project; runners do not do this automatically.
+5. **Verify and select assets.** Require `manifest.json` state `complete`, the requested
+   matrix/checkpoint order, passing executed XCTest scenarios, closed consecutive
+   traces, native geometry and decoded pixel-preserving preparation. Inspect
+   `review.html` and the actual selected PNGs. Use `png/system/<locale>/<orientation>/`
+   as the store-image candidates; `png/screener/` contains hierarchy comparisons.
+   Counts include both backends: 2 languages × 2 orientations × 4 checkpoints means
+   16 UI states, 16 system images and 16 Screener images.
+6. **Hand off reproducibly.** Give the consuming command/config, output directory,
+   selected PNG paths and checked matrix, plus binary/fixture/tool identities, test
+   outcomes and remaining limits. Keep failures and recovery separately attributed.
+   Report integration, build, capture, preparation and review costs separately;
+   elapsed time and frame counts do not measure model-token or billed-cost savings.
 
-Add the app-owned readiness policy, presentation mapping, fixture setup and a short
-XCTest scenario that uses `ScreenshotScenario.run` and named checkpoints. Keep product
-policy in the consuming app's existing policy framework. `ScreenshotProbe` accepts
-its Boolean result and presentation; it does not infer whether arbitrary app content
-is ready. Add the source files/dependency/configuration through the project tooling.
+## Recovery and fidelity
 
-The scenario must operate real controls. Assert the desired screen and language before
-capturing; fixture injection is not evidence that the picker/import UI was exercised.
-Do not fabricate entitlements or invoke billable providers to populate screenshots.
+Preserve logs, xcresults and partial traces after failure. Preparation-only recovery
+requires complete collection and rechecks raw hashes and closed timelines. Incomplete
+collection needs a new capture run. Read the platform guide before repairing startup,
+permissions, sandbox paths or geometry; do not erase user simulators or bypass trust.
 
-## Run and recover
+The preparer retains native RGB8/RGB16 pixels and source color space, removes only
+opaque alpha and normalizes EXIF without resizing. UIKit hierarchy capture omits
+system status chrome, and UIKit/AppKit can differ from system captures for glass.
+For Metal/RealityKit, inspect actual system PNG content: AppKit omitted MTKView in
+the Dreams pilot despite correct geometry. No universal GPU fidelity is established.
 
-Use the copied runner with the app's configuration. Build is the default;
-`--skip-build` explicitly reuses an existing binary whose hash is recorded.
-Use one project/DerivedData per consuming repository and serialize builds. The runner
-rejects an already active `xcodebuild`; its lock does not control a GUI build started later.
-Pass `--simulator <UDID>` only for a deliberately selected matching device. Otherwise the
-runner reuses or creates its owned simulator. It never erases one.
+Neither supplied path needs screen-recording consent; macOS still needs XCTest
+automation permissions. Native pixels, passing tests and a complete batch do not
+establish final store suitability or Apple acceptance. Review content and current
+store requirements before a separately authorized upload.
 
-Run asynchronously and wait on the actual process rather than issuing repeated screenshot
-or status tool calls. Preserve failure logs and partial traces. Once collection is complete,
-`--prepare-output <run>` can regenerate PNGs/gallery without repeating UI navigation;
-it verifies raw hashes and closed trace timelines again.
-
-## Inspect and report
-
-Inspect `manifest.json`, `metrics.json`, XCTest results and `review.html`, then view the
-actual selected PNGs. Require requested checkpoint count/order, unique orientations,
-closed consecutive timelines, native dimensions and decoded pixel-preserving preparation.
-The preparer preserves RGB8/RGB16 depth, source color space and raw files, applies EXIF
-rotation without resizing, and rejects nonopaque pixels.
-
-The adapters capture **both** Screener view-hierarchy and XCTest system reference PNGs.
-UIKit omits system status chrome; UIKit/AppKit may differ for glass/compositor effects. Select and
-review the system images for App Store use; native resolution alone does not establish
-fidelity or Apple acceptance. For Metal/RealityKit, inspect actual GPU content: the Dreams pilot found complete
-MTKView omission in AppKit despite valid native dimensions. Read the macOS guide's
-GPU limits; no universal GPU fidelity is established. Neither Simulator backend
-requires screen-recording consent.
-The macOS window pilot uses XCTest automation rather than a ScreenCaptureKit recording
-session; macOS automation permissions must still be available.
-For physical-device traces, use the separate `screener-visual-trace` workflow.
-
-Report the actual profile/theme/language/orientation matrix, binary/fixture/tool identities,
-test outcomes, failures/recovery and unchecked screens. Separate integration cost from
-repeat-run cost. Use per-operation timings; agent token/tool usage requires separate session
-accounting and cannot be inferred from Screener frames. Apple upload is a separate action.
-
-## Scope of the supplied adapters
-
-The bundled UIKit/SwiftUI + XCTest adapters support portrait and landscapeLeft, paired
-capture, 800ms geometry settling, a 12s eligibility wait, 180s session and 16 checkpoints
-per orientation. Adapt these local budgets when justified; they are not SDK-wide promises.
-Readiness/geometry do not prove map tiles, network content or every animation settled.
-Automatic Duo unfolding, physical capture and App Store upload are outside this runner.
-The macOS adapter uses a fixed whole-window frame, the window's own backing scale,
-and app-owned readiness for each registered presentation. See its platform guide
-for desktop fit, sandbox path handoff and window chrome limitations.
-
-See [validation and reusable-example evidence](references/validation.md) for what was actually exercised.
+See [validation and consumer evidence](references/validation.md) for exactly what
+was exercised and which results predate later adapter/consumer changes.
