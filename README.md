@@ -260,6 +260,7 @@ shorter runs report median/max. See the [benchmark guide](docs/capture-guide.md#
 for interpretation.
 
 See the [product scope](docs/PRD.md),
+[implementation roadmap](docs/roadmap.md),
 [architecture decisions](docs/adr), and [changelog](CHANGELOG.md).
 Screener is open source under the [MIT License](LICENSE).
 
