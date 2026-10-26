@@ -31,6 +31,8 @@ Both paths use the shared collector and PNG preparer. macOS captures an explicit
 queried whole window, including its title bar; it does not crop the desktop.
 Automatic Duo unfolding, physical-device capture and Apple upload are outside these
 runners. For transient UI diagnosis or physical traces, use `screener-visual-trace`.
+For a manual Duo run, read [multi-display Simulator checks](references/duo-simulator.md)
+before judging a black capture or unfamiliar system layout.
 
 ## Workflow
 
