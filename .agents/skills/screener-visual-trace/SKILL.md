@@ -37,6 +37,10 @@ capture API or silently replace the requested physical device with a simulator.
 The recorded Air experiment establishes portrait base/menu behavior, not rotation,
 backgrounding, interruption, or performance coverage on other devices.
 
+For Duo or another multi-display Simulator, read
+[display activation and capture checks](../screener-app-store-screenshots/references/duo-simulator.md).
+A black inactive display does not establish missing app rendering.
+
 ## Establish integration and target
 
 - Inspect the consuming app's Debug capture entry point, package pin/revision,
