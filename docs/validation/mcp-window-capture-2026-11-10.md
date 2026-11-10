@@ -19,5 +19,15 @@ same real fixture and MCP executable. Its resulting trace contained exactly
 `sessionStarted`, one `vcmi:123:1:200` keyframe, and `sessionEnded`; the PNG
 showed the same fixture state. That trace is at
 `runtime/bridge-fixture-check/173967F9-F4D0-4C9C-A8E4-C4897181C31C.vtrace`.
-These runs used existing screen-capture access and did not test VCMI's SDL
-window, continuous video, animation timing, or capture without permission.
+These fixture runs used existing screen-capture access and did not test
+continuous video, animation timing, or capture without permission.
+
+A later run used VCMI's real SDL window and its event-driven observation
+bridge. Source revision `d3b08b4` recorded seven requested PNG keyframes and a
+closed timeline; one image was visually checked and showed the game. No
+additional keyframe appeared in the approximately 16-second pause between two
+camera movements. On this Mac the fullscreen game was not listed among
+on-screen windows in the current space, while its windowed mode was selectable.
+The test used existing screen capture access. It does not establish atomic
+state/image correlation or smooth animation. The local trace is
+`/Volumes/TB5/Developer/Builds/GitHub/Screener-mcp-window-recording-b01fcf1b5397bc1/runtime/vcmi-traces/4654E3F9-3123-4F08-BF75-8780D8B92B44.vtrace`.
