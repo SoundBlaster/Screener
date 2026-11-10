@@ -9,13 +9,21 @@ enum ScreenerMCPCommand {
         var roots = options.roots.isEmpty ? TraceCatalog.defaultRoots : options.roots
         var recording: WindowRecordingController?
         if let directory = options.recordingsDirectory {
-            guard #available(macOS 14, *) else { throw CommandError.unsupportedOS }
+            recording = try makeRecordingController(in: directory)
             roots.append(directory)
-            recording = WindowRecordingController(root: directory, provider: SystemWindowCaptureProvider())
         }
         let server = await ScreenerMCPServer.make(catalog: TraceCatalog(roots: roots), recording: recording)
         try await server.start(transport: CodexCompatibleStdioTransport())
         await server.waitUntilCompleted()
+    }
+
+    private static func makeRecordingController(in directory: URL) throws -> WindowRecordingController {
+        #if os(macOS)
+        guard #available(macOS 14, *) else { throw CommandError.unsupportedOS }
+        return WindowRecordingController(root: directory, provider: SystemWindowCaptureProvider())
+        #else
+        throw CommandError.unsupportedOS
+        #endif
     }
 
     private struct Options {
