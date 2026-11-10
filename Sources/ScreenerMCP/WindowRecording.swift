@@ -1,6 +1,7 @@
 import Foundation
 import CoreGraphics
 #if os(macOS)
+import AppKit
 import ScreenCaptureKit
 #endif
 import ScreenerKit
@@ -41,7 +42,9 @@ public struct SystemWindowCaptureProvider: WindowCaptureProvider {
     }
 
     @MainActor public func capture(windowID: UInt32, processID: Int32) async throws -> CapturedImage {
-        try await ScreenCaptureKitWindowSource(windowID: windowID, processID: processID).capture()
+        // A command-line MCP process may not yet have a WindowServer connection.
+        _ = NSApplication.shared
+        return try await ScreenCaptureKitWindowSource(windowID: windowID, processID: processID).capture()
     }
 }
 #endif
