@@ -1,21 +1,23 @@
 import Foundation
 import MCP
 
-/// Constructs the read-only local trace server and its four MCP tools.
+/// Constructs a local trace server with optional window recording.
 public enum ScreenerMCPServer {
     /// Creates a server whose tool handlers read from the supplied catalog.
     /// The caller connects the returned server to its chosen transport.
-    public static func make(catalog: TraceCatalog = TraceCatalog()) async -> Server {
+    public static func make(catalog: TraceCatalog = TraceCatalog(), recording: WindowRecordingController? = nil) async -> Server {
         let server = Server(
             name: "screener-mcp",
             version: "0.2.0",
             title: "Screener",
-            instructions: "Read-only access to local Screener visual-debugging traces. Start with screener.sessions, then request a timeline and one frame.",
+            instructions: recording == nil
+                ? "Read-only access to local Screener visual-debugging traces. Start with screener.sessions, then request a timeline and one frame."
+                : "Inspect traces or explicitly record checkpoints from one selected application window. Recording never starts automatically.",
             capabilities: .init(tools: .init())
         )
 
         await server.withMethodHandler(ListTools.self) { _ in
-            ListTools.Result(tools: [
+            let readTools: [Tool] = [
                 Tool(
                     name: "screener.sessions",
                     title: "List Screener sessions",
@@ -68,13 +70,38 @@ public enum ScreenerMCPServer {
                     ]),
                     annotations: .init(readOnlyHint: true, destructiveHint: false, idempotentHint: true, openWorldHint: false)
                 ),
-            ])
+            ]
+            return ListTools.Result(tools: readTools + (recording == nil ? [] : recordingTools()))
         }
 
         await server.withMethodHandler(CallTool.self) { params in
             do {
                 let args = params.arguments ?? [:]
                 switch params.name {
+                case "screener.windows":
+                    guard let recording else { return errorResult("Window recording is not enabled") }
+                    guard let appBundleID = args["appBundleID"]?.stringValue else { return errorResult("appBundleID is required") }
+                    let result = WindowListOutput(windows: try await recording.windows(appBundleID: appBundleID))
+                    return try CallTool.Result(content: [text(json(result))], structuredContent: MCP.Value(result))
+                case "screener.window_start":
+                    guard let recording else { return errorResult("Window recording is not enabled") }
+                    guard let appBundleID = args["appBundleID"]?.stringValue,
+                          let windowValue = args["windowID"]?.intValue, let windowID = UInt32(exactly: windowValue),
+                          let processValue = args["processID"]?.intValue, let processID = Int32(exactly: processValue),
+                          let name = args["name"]?.stringValue else { return errorResult("appBundleID, windowID, processID and name are required") }
+                    let result = try await recording.start(appBundleID: appBundleID, windowID: windowID, processID: processID, name: name)
+                    return try CallTool.Result(content: [text(json(result))], structuredContent: MCP.Value(result))
+                case "screener.window_capture":
+                    guard let recording else { return errorResult("Window recording is not enabled") }
+                    guard let rawID = args["sessionID"]?.stringValue, let sessionID = UUID(uuidString: rawID),
+                          let reason = args["reason"]?.stringValue else { return errorResult("sessionID and reason are required") }
+                    let result = try await recording.capture(sessionID: sessionID, reason: reason)
+                    return try CallTool.Result(content: [text(json(result))], structuredContent: MCP.Value(result))
+                case "screener.window_stop":
+                    guard let recording else { return errorResult("Window recording is not enabled") }
+                    guard let rawID = args["sessionID"]?.stringValue, let sessionID = UUID(uuidString: rawID) else { return errorResult("sessionID must be a UUID") }
+                    let result = try await recording.stop(sessionID: sessionID)
+                    return try CallTool.Result(content: [text(json(result))], structuredContent: MCP.Value(result))
                 case "screener.sessions":
                     let sessions = catalog.sessions()
                     let output = SessionsOutput(sessions: sessions)
@@ -134,6 +161,33 @@ public enum ScreenerMCPServer {
             }
         }
         return server
+    }
+
+    private static func recordingTools() -> [Tool] {
+        let string: MCP.Value = .object(["type": .string("string")])
+        let positiveInteger: MCP.Value = .object(["type": .string("integer"), "minimum": .int(1)])
+        let sessionID: MCP.Value = .object(["type": .string("string"), "format": .string("uuid")])
+        let annotation = Tool.Annotations(readOnlyHint: false, destructiveHint: false, idempotentHint: false, openWorldHint: false)
+        return [
+            Tool(name: "screener.windows", title: "Find application windows", description: "List on-screen windows for one exact bundle identifier; requires existing screen-capture access.", inputSchema: .object([
+                "type": .string("object"), "properties": .object(["appBundleID": string]), "required": .array([.string("appBundleID")]),
+            ]), annotations: .init(readOnlyHint: true, destructiveHint: false, idempotentHint: true, openWorldHint: false)),
+            Tool(name: "screener.window_start", title: "Start window trace", description: "Start one explicit window trace without taking a frame or starting a timer.", inputSchema: .object([
+                "type": .string("object"), "properties": .object(["appBundleID": string, "windowID": positiveInteger, "processID": positiveInteger, "name": string]),
+                "required": .array([.string("appBundleID"), .string("windowID"), .string("processID"), .string("name")]),
+            ]), annotations: annotation),
+            Tool(name: "screener.window_capture", title: "Capture window checkpoint", description: "Capture one named checkpoint for the active window trace.", inputSchema: .object([
+                "type": .string("object"), "properties": .object(["sessionID": sessionID, "reason": string]),
+                "required": .array([.string("sessionID"), .string("reason")]),
+            ]), annotations: annotation),
+            Tool(name: "screener.window_stop", title: "Stop window trace", description: "Finish the active window trace.", inputSchema: .object([
+                "type": .string("object"), "properties": .object(["sessionID": sessionID]), "required": .array([.string("sessionID")]),
+            ]), annotations: annotation),
+        ]
+    }
+
+    private struct WindowListOutput: Codable, Sendable {
+        let windows: [RecordableWindow]
     }
 
     private static func text(_ value: String) -> Tool.Content {

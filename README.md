@@ -167,9 +167,13 @@ Distinguish what the captured frames show from anything they may have missed.
 | `screener.contact_sheet` | A numbered grid of captured frames |
 | `screener.frame` | An individual image by session and record ID |
 
-The server reads local trace files. It does not drive your app or start recordings;
-those happen through the app-side SDK. Your MCP client's model and data-handling
-settings determine where images go after the client reads them.
+By default the server reads local trace files; recordings happen through the
+app-side SDK. An optional macOS mode can start a local trace and capture
+explicitly requested checkpoints of a selected external window. It does not
+drive the application or capture continuously. See the
+[window recording guide](docs/capture-guide.md#opt-in-mcp-window-recording).
+Your MCP client's model and data-handling settings determine where images go
+after the client reads them.
 
 ## Choose the right capture
 
