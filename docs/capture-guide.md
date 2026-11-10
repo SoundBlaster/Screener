@@ -133,6 +133,39 @@ By default the window must belong to the calling process. Supply the expected
 `processID` explicitly for another app. Authorization, native geometry and owner
 checks fail explicitly; there is no desktop/hierarchy fallback or sampling loop.
 
+## Opt-in MCP window recording
+
+On macOS 14 or later, launch a separate `screener-mcp` process with an explicit
+output root to enable window recording:
+
+```sh
+screener-mcp --recordings-dir /path/to/local/traces
+```
+
+Without that option the server advertises only the original four read-only
+tools. The configured root is also searched by the trace catalog. The server
+process needs existing macOS Screen Recording authorization; the tools do not
+present a permission prompt. Authorization for another executable does not
+establish access for this server process.
+
+1. Call `screener.windows` with the exact `appBundleID`. It returns matching
+   on-screen windows with title, `windowID` and `processID`.
+2. Call `screener.window_start` with those three identifiers and a session
+   `name`. Starting a session does not capture a frame.
+3. Call `screener.window_capture` with the returned `sessionID` and a meaningful
+   `reason` after a state change. Each call captures one still; no timer or
+   automatic visual-change detector runs. A session permits at most 256 frames.
+4. Call `screener.window_stop` with that `sessionID`, then inspect it with the
+   existing timeline, contact-sheet and frame tools.
+
+The server allows one active window session. It validates the selected process
+and window when starting and at each capture; disappearing or unauthorized
+windows produce errors. Capture does not fall back to the desktop or another
+window. An abruptly terminated server may leave an incomplete but readable
+trace. Frame timestamps describe recording, not the exact time of an external
+game event, and stills do not demonstrate uninterrupted animation or frame
+pacing. See [ADR-0007](adr/ADR-0007-opt-in-mcp-window-recording.md).
+
 ## Codex skill and plugin
 
 The project-local [$screener-visual-trace skill](../.agents/skills/screener-visual-trace/SKILL.md)

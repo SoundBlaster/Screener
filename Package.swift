@@ -20,12 +20,12 @@ let package = Package(
         .target(name: "ScreenerCore"),
         .target(name: "ScreenerKit", dependencies: ["ScreenerCore"]),
         .target(name: "ScreenerScreenCaptureKit", dependencies: ["ScreenerKit"]),
-        .target(name: "ScreenerMCP", dependencies: ["ScreenerCore", .product(name: "MCP", package: "swift-sdk")]),
+        .target(name: "ScreenerMCP", dependencies: ["ScreenerCore", "ScreenerKit", "ScreenerScreenCaptureKit", .product(name: "MCP", package: "swift-sdk")]),
         .executableTarget(name: "screener-mcp", dependencies: ["ScreenerMCP", .product(name: "MCP", package: "swift-sdk")]),
         .executableTarget(name: "screener-benchmarks", dependencies: ["ScreenerCore", "ScreenerMCP"]),
         .testTarget(name: "ScreenerBenchmarksTests", dependencies: ["screener-benchmarks"]),
         .testTarget(name: "ScreenerCoreTests", dependencies: ["ScreenerCore"]),
         .testTarget(name: "ScreenerKitTests", dependencies: ["ScreenerKit", "ScreenerCore"]),
-        .testTarget(name: "ScreenerMCPTests", dependencies: ["ScreenerMCP", "ScreenerCore", .product(name: "MCP", package: "swift-sdk")]),
+        .testTarget(name: "ScreenerMCPTests", dependencies: ["ScreenerMCP", "ScreenerCore", "ScreenerKit", .product(name: "MCP", package: "swift-sdk")]),
     ]
 )
