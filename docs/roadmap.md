@@ -1,7 +1,7 @@
 # Roadmap after 0.2.0
 
 Status: Proposed implementation plan; all items below are unimplemented.
-Reviewed: 2026-10-18.
+Initial review: 2026-10-18. RM-09 added: 2026-11-14.
 Source baseline: [0.2.0](https://github.com/SoundBlaster/Screener/releases/tag/v0.2.0),
 commit `085252854d22dcc344d494d38496b402a92b308f`.
 
@@ -38,13 +38,15 @@ Dependencies apply to the minimal slice, not every future enhancement.
 | B: visual investigation | RM-04 | Compare frames and review screenshot baselines | M | None |
 | B: visual investigation | RM-05 | Query frames around a time or semantic event | S–M | None; composes with RM-04 |
 | B: backend coverage | RM-06 | Select compositor capture in macOS screenshot batches | M | Existing macOS SCK product |
+| B: visual investigation | RM-09 | Inspect optional view and layer trees at selected checkpoints | M | None |
 | C: bounded recording | RM-07 | Enforce storage budgets and safe cleanup | M | None; required before RM-08 |
 | C: bounded recording | RM-08 | Record useful visual changes adaptively | L | RM-07; reuse RM-04 metric primitives where appropriate |
 
 Start with RM-01, then RM-02. RM-03 can follow independently when another
 consumer needs an adapter upgrade. RM-04 is the next user-facing analysis feature;
 RM-05 and RM-06 can then proceed independently. Complete RM-07 before enabling
-the longer-running automatic recording in RM-08.
+the longer-running automatic recording in RM-08. RM-09 can proceed independently
+when a consumer needs to explain a layout or animation issue from a trace.
 
 ## RM-01 — Integration diagnostics (`doctor`)
 
@@ -179,6 +181,39 @@ retain the separate system reference and accurate source labels.
   the optional compositor backend.
 - Fresh runner evidence includes a matched native Dreams Metal case. RealityKit,
   HDR/EDR and other GPU surfaces keep independent coverage/unknown status.
+
+## RM-09 — Optional view and layer trees
+
+**Gap:** [trace records](../Sources/ScreenerCore/TraceRecord.swift) support
+scalar metadata and a frame reference. Pixels alone do not show which views
+or layers could explain clipping, stacking or an unexpected layout. The
+[PRD's accessibility snapshot](PRD.md#13-accessibility--semantic-snapshot)
+describes semantic UI elements and is a separate source of information.
+
+**Minimal slice:** at a selected checkpoint, let the host app attach a view
+tree, a layer tree, or both to the frame record. Start with a host-selected
+`UIView` or `NSView` subtree and its available `CALayer` hierarchy. Capture
+parent/child order, type and geometry in a declared coordinate space, with
+visibility and clipping properties where available. Read the saved trees on
+demand through MCP so listing frames stays lightweight.
+
+**Done when:**
+
+- Capture is off by default. The host chooses the root and which trees to
+  collect. Existing traces and frame-only capture still work.
+- Each saved tree identifies its frame, root, collection time and source.
+  A checkpoint associates the tree with the pixels without promising an
+  atomic snapshot of what the compositor displayed. Layer geometry identifies
+  whether it came from the model or presentation tree.
+- Depth, node count and serialized size are bounded. Text and accessibility
+  values are omitted by default; the host can exclude subtrees before
+  persistence.
+- Missing, unavailable and truncated trees are distinguishable. A missing tree
+  does not prevent recording a frame. External ScreenCaptureKit capture alone
+  does not provide another app's internal hierarchy, and the native host tree
+  is not presented as SwiftUI's declarative view tree.
+- A fixture with nested views and layers can be inspected alongside its
+  checkpoint image to diagnose a clipping or stacking issue.
 
 ## RM-07 — Retention and storage controls
 
