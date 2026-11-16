@@ -1,7 +1,7 @@
 # Roadmap after 0.2.0
 
 Status: Proposed implementation plan; all items below are unimplemented.
-Initial review: 2026-10-18. RM-09 added: 2026-11-14.
+Initial review: 2026-10-18. RM-09 updated: 2026-11-16.
 Source baseline: [0.2.0](https://github.com/SoundBlaster/Screener/releases/tag/v0.2.0),
 commit `085252854d22dcc344d494d38496b402a92b308f`.
 
@@ -192,10 +192,14 @@ describes semantic UI elements and is a separate source of information.
 
 **Minimal slice:** at a selected checkpoint, let the host app attach a view
 tree, a layer tree, or both to the frame record. Start with a host-selected
-`UIView` or `NSView` subtree and its available `CALayer` hierarchy. Capture
-parent/child order, type and geometry in a declared coordinate space, with
-visibility and clipping properties where available. Read the saved trees on
-demand through MCP so listing frames stays lightweight.
+`UIView` or `NSView` subtree and its available `CALayer` hierarchy. For
+analysis of a frame during an animation, use the
+[presentation tree](https://developer.apple.com/documentation/quartzcore/calayer/presentation%28%29)
+as the primary source of observed layer state. Keep model state available
+separately so the trace can explain the difference between the current value
+and the value set by the app. Capture parent/child order, type, geometry in a
+declared coordinate space, and available visibility and clipping properties.
+Read the saved trees on demand through MCP so listing frames stays lightweight.
 
 **Done when:**
 
@@ -203,8 +207,11 @@ demand through MCP so listing frames stays lightweight.
   collect. Existing traces and frame-only capture still work.
 - Each saved tree identifies its frame, root, collection time and source.
   A checkpoint associates the tree with the pixels without promising an
-  atomic snapshot of what the compositor displayed. Layer geometry identifies
-  whether it came from the model or presentation tree.
+  atomic snapshot of what the compositor displayed.
+- Sample `position`, `bounds`, `transform` and `opacity` from the
+  presentation layer when available. Follow that tree's own `sublayers` and
+  `mask` links. If presentation data is unavailable, report that explicitly;
+  any model values shown alongside it retain their own source label.
 - Depth, node count and serialized size are bounded. Text and accessibility
   values are omitted by default; the host can exclude subtrees before
   persistence.
@@ -214,6 +221,9 @@ demand through MCP so listing frames stays lightweight.
   is not presented as SwiftUI's declarative view tree.
 - A fixture with nested views and layers can be inspected alongside its
   checkpoint image to diagnose a clipping or stacking issue.
+- An in-flight animation fixture captures a checkpoint whose presentation
+  position or opacity differs from the model value. The trace identifies both
+  sources and lets a reader compare the presentation sample with the image.
 
 ## RM-07 — Retention and storage controls
 
